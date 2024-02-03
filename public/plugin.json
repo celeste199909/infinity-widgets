@@ -1,0 +1,22 @@
+{
+  "main": "index.html",
+  "preload": "preload.js",
+  "logo": "logo.png",
+  "platform": ["win32", "darwin", "linux"],
+  "development": {
+    "main": "http://localhost:5173/"
+  },
+  "pluginSetting": {
+    "single": true,
+    "height": 0
+  },
+  "features": [
+    {
+      "code": "widgets-wrapper",
+      "explain": "infinity-widgets-wrapper",
+      "icon": "logo.png",
+      "platform": ["win32", "darwin", "linux"],
+      "cmds": ["无限小组件"]
+    }
+  ]
+}

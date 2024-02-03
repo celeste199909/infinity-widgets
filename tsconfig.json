@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM"],
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*","win-main/*","./win-widgets/*","./w-common/*","./"]
+    },
+    "noEmit": true,
+    "types": ["utools-api-types"]
+  },
+  "include": [
+    "w-common/**/*.ts",
+    "w-common/**/*.d.ts",
+    "w-common/**/*.tsx",
+    "w-common/**/*.vue",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "win-main/**/*.ts",
+    "win-main/**/*.d.ts",
+    "win-main/**/*.tsx",
+    "win-main/**/*.vue",
+    "win-widgets/**/*.ts",
+    "win-widgets/**/*.d.ts",
+    "win-widgets/**/*.tsx",
+    "win-widgets/**/*.vue",
+    "vite-env.d.ts",
+    "./vite-env.d.ts",
+    "shims-vue.d.ts",
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
