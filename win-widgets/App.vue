@@ -1,34 +1,45 @@
 <template>
   <div
-    data-widgets=""
     id="widgets-wrapper"
-    class="flex flex-row gap-4 w-screen h-screen"
+    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center"
+    :style="{
+      padding: `${layout.padding}px`,
+      paddingBottom: `${layout.padding + layout.extraPaddingBottom}px`,
+    }"
   >
-    <!-- <div v-for="(item, index) in showWidgetList" :key="index">
-        <component :is="item" />
-      </div> -->
     <DraggableContainer
       :referenceLineVisible="true"
       :referenceLineColor="'#0f0'"
+      :style="{
+        width: `${layout.gridWidth}px`,
+        height: `${layout.gridHeight}px`,
+      }"
     >
-      <!-- <div v-for="(item, index) in showWidgetList" :key="index">
-        <component :is="item" />
-      </div> -->
       <Vue3DraggableResizable
-        :initW="120"
-        :initH="80"
-        v-model:x="x"
-        v-model:y="y"
-        v-model:w="w"
-        v-model:h="h"
-        v-model:active="active"
+        v-for="(item, index) in showWidgets"
+        :key="item.key"
+        class="widgets select-none"
+        :initW="item.position.w"
+        :initH="item.position.h"
+        v-model:x="item.position.x"
+        v-model:y="item.position.y"
+        v-model:w="item.position.w"
+        v-model:h="item.position.h"
         :lockAspectRatio="true"
         :draggable="true"
-        :resizable="true"
+        :resizable="item.resizable"
         :parent="true"
-        :handles="['br']"
+        classNameDragging="dragging"
+        classNameDraggable="draggable"
+        @drag-start="dragStartHandle"
+        @dragging="draggingHandle"
+        @drag-end="dragEndHandle"
       >
-        This is a test example
+        <component
+          :is="item.component"
+          :widgetData="item"
+          :nearestPosition="nearestPosition"
+        />
       </Vue3DraggableResizable>
     </DraggableContainer>
   </div>
@@ -38,47 +49,134 @@ import { ref, onMounted, computed, reactive } from "vue";
 import Weather from "../w-common/components/Weather.vue";
 import Calendar from "../w-common/components/Calendar.vue";
 import Todo from "../w-common/components/Todo.vue";
+// 组合函数
+import { useLayout } from "./composables/useLayout";
 
-const x = ref(0);
-const y = ref(0);
-const w = ref(100);
-const h = ref(100);
-const active = ref(false);
+const { layout, nearestPosition } = useLayout();
+console.log(
+  "%c [ layout ]-50",
+  "font-size:13px; background:pink; color:#bf2c9f;",
+  layout
+);
 
-const usedWidgets = ref<string[]>([]);
-const showWidgetList = computed(() => {
-  return usedWidgets.value.map((item) => {
-    switch (item) {
-      case "weather":
-        return Weather;
-      case "calendar":
-        return Calendar;
-      case "todo":
-        return Todo;
-      default:
-        return Weather;
-    }
-  });
+const allWidgets = ref([
+  {
+    key: "weather",
+    name: "天气",
+    component: Weather,
+    use: false,
+    draggable: false,
+    resizable: false,
+    position: {
+      x: 0,
+      y: 0,
+      w: 200,
+      h: 160,
+    },
+  },
+  {
+    key: "calendar",
+    name: "日历",
+    component: Calendar,
+    use: false,
+    draggable: false,
+    resizable: false,
+    position: {
+      x: 0,
+      y: 0,
+      w: 200,
+      h: 160,
+    },
+  },
+  {
+    key: "todo",
+    name: "待办",
+    component: Todo,
+    use: false,
+    draggable: false,
+    resizable: false,
+    position: {
+      x: 0,
+      y: 0,
+      w: 200,
+      h: 160,
+    },
+  },
+]);
+
+const showWidgets = computed(() => {
+  return allWidgets.value.filter((item) => item.use);
 });
-interface EventDetail {
-  key: string;
-}
+
+const widgetsWrapperLayout = ref({ width: 0, height: 0, cellSize: 0 });
 
 onMounted(() => {
+  // 设置小组件容器布局
+  widgetsWrapperLayout.value = {
+    width: document.getElementById("widgets-wrapper")!.offsetWidth,
+    height: document.getElementById("widgets-wrapper")!.offsetHeight,
+    cellSize: 60,
+  };
+
   // 监听自定义事件
   document.addEventListener("addWidgetEvent", function (event: any) {
     console.log("添加小组件", event.detail.key);
-    const eventDetail: EventDetail = event.detail;
-    usedWidgets.value.push(eventDetail.key);
+    const eventDetail = event.detail;
+    const widgetName = eventDetail.key;
+    allWidgets.value.forEach((item) => {
+      if (item.key === widgetName) {
+        item.use = true;
+      }
+    });
   });
 
   document.addEventListener("removeWidgetEvent", function (event: any) {
     console.log("移除小组件！", event.detail.key);
-    const eventDetail: EventDetail = event.detail;
-    usedWidgets.value = usedWidgets.value.filter(
-      (item) => item !== eventDetail.key
-    );
+    const eventDetail = event.detail;
+    const widgetName = eventDetail.key;
+    allWidgets.value.forEach((item) => {
+      if (item.key === widgetName) {
+        item.use = false;
+      }
+    });
   });
 });
+
+function dragStartHandle(payload: { x: number; y: number }) {
+  // active.value = true;
+  console.log(
+    "%c [ dragStartHandle ]-135",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    payload
+  );
+}
+
+function draggingHandle(payload: { x: number; y: number }) {
+  // active.value = true;
+  console.log(
+    "%c [ draggingHandle ]-135",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    payload
+  );
+}
+
+function dragEndHandle(payload: { x: number; y: number }) {
+  // active.value = false;
+  console.log(
+    "%c [ dragEndHandle ]-135",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    payload
+  );
+}
+
 </script>
-<style scoped></style>
+<style scoped>
+.dragging {
+  border: 0;
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+.draggable {
+  border: 0;
+}
+</style>
