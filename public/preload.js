@@ -44,10 +44,15 @@ const removeWidget = (widget) => {
   ipcRenderer.sendTo(widgetsWrapper.webContents.id, "removeWidget", widget);
 }
 
+const setEditMode = (editMode) => {
+  ipcRenderer.sendTo(widgetsWrapper.webContents.id, "setEditMode", editMode);
+}
+
 preload.createWidgetsWrapper = createWidgetsWrapper;
 preload.removeWidgetsWrapper = removeWidgetsWrapper;
 preload.addWidget = addWidget;
 preload.removeWidget = removeWidget;
+preload.setEditMode = setEditMode;
 
 
 window.preload = preload;

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="widget rounded-2xl bg-blue-100 flex justify-center items-center"
+    class="widget rounded-xl bg-blue-100 flex justify-center items-center"
     :style="{
       width: widgetData.position.w + 'px',
       height: widgetData.position.h + 'px',

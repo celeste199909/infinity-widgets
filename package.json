@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/node": "^20.11.16",
+    "@vueuse/components": "^10.7.2",
     "@vueuse/core": "^10.7.2",
     "idb-keyval": "^6.2.1",
     "pinia": "^2.1.7",

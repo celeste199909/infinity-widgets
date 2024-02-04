@@ -34,32 +34,6 @@ export function useLayout() {
         gridTop,
     })
 
-
-    // // 输入 grid 坐标，返回像素坐标
-    // function gridToPixelPositions(gridX: number, gridY: number) {
-    //     return {
-    //         pixelX: layout.value.gridLeft + gridX,
-    //         pixelY: layout.value.gridTop + gridY,
-    //     }
-    // }
-
-    // // 输入像素坐标，返回 grid 坐标
-    // function pixelToGridPositions(pixelX: number, pixelY: number) {
-    //     return {
-    //         gridX: pixelX - layout.value.gridLeft,
-    //         gridY: pixelY - layout.value.gridTop,
-    //     }
-    // }
-
-    // // 输入像素坐标，返回所在X格子的上边界离 grid 上边界的距离
-    // function getGridEdgeDistance(pixelX: number, pixelY: number) {
-    //     return {
-    //         gridTopDistance: (pixelY - layout.value.gridTop) % layout.value.cellSize * layout.value.cellSize,
-    //         gridLeftDistance: (pixelX - layout.value.gridLeft) % layout.value.cellSize * layout.value.cellSize,
-    //     }
-    // }
-
-
     // 输入坐标，获取当前格子的四个顶点中最近顶点坐标
     function nearestPosition(pixelX: number, pixelY: number) {
         // 获取当前格子的上下边的y坐标

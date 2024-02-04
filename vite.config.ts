@@ -29,8 +29,10 @@ export default defineConfig({
                 entryFileNames: '[name]/[name].js',
                 chunkFileNames: 'chunks/[name].js',
                 assetFileNames: 'assets/[name].[ext]',
-            }
+            },
         },
+        // 不压缩
+        minify: false,
     },
 
 });

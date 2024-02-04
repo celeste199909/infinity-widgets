@@ -30,6 +30,15 @@ ipcRenderer.on("removeWidget", (e, widget) => {
 });
 
 // 创建一个自定义事件
+const setEditModeEvent = new CustomEvent('setEditModeEvent', { detail: { key: 'value' } });
+ipcRenderer.on("setEditMode", (e, editMode) => {
+    // 触发自定义事件
+    // 触发自定义事件，并传递参数
+    const newCustomEvent = new CustomEvent('setEditModeEvent', {
+        detail: { key: editMode },
+    });
+    document.dispatchEvent(newCustomEvent);
+});
 
 
 
