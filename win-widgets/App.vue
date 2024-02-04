@@ -17,7 +17,7 @@
       <Vue3DraggableResizable
         v-for="(item, index) in showWidgets"
         :key="item.key"
-        class="widgets select-none border-0"
+        class="widgets select-none border-0 "
         :class="item.draggable ? 'drag-mode' : ''"
         :initW="item.position.w"
         :initH="item.position.h"
@@ -47,7 +47,7 @@
       <!-- 下一个位置 -->
       <Vue3DraggableResizable
         v-if="dragTarget && onEditMode"
-        class="next-position bg-blue-300/80 flex justify-center items-center -z-10 rounded-xl"
+        class="next-position border-[1px] border-blue-300 bg-blue-300/20 backdrop-blur-sm -z-10 rounded-xl"
         :initW="nextPosistion.position.w"
         :initH="nextPosistion.position.h"
         v-model:x="nextPosistion.position.x"
@@ -87,6 +87,12 @@ interface Widget {
   };
 }
 
+function getWidgetLength(units: number) {
+
+  const cellSize = layout.value.cellSize;
+  return units * cellSize  + (Math.floor(units * cellSize / cellSize) - 1) * layout.value.gap;
+}
+
 const allWidgets = ref([
   {
     key: "weather",
@@ -99,8 +105,8 @@ const allWidgets = ref([
     position: {
       x: 0,
       y: 0,
-      w: 60,
-      h: 60,
+      w: getWidgetLength(1),
+      h: getWidgetLength(1),
     },
   },
   {
@@ -114,8 +120,8 @@ const allWidgets = ref([
     position: {
       x: 0,
       y: 0,
-      w: 90,
-      h: 90,
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
     },
   },
   {
@@ -129,8 +135,8 @@ const allWidgets = ref([
     position: {
       x: 0,
       y: 0,
-      w: 120,
-      h: 180,
+      w: getWidgetLength(2),
+      h: 180 + (Math.floor(180 / layout.value.cellSize) - 1) * layout.value.gap,
     },
   },
 ]);
@@ -232,13 +238,13 @@ function dragEndHandle(payload: { x: number; y: number }) {
 
 @keyframes shake {
   0% {
-    transform: translateX(-2px);
+    transform: translateX(-1px);
   }
   50% {
-    transform: translateX(2px);
+    transform: translateX(1px);
   }
   100% {
-    transform: translateX(-2px);
+    transform: translateX(-1px);
   }
 }
 </style>

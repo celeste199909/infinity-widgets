@@ -22,7 +22,7 @@ const createWidgetsWrapper = () => {
   }, () => {
     // 显示
     widgetsWrapper.show();
-    widgetsWrapper.webContents.openDevTools();
+    // widgetsWrapper.webContents.openDevTools();
     ipcRenderer.sendTo(widgetsWrapper.webContents.id, "init");
   })
 }
