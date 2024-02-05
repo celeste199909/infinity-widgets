@@ -2,12 +2,14 @@
 import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 import path from "path";
+import svgLoader from 'vite-svg-loader'
 
 function _resolve(dir: string) {
     return path.resolve(__dirname, dir);
 }
 
 export default defineConfig({
+    assetsInclude: ['./w-common/assets/**/*'],
     resolve: {
         alias: {
             "@": _resolve("./"),
@@ -15,7 +17,7 @@ export default defineConfig({
         },
     },
     plugins: [
-        vue()
+        vue(), svgLoader()
     ],
     base: "./",
     build: {

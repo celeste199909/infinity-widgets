@@ -2,7 +2,7 @@ import { ref, onMounted } from "vue";
 
 // 按照惯例，组合式函数名以“use”开头
 export function useLayout() {
-    const padding = 10;
+    const padding = 2;
     const extraPaddingBottom = 50;
     const cellSize = 60;
     const gap = 10;

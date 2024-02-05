@@ -1,32 +1,43 @@
 <template>
-  <div class="w-56 h-40 bg-blue-400">
-    <div class="text-white text-center">{{ widgetName }}</div>
-    <div class="text-blue-500 text-center" @click="handleAddWidget(widgetName)">
-      添加
-    </div>
-    <div class="text-red-500 text-center" @click="handleRemoveWidget(widgetName)">
-      删除
-    </div>
-
-  </div>
+  <component
+    :is="widgets.get(widgetName)"
+    :widgetData="widgetData"
+    :disabledFn="disabledFn"
+    class="cursor-pointer rounded-xl overflow-hidden"
+  />
 </template>
 
 <script setup lang="ts">
+import Calendar from "./widgets/Calendar.vue";
+import Starter from "./widgets/Starter.vue";
+import Todo from "./widgets/Todo.vue";
+import Weather from "./widgets/weather/Weather.vue";
+import Woodfish from "./widgets/woodfish/Woodfish.vue";
+
 import { defineProps } from "vue";
 
 const props = defineProps({
   widgetName: {
     type: String,
     required: true,
-  }
+  },
+  widgetData: {
+    type: Object,
+    required: true,
+  },
+  disabledFn: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
-function handleAddWidget(widgetName: string) {
-    window.preload.addWidget(widgetName);
-}
-
-function handleRemoveWidget(widgetName: string) {
-    window.preload.removeWidget(widgetName);
-}
+const widgets = new Map([
+  ["calendar", Calendar],
+  ["starter", Starter],
+  ["todo", Todo],
+  ["weather", Weather],
+  ["woodfish", Woodfish],
+]);
 </script>
 <style scoped></style>

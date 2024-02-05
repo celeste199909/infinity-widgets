@@ -17,7 +17,7 @@
       <Vue3DraggableResizable
         v-for="(item, index) in showWidgets"
         :key="item.key"
-        class="widgets select-none border-0 "
+        class="widgets select-none border-0"
         :class="item.draggable ? 'drag-mode' : ''"
         :initW="item.position.w"
         :initH="item.position.h"
@@ -37,17 +37,20 @@
         @drag-end="dragEndHandle"
         @mousedown="dragTarget = item"
       >
-        <component
-          :is="item.component"
-          :widgetData="item"
-          :id="item.key"
-          :nearestPosition="nearestPosition"
-        />
+        <Transition name="fade" mode="out-in" appear>
+          <!-- <component
+            :is="item.component"
+            :widgetData="item"
+            :id="item.key"
+            :nearestPosition="nearestPosition"
+          /> -->
+          <Widget :widgetName="item.key" :widgetData="item" :id="item.key" />
+        </Transition>
       </Vue3DraggableResizable>
       <!-- 下一个位置 -->
       <Vue3DraggableResizable
         v-if="dragTarget && onEditMode"
-        class="next-position border-[1px] border-blue-300 bg-blue-300/20 backdrop-blur-sm -z-10 rounded-xl"
+        class="next-position bg-blue-300/60 backdrop-blur-sm -z-10 rounded-xl"
         :initW="nextPosistion.position.w"
         :initH="nextPosistion.position.h"
         v-model:x="nextPosistion.position.x"
@@ -63,9 +66,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, onMounted, computed, reactive, Ref } from "vue";
-import Weather from "../w-common/components/Weather.vue";
-import Calendar from "../w-common/components/Calendar.vue";
-import Todo from "../w-common/components/Todo.vue";
+import Widget from "../w-common/components/Widget.vue";
 // 组合函数
 import { useLayout } from "./composables/useLayout";
 
@@ -74,7 +75,6 @@ const { layout, nearestPosition } = useLayout();
 interface Widget {
   key: string;
   name: string;
-  component: any;
   use: boolean;
   draggable: boolean;
   resizable: boolean;
@@ -88,16 +88,17 @@ interface Widget {
 }
 
 function getWidgetLength(units: number) {
-
   const cellSize = layout.value.cellSize;
-  return units * cellSize  + (Math.floor(units * cellSize / cellSize) - 1) * layout.value.gap;
+  return (
+    units * cellSize +
+    (Math.floor((units * cellSize) / cellSize) - 1) * layout.value.gap
+  );
 }
 
 const allWidgets = ref([
   {
-    key: "weather",
-    name: "天气",
-    component: Weather,
+    key: "starter",
+    name: "启动器",
     use: false,
     draggable: false,
     resizable: false,
@@ -110,9 +111,22 @@ const allWidgets = ref([
     },
   },
   {
+    key: "weather",
+    name: "天气",
+    use: false,
+    draggable: false,
+    resizable: false,
+    isDragging: false,
+    position: {
+      x: 0,
+      y: 0,
+      w: getWidgetLength(4),
+      h: getWidgetLength(3),
+    },
+  },
+  {
     key: "calendar",
     name: "日历",
-    component: Calendar,
     use: false,
     draggable: false,
     resizable: false,
@@ -127,7 +141,6 @@ const allWidgets = ref([
   {
     key: "todo",
     name: "待办",
-    component: Todo,
     use: false,
     draggable: false,
     resizable: false,
@@ -136,7 +149,21 @@ const allWidgets = ref([
       x: 0,
       y: 0,
       w: getWidgetLength(2),
-      h: 180 + (Math.floor(180 / layout.value.cellSize) - 1) * layout.value.gap,
+      h: getWidgetLength(2),
+    },
+  },
+  {
+    key: "woodfish",
+    name: "电子木鱼",
+    use: false,
+    draggable: false,
+    resizable: false,
+    isDragging: false,
+    position: {
+      x: 0,
+      y: 0,
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
     },
   },
 ]);

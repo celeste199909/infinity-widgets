@@ -1,7 +1,6 @@
 const { ipcRenderer } = require("electron");
 
 const preload = {};
-
 let widgetsWrapper = null;
 
 const createWidgetsWrapper = () => {
@@ -21,11 +20,19 @@ const createWidgetsWrapper = () => {
     focus: false,
   }, () => {
     // 显示
-    widgetsWrapper.show();
-    // widgetsWrapper.webContents.openDevTools();
+    // widgetsWrapper.show();
+    widgetsWrapper.webContents.openDevTools();
     ipcRenderer.sendTo(widgetsWrapper.webContents.id, "init");
+    utools.showMainWindow();
   })
 }
+
+utools.onPluginEnter(({code, type, payload, option}) => {
+  console.log('用户进入插件应用', code, type, payload)
+  if(!widgetsWrapper) {
+    createWidgetsWrapper();
+  }
+})
 
 const removeWidgetsWrapper = () => {
   if (widgetsWrapper) {
@@ -35,8 +42,6 @@ const removeWidgetsWrapper = () => {
 }
 
 const addWidget = (widget) => {
-  // console.log('%c [ addWidget ]-35', 'font-size:13px; background:pink; color:#bf2c9f;', widght)
-  // console.log('%c [ widgetsWrapper ]-35', 'font-size:13px; background:pink; color:#bf2c9f;', widgetsWrapper)
   ipcRenderer.sendTo(widgetsWrapper.webContents.id, "addWidget", widget);
 }
 
@@ -53,6 +58,5 @@ preload.removeWidgetsWrapper = removeWidgetsWrapper;
 preload.addWidget = addWidget;
 preload.removeWidget = removeWidget;
 preload.setEditMode = setEditMode;
-
 
 window.preload = preload;
