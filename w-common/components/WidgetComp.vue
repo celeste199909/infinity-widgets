@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="widgets.get(widgetName)"
+    :is="widgets.get(widgetData.key)"
     :widgetData="widgetData"
     :disabledFn="disabledFn"
     class="cursor-pointer rounded-xl overflow-hidden"
@@ -17,10 +17,6 @@ import Woodfish from "./widgets/woodfish/Woodfish.vue";
 import { defineProps } from "vue";
 
 const props = defineProps({
-  widgetName: {
-    type: String,
-    required: true,
-  },
   widgetData: {
     type: Object,
     required: true,

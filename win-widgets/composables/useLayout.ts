@@ -2,9 +2,10 @@ import { ref, onMounted } from "vue";
 
 // 按照惯例，组合式函数名以“use”开头
 export function useLayout() {
-    const padding = 2;
+    const padding = 10;
     const extraPaddingBottom = 50;
-    const cellSize = 60;
+    const cellSize = 30;
+    const widgetUnit = 60;
     const gap = 10;
     const width = document.documentElement.clientWidth;
     const height = document.documentElement.clientHeight;
@@ -39,6 +40,7 @@ export function useLayout() {
         gap,
         gridToInnerLeft,
         gridToInnerTop,
+        widgetUnit,
     });
 
     // 输入坐标，获取当前格子的四个顶点中最近顶点坐标

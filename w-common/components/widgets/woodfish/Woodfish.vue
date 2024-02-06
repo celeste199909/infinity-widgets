@@ -1,14 +1,32 @@
 <template>
+  <!-- 无样式 -->
   <div
-    :style="{
-      width: widgetData.position.w + 'px',
-      height: widgetData.position.h + 'px',
-    }"
+    v-if="!widgetData.style"
     class="w-full h-full p-4 flex justify-center items-center bg-black overflow-hidden relative"
+    :style="{
+      width: widgetData.size.w + 'px',
+      height: widgetData.size.h + 'px',
+    }"
+  >
+    <img
+      src="../../../assets/images/muyu.png"
+      class="muyu h-full aspect-square"
+      alt=""
+      srcset=""
+      ref="muyu"
+    />
+  </div>
+  <!-- 有样式 -->
+  <div
+    v-else
+    class="w-full h-full p-4 flex justify-center items-center bg-black overflow-hidden relative"
+    :style="{
+      width: widgetData.style[widgetData.currentStyle].w + 'px',
+      height: widgetData.style[widgetData.currentStyle].h + 'px',
+    }"
     @click="handleClick"
   >
     <div
-      v-if="!disabledFn"
       class="text top-10 right-1/2 translate-x-1/2 text-white opacity-0 absolute z-10"
       ref="text"
     >
@@ -26,7 +44,7 @@
 
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
-import knockSound from "../../../assets/sounds/knock.wav";
+// import knockSound from "../../../assets/sounds/knock.wav";
 const props = defineProps({
   widgetData: {
     type: Object,
@@ -46,8 +64,8 @@ function handleClick() {
   if (muyu.value) {
     muyu.value.classList.add("muyu-beat");
     text.value?.classList.add("text-beat");
-    const audio = new Audio(knockSound);
-    audio.play();
+    // const audio = new Audio(knockSound);
+    // audio.play();
     setTimeout(() => {
       muyu.value?.classList.remove("muyu-beat");
       text.value?.classList.remove("text-beat");

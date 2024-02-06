@@ -5,12 +5,7 @@ ipcRenderer.on("init", () => {
     console.log("init");
 });
 
-// 添加自定义事件
-// 创建一个自定义事件
-
-const addWidgetEvent = new CustomEvent('addWidgetEvent', { detail: { key: 'value' } });
 ipcRenderer.on("addWidget", (e, widget) => {
-    // 触发自定义事件
     // 触发自定义事件，并传递参数
     const newCustomEvent = new CustomEvent('addWidgetEvent', {
         detail: { key: widget },
@@ -18,27 +13,20 @@ ipcRenderer.on("addWidget", (e, widget) => {
     document.dispatchEvent(newCustomEvent);
 });
 
-
-const removeWidgetEvent = new CustomEvent('removeWidgetEvent', { detail: { key: 'value' } });
-ipcRenderer.on("removeWidget", (e, widget) => {
-    // 触发自定义事件
-    // 触发自定义事件，并传递参数
-    const newCustomEvent = new CustomEvent('removeWidgetEvent', {
-        detail: { key: widget },
+// 监听窗口失去焦点
+ipcRenderer.on("win-blur", () => {
+    const newCustomEvent = new CustomEvent('winBlurEvent', {
+        detail: { key: "value" },
     });
     document.dispatchEvent(newCustomEvent);
 });
 
-// 创建一个自定义事件
-const setEditModeEvent = new CustomEvent('setEditModeEvent', { detail: { key: 'value' } });
-ipcRenderer.on("setEditMode", (e, editMode) => {
-    // 触发自定义事件
-    // 触发自定义事件，并传递参数
-    const newCustomEvent = new CustomEvent('setEditModeEvent', {
-        detail: { key: editMode },
+// 监听窗口重新获得焦点
+ipcRenderer.on("win-focus", () => {
+    const newCustomEvent = new CustomEvent('winFocusEvent', {
+        detail: { key: "value" },
     });
     document.dispatchEvent(newCustomEvent);
 });
-
 
 

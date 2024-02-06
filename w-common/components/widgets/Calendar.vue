@@ -1,12 +1,22 @@
 <template>
+  <!-- 无样式 -->
   <div
-    class="widget rounded-xl bg-slate-100/90 backdrop-blur-sm flex justify-center items-center"
+    v-if="!widgetData.style"
+    class="rounded-xl bg-slate-100/90 backdrop-blur-sm flex justify-center items-center"
     :style="{
-      width: widgetData.position.w + 'px',
-      height: widgetData.position.h + 'px',
+      width: widgetData.size.w + 'px',
+      height: widgetData.size.h + 'px',
     }"
-  >
-  </div>
+  ></div>
+  <!-- 有样式 -->
+  <div
+    v-else
+    class="rounded-xl bg-slate-100/90 backdrop-blur-sm flex justify-center items-center"
+    :style="{
+      width: widgetData.style[widgetData.currentStyle].w + 'px',
+      height: widgetData.style[widgetData.currentStyle].h + 'px',
+    }"
+  ></div>
 </template>
 
 <script setup lang="ts">

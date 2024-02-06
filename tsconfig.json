@@ -13,20 +13,21 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*","win-main/*","./win-widgets/*","./w-common/*","./"]
+      "@/*": [
+        "./win-main/*",
+        "./win-widgets/*",
+        "./w-common/*",
+      ]
     },
     "noEmit": true,
-    "types": ["utools-api-types"]
+    "types": ["utools-api-types"],
   },
   "include": [
+    "node_modules/@types/**/*.ts",
     "w-common/**/*.ts",
     "w-common/**/*.d.ts",
     "w-common/**/*.tsx",
     "w-common/**/*.vue",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
     "win-main/**/*.ts",
     "win-main/**/*.d.ts",
     "win-main/**/*.tsx",
@@ -36,8 +37,7 @@
     "win-widgets/**/*.tsx",
     "win-widgets/**/*.vue",
     "vite-env.d.ts",
-    "./vite-env.d.ts",
-    "shims-vue.d.ts",
+    "shims-vue.d.ts"
   ],
   "references": [
     {

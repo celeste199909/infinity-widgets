@@ -24,12 +24,25 @@ const createWidgetsWrapper = () => {
     widgetsWrapper.webContents.openDevTools();
     ipcRenderer.sendTo(widgetsWrapper.webContents.id, "init");
     utools.showMainWindow();
+    // 在窗口失去焦点时将其置于最底层
+    widgetsWrapper.on('blur', () => {
+      widgetsWrapper.setAlwaysOnTop(true);
+      // 发送消息，把右键菜单隐藏
+      ipcRenderer.sendTo(widgetsWrapper.webContents.id, "win-blur");
+    });
+
+    // 在窗口重新获得焦点时取消置于最底层
+    widgetsWrapper.on('focus', () => {
+      widgetsWrapper.setAlwaysOnTop(false);
+      // 发送消息，把右键菜单隐藏
+      ipcRenderer.sendTo(widgetsWrapper.webContents.id, "win-focus");
+    });
   })
 }
 
-utools.onPluginEnter(({code, type, payload, option}) => {
+utools.onPluginEnter(({ code, type, payload, option }) => {
   console.log('用户进入插件应用', code, type, payload)
-  if(!widgetsWrapper) {
+  if (!widgetsWrapper) {
     createWidgetsWrapper();
   }
 })
@@ -45,18 +58,8 @@ const addWidget = (widget) => {
   ipcRenderer.sendTo(widgetsWrapper.webContents.id, "addWidget", widget);
 }
 
-const removeWidget = (widget) => {
-  ipcRenderer.sendTo(widgetsWrapper.webContents.id, "removeWidget", widget);
-}
-
-const setEditMode = (editMode) => {
-  ipcRenderer.sendTo(widgetsWrapper.webContents.id, "setEditMode", editMode);
-}
-
 preload.createWidgetsWrapper = createWidgetsWrapper;
 preload.removeWidgetsWrapper = removeWidgetsWrapper;
 preload.addWidget = addWidget;
-preload.removeWidget = removeWidget;
-preload.setEditMode = setEditMode;
 
 window.preload = preload;

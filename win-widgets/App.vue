@@ -1,7 +1,7 @@
 <template>
   <div
     id="widgets-wrapper"
-    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center"
+    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative"
     :style="{
       padding: `${layout.padding}px`,
       paddingBottom: `${layout.padding + layout.extraPaddingBottom}px`,
@@ -16,18 +16,18 @@
     >
       <Vue3DraggableResizable
         v-for="(item, index) in showWidgets"
-        :key="item.key"
+        :key="item.id"
         class="widgets select-none border-0"
         :class="item.draggable ? 'drag-mode' : ''"
-        :initW="item.position.w"
-        :initH="item.position.h"
+        :initW="item.size.w"
+        :initH="item.size.h"
         v-model:x="item.position.x"
         v-model:y="item.position.y"
-        v-model:w="item.position.w"
-        v-model:h="item.position.h"
+        v-model:w="item.size.w"
+        v-model:h="item.size.h"
         :lockAspectRatio="true"
         :draggable="item.draggable"
-        :resizable="item.resizable"
+        :resizable="false"
         :active="true"
         :parent="true"
         classNameDragging="dragging"
@@ -38,144 +38,181 @@
         @mousedown="dragTarget = item"
       >
         <Transition name="fade" mode="out-in" appear>
-          <!-- <component
-            :is="item.component"
-            :widgetData="item"
-            :id="item.key"
-            :nearestPosition="nearestPosition"
-          /> -->
-          <Widget :widgetName="item.key" :widgetData="item" :id="item.key" />
+          <WidgetComp :widgetData="item" :id="item.id" class="widget" />
         </Transition>
       </Vue3DraggableResizable>
       <!-- 下一个位置 -->
       <Vue3DraggableResizable
-        v-if="dragTarget && onEditMode"
+        v-if="dragTarget?.draggable === true"
         class="next-position bg-blue-300/60 backdrop-blur-sm -z-10 rounded-xl"
-        :initW="nextPosistion.position.w"
-        :initH="nextPosistion.position.h"
+        :initW="nextPosistion.size.w"
+        :initH="nextPosistion.size.h"
         v-model:x="nextPosistion.position.x"
         v-model:y="nextPosistion.position.y"
-        v-model:w="nextPosistion.position.w"
-        v-model:h="nextPosistion.position.h"
+        v-model:w="nextPosistion.size.w"
+        v-model:h="nextPosistion.size.h"
         classNameDragging="next-dragging"
         classNameDraggable="next-draggable"
       >
       </Vue3DraggableResizable>
     </DraggableContainer>
+    <!-- 右键菜单 -->
+    <ContextMenu
+      :showWidgets="showWidgets"
+      :onBulkEdit="onBulkEdit"
+      :modifyWidgetData="modifyWidgetData"
+      :removeWidget="removeWidget"
+      :bulkEdit="bulkEdit"
+    />
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, computed, reactive, Ref } from "vue";
-import Widget from "../w-common/components/Widget.vue";
+import { ref, onMounted, Ref } from "vue";
+import WidgetComp from "../w-common/components/WidgetComp.vue";
+import ContextMenu from "../w-common/components/ContextMenu.vue";
 // 组合函数
 import { useLayout } from "./composables/useLayout";
 
+import { nanoid } from "nanoid";
+import { Widget } from "../w-common/types/widget";
 const { layout, nearestPosition } = useLayout();
-
-interface Widget {
-  key: string;
-  name: string;
-  use: boolean;
-  draggable: boolean;
-  resizable: boolean;
-  isDragging: boolean;
-  position: {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-  };
-}
 
 function getWidgetLength(units: number) {
   const cellSize = layout.value.cellSize;
+  const widgetUnit = layout.value.widgetUnit;
   return (
-    units * cellSize +
-    (Math.floor((units * cellSize) / cellSize) - 1) * layout.value.gap
+    units * widgetUnit +
+    (Math.floor((units * widgetUnit) / cellSize) - 1) * layout.value.gap
   );
 }
 
-const allWidgets = ref([
+const allWidgets: Widget[] = [
   {
     key: "starter",
     name: "启动器",
-    use: false,
-    draggable: false,
-    resizable: false,
-    isDragging: false,
     position: {
-      x: 0,
-      y: 0,
+      x: 10,
+      y: 10,
+    },
+    size: {
       w: getWidgetLength(1),
       h: getWidgetLength(1),
+    },
+    currentStyle: "1x1",
+    style: {
+      "1x1": {
+        w: getWidgetLength(1),
+        h: getWidgetLength(1),
+      },
+      "2x2": {
+        w: getWidgetLength(2),
+        h: getWidgetLength(2),
+      },
     },
   },
   {
     key: "weather",
     name: "天气",
-    use: false,
-    draggable: false,
-    resizable: false,
-    isDragging: false,
     position: {
-      x: 0,
-      y: 0,
-      w: getWidgetLength(4),
-      h: getWidgetLength(3),
+      x: 10,
+      y: 10,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "2x2",
+    style: {
+      "2x2": {
+        w: getWidgetLength(2),
+        h: getWidgetLength(2),
+      },
+      "3x2": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(2),
+      },
+      "4x2": {
+        w: getWidgetLength(4),
+        h: getWidgetLength(2),
+      },
     },
   },
   {
     key: "calendar",
     name: "日历",
-    use: false,
-    draggable: false,
-    resizable: false,
-    isDragging: false,
     position: {
       x: 0,
       y: 0,
-      w: getWidgetLength(2),
+    },
+    size: {
+      w: getWidgetLength(3),
       h: getWidgetLength(2),
+    },
+    currentStyle: "3x2",
+    style: {
+      "3x2": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(2),
+      },
+      "4x3": {
+        w: getWidgetLength(4),
+        h: getWidgetLength(3),
+      },
     },
   },
   {
     key: "todo",
     name: "待办",
-    use: false,
-    draggable: false,
-    resizable: false,
-    isDragging: false,
     position: {
-      x: 0,
-      y: 0,
-      w: getWidgetLength(2),
+      x: 10,
+      y: 10,
+    },
+    size: {
+      w: getWidgetLength(3),
       h: getWidgetLength(2),
+    },
+    currentStyle: "3x4",
+    style: {
+      "3x4": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(4),
+      },
+      "3x5": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(5),
+      },
     },
   },
   {
     key: "woodfish",
     name: "电子木鱼",
-    use: false,
-    draggable: false,
-    resizable: false,
-    isDragging: false,
     position: {
-      x: 0,
-      y: 0,
+      x: 10,
+      y: 10,
+    },
+    size: {
       w: getWidgetLength(2),
       h: getWidgetLength(2),
     },
+    currentStyle: "2x2",
+    style: {
+      "2x2": {
+        w: getWidgetLength(2),
+        h: getWidgetLength(2),
+      },
+      "3x3": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(3),
+      },
+    },
   },
-]);
+];
 
-const onEditMode = ref(false);
 const dragTarget: Ref<Widget | null> = ref(null);
-
-const showWidgets = computed(() => {
-  return allWidgets.value.filter((item) => item.use);
-});
-
-const nextPosistion = ref({
+const showWidgets = ref<Widget[]>([]);
+const onBulkEdit = ref(false);
+const nextPosistion: Ref<Widget> = ref({
+  id: "next-position",
   key: "next-position",
   name: "下个位置",
   draggable: false,
@@ -184,62 +221,115 @@ const nextPosistion = ref({
   position: {
     x: 0,
     y: 0,
+  },
+  size: {
     w: 0,
     h: 0,
   },
 });
 
 onMounted(() => {
+  window.utools.isDarkColors()
+    ? document.documentElement.classList.add("dark")
+    : document.documentElement.classList.remove("dark");
   // 监听自定义事件
   document.addEventListener("addWidgetEvent", function (event: any) {
     console.log("添加小组件", event.detail.key);
     const eventDetail = event.detail;
     const widgetName = eventDetail.key;
-    allWidgets.value.forEach((item) => {
-      if (item.key === widgetName) {
-        item.use = true;
-      }
-    });
+    addWidget(widgetName);
+  });
+  document.addEventListener("winBlurEvent", function (event: any) {
+    console.log("失去焦点", event.detail.key);
+    window.utools.isDarkColors()
+    ? document.documentElement.classList.add("dark")
+    : document.documentElement.classList.remove("dark");
   });
 
-  document.addEventListener("removeWidgetEvent", function (event: any) {
-    console.log("移除小组件！", event.detail.key);
-    const eventDetail = event.detail;
-    const widgetName = eventDetail.key;
-    allWidgets.value.forEach((item) => {
-      if (item.key === widgetName) {
-        item.use = false;
-      }
-    });
-  });
-
-  document.addEventListener("setEditModeEvent", function (event: any) {
-    console.log("编辑模式！", event.detail);
-    const eventDetail = event.detail;
-    const editMode = eventDetail.key;
-    onEditMode.value = editMode;
-    allWidgets.value.forEach((item) => {
-      item.draggable = editMode;
-    });
+  document.addEventListener("winFocusEvent", function (event: any) {
+    console.log("获得焦点", event.detail.key);
+    window.utools.isDarkColors()
+    ? document.documentElement.classList.add("dark")
+    : document.documentElement.classList.remove("dark");
   });
 });
 
-function dragStartHandle(payload: { x: number; y: number }) {}
+// 修改widget数据
+function modifyWidgetData(widgetData: Widget) {
+  showWidgets.value.forEach((item) => {
+    if (item.id === widgetData.id) {
+      item = widgetData;
+    }
+  });
+}
+
+// 添加 widget
+function addWidget(key: string) {
+  const widget = allWidgets.find((item) => item.key === key);
+  if (widget) {
+    showWidgets.value.push({
+      id: nanoid(),
+      key: widget.key,
+      name: widget.name,
+      draggable: onBulkEdit.value ? true : false,
+      resizable: false,
+      position: {
+        x: widget.position.x,
+        y: widget.position.y,
+      },
+      size: {
+        w: widget.size.w,
+        h: widget.size.h,
+      },
+      currentStyle: widget.currentStyle,
+      style: widget.style,
+    });
+  }
+}
+
+// 删除 widget
+function removeWidget(id: string) {
+  showWidgets.value = showWidgets.value.filter((item) => item.id !== id);
+}
+
+// 批量编辑
+function bulkEdit() {
+  onBulkEdit.value = !onBulkEdit.value;
+  if (onBulkEdit.value) {
+    showWidgets.value.forEach((item) => {
+      item.draggable = true;
+    });
+  } else {
+    showWidgets.value.forEach((item) => {
+      item.draggable = false;
+    });
+  }
+}
+
+function dragStartHandle(payload: { x: number; y: number }) {
+  if (dragTarget.value) {
+    nextPosistion.value.size.w = dragTarget.value?.size.w;
+    nextPosistion.value.size.h = dragTarget.value?.size.h;
+  }
+  nextPosistion.value.position.x = nearestPosition(payload.x, payload.y).x;
+  nextPosistion.value.position.y = nearestPosition(payload.x, payload.y).y;
+}
 
 function draggingHandle(payload: { x: number; y: number }) {
   const { x, y } = nearestPosition(payload.x, payload.y);
   if (dragTarget.value) {
-    nextPosistion.value.position.w = dragTarget.value.position.w;
-    nextPosistion.value.position.h = dragTarget.value.position.h;
+    nextPosistion.value.size.w = dragTarget.value.size.w;
+    nextPosistion.value.size.h = dragTarget.value.size.h;
   }
   nextPosistion.value.position.y = y;
   nextPosistion.value.position.x = x;
 }
 
 function dragEndHandle(payload: { x: number; y: number }) {
-  const dragTargetId = dragTarget.value?.key;
-  allWidgets.value.forEach((item) => {
-    if (item.key === dragTargetId) {
+  if (!dragTarget.value) return;
+  const dragTargetId = dragTarget.value?.id;
+  showWidgets.value.forEach((item) => {
+    if (item.id === dragTargetId) {
       item.position.x = nextPosistion.value.position.x;
       item.position.y = nextPosistion.value.position.y;
     }
@@ -255,6 +345,10 @@ function dragEndHandle(payload: { x: number; y: number }) {
 }
 .draggable {
   border: 0;
+}
+
+.widget {
+  transition: width 0.3s, height 0.3s;
 }
 .active {
   border: 0;

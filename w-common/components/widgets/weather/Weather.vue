@@ -1,11 +1,43 @@
 <template>
+  <!-- 无样式 -->
   <div
-    class="widget weather text-white p-2 w-full h-full rounded-xl flex flex-col justify-center items-center gap-1"
+    v-if="!widgetData.style"
+    class="bg-blue-500 text-white p-2 w-full h-full rounded-xl flex flex-col justify-center items-center gap-1"
     :style="{
-      width: widgetData.position.w + 'px',
-      height: widgetData.position.h + 'px',
+      width: widgetData.size.w + 'px',
+      height: widgetData.size.h + 'px',
     }"
   >
+    <div
+      v-if="weatherInfo"
+      class="w-full flex flex-col justify-center items-center gap-3 cursor-pointer"
+    >
+      <div class="text-center">
+        {{ weatherInfo?.city }}
+      </div>
+      <div class="w-24 h-24 flex justify-center items-center">
+        <img
+          class="w-full h-full block select-none"
+          :src="getLocalImage(weatherPhenomenaMap.get(weatherInfo?.weather) as string)"
+          alt=""
+          srcset=""
+        />
+      </div>
+      <div class="text-center">
+        {{ weatherInfo?.weather }}
+      </div>
+    </div>
+  </div>
+  <!-- 有样式 -->
+  <div
+    v-else
+    class="bg-blue-500 text-white p-2 w-full h-full rounded-xl flex flex-col justify-center items-center gap-1"
+    :style="{
+      width: widgetData.style[widgetData.currentStyle].w + 'px',
+      height: widgetData.style[widgetData.currentStyle].h + 'px',
+    }"
+  >
+    <!-- 展示天气 -->
     <div
       v-if="!showSelectDistrict"
       class="flex flex-col justify-center items-center w-full h-full relative backdrop-blur-lg"
@@ -14,14 +46,10 @@
         v-if="weatherInfo"
         class="w-full flex flex-col justify-center items-center gap-3 cursor-pointer"
       >
-        <div
-          v-if="!disabledFn"
-          class="text-center"
-          @click="handleShowSelectDistrict"
-        >
+        <div class="text-center" @click="handleShowSelectDistrict">
           {{ weatherInfo?.city }}
         </div>
-        <div class="w-24 h-24 flex justify-center items-center">
+        <div class="w-24 h-24 flex justify-center items-center select-none">
           <img
             class="w-full h-full block"
             :src="getLocalImage(weatherPhenomenaMap.get(weatherInfo?.weather) as string)"
@@ -29,11 +57,12 @@
             srcset=""
           />
         </div>
-        <div v-if="!disabledFn" class="text-center">
+        <div class="text-center">
           {{ weatherInfo?.weather }}
         </div>
       </div>
     </div>
+    <!-- 选择地区 -->
     <div
       v-else
       class="flex flex-col justify-center items-center gap-2 w-full h-full"
