@@ -1,20 +1,23 @@
 <template>
-  <component
-    :is="widgets.get(widgetData.key)"
-    :widgetData="widgetData"
-    :disabledFn="disabledFn"
-    class="cursor-pointer rounded-xl overflow-hidden"
-  />
+    <component
+      :is="widgets.get(widgetData.key)"
+      :widgetData="widgetData"
+      :disabledFn="disabledFn"
+      class="transition-class rounded-xl overflow-hidden select-none"
+    />
 </template>
 
 <script setup lang="ts">
-import Calendar from "./widgets/Calendar.vue";
-import Starter from "./widgets/Starter.vue";
-import Todo from "./widgets/Todo.vue";
+import Calendar from "./widgets/calendar/Calendar.vue";
+import AppStarter from "./widgets/app-starter/AppStarter.vue"; 
+import Todo from "./widgets/todo/Todo.vue";
 import Weather from "./widgets/weather/Weather.vue";
 import Woodfish from "./widgets/woodfish/Woodfish.vue";
+import PaintBoard from "./widgets/paint-board/PaintBoard.vue";
 
-import { defineProps } from "vue";
+import { gsap } from "gsap";
+
+import { defineProps, onMounted } from "vue";
 
 const props = defineProps({
   widgetData: {
@@ -28,12 +31,30 @@ const props = defineProps({
   },
 });
 
+const widgetId = props.widgetData.id;
+
 const widgets = new Map([
   ["calendar", Calendar],
-  ["starter", Starter],
+  ["app-starter", AppStarter],
   ["todo", Todo],
   ["weather", Weather],
   ["woodfish", Woodfish],
+  ["paint-board", PaintBoard],
 ]);
+
+onMounted(() => {
+  const widget = document.getElementById('w-'+widgetId);
+  if (widget) {
+    gsap.from(`#w-${widgetId}`, {
+      duration: 0.3,
+      scale: 0,
+      ease: "back.out(1.4)",
+    });
+  }
+});
 </script>
-<style scoped></style>
+<style scoped>
+.transition-class {
+  transition: width 0.3s, height 0.3s;
+}
+</style>

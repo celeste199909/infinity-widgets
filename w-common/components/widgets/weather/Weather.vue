@@ -2,7 +2,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="bg-blue-500 text-white p-2 w-full h-full rounded-xl flex flex-col justify-center items-center gap-1"
+    class="bg-blue-500 text-white p-3 w-full h-full rounded-xl flex flex-col justify-center items-center gap-1"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -10,12 +10,13 @@
   >
     <div
       v-if="weatherInfo"
-      class="w-full flex flex-col justify-center items-center gap-3 cursor-pointer"
+      class="w-full h-full flex flex-col justify-center items-center"
     >
-      <div class="text-center">
-        {{ weatherInfo?.city }}
+      <div class="h-14 flex justify-center items-center text-center">
+        <img class="w-5 h-5" src="../../../assets/icons/location-48.png" />
+        <div>{{ weatherInfo?.city }}</div>
       </div>
-      <div class="w-24 h-24 flex justify-center items-center">
+      <div class="flex justify-center items-center overflow-hidden">
         <img
           class="w-full h-full block select-none"
           :src="getLocalImage(weatherPhenomenaMap.get(weatherInfo?.weather) as string)"
@@ -23,8 +24,11 @@
           srcset=""
         />
       </div>
-      <div class="text-center">
-        {{ weatherInfo?.weather }}
+      <div
+        class="flex-grow-0 h-14 flex flex-row justify-center items-center gap-2"
+      >
+        <div>{{ weatherInfo?.temperature }} ℃</div>
+        <div>{{ weatherInfo?.weather }}</div>
       </div>
     </div>
   </div>
@@ -40,25 +44,28 @@
     <!-- 展示天气 -->
     <div
       v-if="!showSelectDistrict"
-      class="flex flex-col justify-center items-center w-full h-full relative backdrop-blur-lg"
+      class="w-full h-full flex flex-col justify-center items-center"
     >
       <div
         v-if="weatherInfo"
-        class="w-full flex flex-col justify-center items-center gap-3 cursor-pointer"
+        class="w-full h-full flex flex-col justify-center items-center gap-3 "
       >
-        <div class="text-center" @click="handleShowSelectDistrict">
-          {{ weatherInfo?.city }}
+        <div
+          class="h-14 flex justify-center items-center text-center cursor-pointer"
+          @click="handleShowSelectDistrict"
+        >
+          <img class="w-5 h-5" src="../../../assets/icons/location-48.png" />
+          <div>{{ weatherInfo?.city }}</div>
         </div>
-        <div class="w-24 h-24 flex justify-center items-center select-none">
+        <div class="flex justify-center items-center overflow-hidden">
           <img
-            class="w-full h-full block"
+            class="w-full h-full block select-none"
             :src="getLocalImage(weatherPhenomenaMap.get(weatherInfo?.weather) as string)"
-            alt=""
-            srcset=""
           />
         </div>
-        <div class="text-center">
-          {{ weatherInfo?.weather }}
+        <div class="h-14 flex justify-center items-center text-center">
+          <div>{{ weatherInfo?.temperature }} ℃</div>
+          <div>{{ weatherInfo?.weather }}</div>
         </div>
       </div>
     </div>

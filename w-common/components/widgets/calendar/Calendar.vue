@@ -2,7 +2,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="rounded-xl bg-slate-100/90 backdrop-blur-sm flex justify-center items-center"
+    class="rounded-xl bg-blue-300 backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 // 组合函数
-import { useLayout } from "../../../win-widgets/composables/useLayout";
+import { useLayout } from "../../../../win-widgets/composables/useLayout";
 
 const { layout, nearestPosition } = useLayout();
 

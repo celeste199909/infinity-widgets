@@ -58,8 +58,13 @@ const addWidget = (widget) => {
   ipcRenderer.sendTo(widgetsWrapper.webContents.id, "addWidget", widget);
 }
 
+const removeAllWidgets = () => {
+  ipcRenderer.sendTo(widgetsWrapper.webContents.id, "removeAllWidgets");
+}
+
 preload.createWidgetsWrapper = createWidgetsWrapper;
 preload.removeWidgetsWrapper = removeWidgetsWrapper;
 preload.addWidget = addWidget;
+preload.removeAllWidgets = removeAllWidgets;
 
 window.preload = preload;

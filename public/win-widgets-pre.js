@@ -1,5 +1,6 @@
 const { ipcRenderer } = require("electron");
 
+require("./functions/getIcons.js");
 // 初始化窗口
 ipcRenderer.on("init", () => {
     console.log("init");
@@ -8,6 +9,14 @@ ipcRenderer.on("init", () => {
 ipcRenderer.on("addWidget", (e, widget) => {
     // 触发自定义事件，并传递参数
     const newCustomEvent = new CustomEvent('addWidgetEvent', {
+        detail: { key: widget },
+    });
+    document.dispatchEvent(newCustomEvent);
+});
+
+ipcRenderer.on("removeAllWidgets", (e, widget) => {
+    // 触发自定义事件，并传递参数
+    const newCustomEvent = new CustomEvent('removeAllWidgetsEvent', {
         detail: { key: widget },
     });
     document.dispatchEvent(newCustomEvent);
@@ -28,5 +37,7 @@ ipcRenderer.on("win-focus", () => {
     });
     document.dispatchEvent(newCustomEvent);
 });
+
+
 
 

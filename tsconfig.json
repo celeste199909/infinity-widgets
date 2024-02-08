@@ -14,16 +14,15 @@
     "baseUrl": "./",
     "paths": {
       "@/*": [
+        "./w-common/*",
         "./win-main/*",
         "./win-widgets/*",
-        "./w-common/*",
       ]
     },
     "noEmit": true,
     "types": ["utools-api-types"],
   },
   "include": [
-    "node_modules/@types/**/*.ts",
     "w-common/**/*.ts",
     "w-common/**/*.d.ts",
     "w-common/**/*.tsx",

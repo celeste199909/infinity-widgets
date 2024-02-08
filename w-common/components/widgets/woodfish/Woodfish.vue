@@ -10,9 +10,8 @@
   >
     <img
       src="../../../assets/images/muyu.png"
-      class="muyu h-full aspect-square"
-      alt=""
-      srcset=""
+      class="muyu w-20 h-20 aspect-square"
+      draggable="false"
       ref="muyu"
     />
   </div>
@@ -34,9 +33,8 @@
     </div>
     <img
       src="../../../assets/images/muyu.png"
-      class="muyu h-full aspect-square"
-      alt=""
-      srcset=""
+      class="muyu h-full aspect-square cursor-pointer"
+      draggable="false"
       ref="muyu"
     />
   </div>

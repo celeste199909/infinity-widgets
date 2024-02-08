@@ -17,7 +17,8 @@
       <Vue3DraggableResizable
         v-for="(item, index) in showWidgets"
         :key="item.id"
-        class="widgets select-none border-0"
+        :id="item.id"
+        class="widget select-none border-0"
         :class="item.draggable ? 'drag-mode' : ''"
         :initW="item.size.w"
         :initH="item.size.h"
@@ -37,9 +38,7 @@
         @drag-end="dragEndHandle"
         @mousedown="dragTarget = item"
       >
-        <Transition name="fade" mode="out-in" appear>
-          <WidgetComp :widgetData="item" :id="item.id" class="widget" />
-        </Transition>
+        <WidgetComp :widgetData="item" :id="'w-' + item.id" />
       </Vue3DraggableResizable>
       <!-- 下一个位置 -->
       <Vue3DraggableResizable
@@ -67,15 +66,20 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, Ref } from "vue";
+import { ref, onMounted, Ref, toValue } from "vue";
 import WidgetComp from "../w-common/components/WidgetComp.vue";
 import ContextMenu from "../w-common/components/ContextMenu.vue";
 // 组合函数
 import { useLayout } from "./composables/useLayout";
+import { watchDeep } from "@vueuse/core";
 
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
+const nanoid = customAlphabet(
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  16
+);
 import { Widget } from "../w-common/types/widget";
-const { layout, nearestPosition } = useLayout();
+const { layout, nearestPosition, getNearestEmptyPosition } = useLayout();
 
 function getWidgetLength(units: number) {
   const cellSize = layout.value.cellSize;
@@ -88,11 +92,11 @@ function getWidgetLength(units: number) {
 
 const allWidgets: Widget[] = [
   {
-    key: "starter",
-    name: "启动器",
+    key: "app-starter",
+    name: "应用启动器",
     position: {
-      x: 10,
-      y: 10,
+      x: 0,
+      y: 0,
     },
     size: {
       w: getWidgetLength(1),
@@ -114,8 +118,8 @@ const allWidgets: Widget[] = [
     key: "weather",
     name: "天气",
     position: {
-      x: 10,
-      y: 10,
+      x: 0,
+      y: 0,
     },
     size: {
       w: getWidgetLength(2),
@@ -164,12 +168,12 @@ const allWidgets: Widget[] = [
     key: "todo",
     name: "待办",
     position: {
-      x: 10,
-      y: 10,
+      x: 0,
+      y: 0,
     },
     size: {
       w: getWidgetLength(3),
-      h: getWidgetLength(2),
+      h: getWidgetLength(4),
     },
     currentStyle: "3x4",
     style: {
@@ -187,8 +191,8 @@ const allWidgets: Widget[] = [
     key: "woodfish",
     name: "电子木鱼",
     position: {
-      x: 10,
-      y: 10,
+      x: 0,
+      y: 0,
     },
     size: {
       w: getWidgetLength(2),
@@ -206,10 +210,34 @@ const allWidgets: Widget[] = [
       },
     },
   },
+  {
+    key: "paint-board",
+    name: "画板",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(1),
+      h: getWidgetLength(1),
+    },
+    currentStyle: "1x1",
+    style: {
+      "1x1": {
+        w: getWidgetLength(1),
+        h: getWidgetLength(1),
+      },
+    },
+  },
 ];
 
 const dragTarget: Ref<Widget | null> = ref(null);
-const showWidgets = ref<Widget[]>([]);
+const showWidgets = ref<Widget[]>(
+  utools.dbStorage.getItem("showWidgets") || []
+);
+watchDeep(showWidgets, () => {
+  saveWidgetData();
+});
 const onBulkEdit = ref(false);
 const nextPosistion: Ref<Widget> = ref({
   id: "next-position",
@@ -229,9 +257,11 @@ const nextPosistion: Ref<Widget> = ref({
 });
 
 onMounted(() => {
+  // 系统主题
   window.utools.isDarkColors()
     ? document.documentElement.classList.add("dark")
     : document.documentElement.classList.remove("dark");
+
   // 监听自定义事件
   document.addEventListener("addWidgetEvent", function (event: any) {
     console.log("添加小组件", event.detail.key);
@@ -239,20 +269,40 @@ onMounted(() => {
     const widgetName = eventDetail.key;
     addWidget(widgetName);
   });
+
   document.addEventListener("winBlurEvent", function (event: any) {
     console.log("失去焦点", event.detail.key);
     window.utools.isDarkColors()
-    ? document.documentElement.classList.add("dark")
-    : document.documentElement.classList.remove("dark");
+      ? document.documentElement.classList.add("dark")
+      : document.documentElement.classList.remove("dark");
   });
 
   document.addEventListener("winFocusEvent", function (event: any) {
     console.log("获得焦点", event.detail.key);
     window.utools.isDarkColors()
-    ? document.documentElement.classList.add("dark")
-    : document.documentElement.classList.remove("dark");
+      ? document.documentElement.classList.add("dark")
+      : document.documentElement.classList.remove("dark");
+  });
+
+  document.addEventListener("removeAllWidgetsEvent", function (event: any) {
+    console.log("删除所有小组件", event.detail.key);
+    showWidgets.value = [];
+    utools.dbStorage.setItem("showWidgets", []);
   });
 });
+
+// 保存widget数据
+function saveWidgetData() {
+  utools.dbStorage.setItem(
+    "showWidgets",
+    JSON.parse(JSON.stringify(toValue(showWidgets.value)))
+  );
+  console.log(
+    "%c [ showWidgets ]-266",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    utools.dbStorage.getItem("showWidgets")
+  );
+}
 
 // 修改widget数据
 function modifyWidgetData(widgetData: Widget) {
@@ -267,15 +317,20 @@ function modifyWidgetData(widgetData: Widget) {
 function addWidget(key: string) {
   const widget = allWidgets.find((item) => item.key === key);
   if (widget) {
+    const { x, y } = getNearestEmptyPosition(
+      toValue(showWidgets.value),
+      toValue(widget)
+    );
     showWidgets.value.push({
       id: nanoid(),
       key: widget.key,
       name: widget.name,
-      draggable: onBulkEdit.value ? true : false,
+      // draggable: onBulkEdit.value ? true : false,
+      draggable: true,
       resizable: false,
       position: {
-        x: widget.position.x,
-        y: widget.position.y,
+        x: x,
+        y: y,
       },
       size: {
         w: widget.size.w,
@@ -343,16 +398,19 @@ function dragEndHandle(payload: { x: number; y: number }) {
   transform: scale(1.1);
   opacity: 0.8;
 }
+
 .draggable {
   border: 0;
 }
 
-.widget {
+/* .widget {
   transition: width 0.3s, height 0.3s;
-}
+} */
+
 .active {
   border: 0;
 }
+
 .drag-mode {
   animation: shake 0.5s ease-in-out infinite;
 }
@@ -361,9 +419,11 @@ function dragEndHandle(payload: { x: number; y: number }) {
   0% {
     transform: translateX(-1px);
   }
+
   50% {
     transform: translateX(1px);
   }
+
   100% {
     transform: translateX(-1px);
   }

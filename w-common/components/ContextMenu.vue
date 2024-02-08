@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isShowContextMenu"
-    class="absolute w-40 p-3 select-none text-white font-bold bg-slate-700 rounded-md flex flex-col gap-y-1 z-10"
+    class="absolute w-40 p-3 select-none text-white bg-slate-700 rounded-md flex flex-col gap-y-1 z-10"
     :style="{
       left: contextMenuPosition.x - 5 + 'px',
       top: contextMenuPosition.y - 5 + 'px',
@@ -39,7 +39,9 @@
       {{ onBulkEdit ? "退出批量编辑" : "进入批量编辑" }}
     </div>
     <!-- 添加新组件 -->
-    <div class="cursor-pointer hover:bg-slate-500 p-2 rounded-xl">
+    <div class="cursor-pointer hover:bg-slate-500 p-2 rounded-xl"
+    @click="handleAddWidget"
+    >
       添加新组件
     </div>
     <!-- 删除组件 -->
@@ -107,9 +109,12 @@ onMounted(() => {
       return false;
     });
 
+
+    console.log('%c [ contextmenu widget ]-113', 'font-size:13px; background:pink; color:#bf2c9f;', widget)
+
     if (widget instanceof HTMLElement) {
       const widgetId = widget.id; // 这里可以安全地访问 id 属性
-      console.log(widgetId);
+      // console.log(widgetId);
       clickTargetId.value = widgetId;
     }
   });
@@ -146,6 +151,12 @@ function changeStyle(key: string) {
     widgetData.size.h = widgetData.style[key].h;
     props.modifyWidgetData(widgetData);
   }
+}
+
+function handleAddWidget() {
+  // window.utools.showMainWindow();
+  window.utools.redirect('无限小组件', '无限小组件')
+  isShowContextMenu.value = false;
 }
 </script>
 <style scoped></style>

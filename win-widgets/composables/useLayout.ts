@@ -1,4 +1,5 @@
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
+import { Widget } from "@/types/widget";
 
 // 按照惯例，组合式函数名以“use”开头
 export function useLayout() {
@@ -47,16 +48,9 @@ export function useLayout() {
     function nearestPosition(pixelX: number, pixelY: number) {
         // 获取当前格子的上下边的y坐标
         let topY = Math.floor(pixelY / (cellSize + gap)) * (cellSize + gap) + gap;
-        // if (Math.floor(pixelY / (cellSize + gap)) === 0) {
-        //     console.log('%c [ === 0 ]-50', 'font-size:13px; background:pink; color:#bf2c9f;',)
-        //     topY = gap;
-        // }
         const bottomY = topY + (cellSize + gap);
         // 获取当前格子的左右边的x坐标
         let leftX = Math.floor(pixelX / (cellSize + gap)) * (cellSize + gap) + gap;
-        // if (Math.floor(pixelX / (cellSize + gap)) === 0) {
-        //     leftX = gap;
-        // }
         const rightX = leftX + (cellSize + gap);
         // 获取当前格子的四个顶点坐标
         const topLeft = { x: leftX, y: topY };
@@ -76,9 +70,91 @@ export function useLayout() {
         ];
     }
 
+    // 输入坐标，获取在grid中的坐标
+    function getGridPosition(x: number, y: number) {
+        const { cellSize, gap } = layout.value;
+        return {
+            x: Math.floor(x / (cellSize + gap)),
+            y: Math.floor(y / (cellSize + gap)),
+        };
+    }
+
+    // 输入长度，获取在grid中的长度
+    function getGridLength(length: number) {
+        const { cellSize, gap } = layout.value;
+        return Math.floor(length / (cellSize + gap)) + 1; //+1 , 权宜之计
+    }
+
+    // 输入 grid 中的坐标，获取像素坐标
+    function getPixelPosition(x: number, y: number) {
+        const { cellSize, gap } = layout.value;
+        return {
+            x: x * (cellSize + gap) + gap,
+            y: y * (cellSize + gap) + gap,
+        };
+    }
+
+    // 获取当前最近可放置的格子的坐标，参数：1 所有已放置的组件数据, 2 要放置的组件数据
+    function getNearestEmptyPosition(showWidgets: Widget[], putWidget: Widget) {
+        const { cols, rows, gap, cellSize } = layout.value;
+        // 初始化一个二维数组，用于记录每个格子是否被占用
+        const grid = Array.from({ length: rows }, () =>
+            Array.from({ length: cols }, () => 0)
+        );
+        // 遍历所有已放置的组件，将占用的格子标记为1
+        showWidgets.forEach((widget) => {
+            const { x, y } = getGridPosition(widget.position.x, widget.position.y);
+            for (let i = y; i < y + getGridLength(widget.size.h); i++) {
+                for (let j = x; j < x + getGridLength(widget.size.w); j++) {
+                    grid[i][j] = 1;
+                }
+            }
+        });
+        console.log('%c [ grid ]-105', 'font-size:13px; background:pink; color:#bf2c9f;', grid)
+        // 遍历所有格子，找到最近可放置的格子
+        const w = getGridLength(putWidget.size.w);
+        const h = getGridLength(putWidget.size.h);
+        let x = 0;
+        let y = 0;
+        for (let i = 0; i < rows - h; i++) {
+            for (let j = 0; j < cols - w; j++) {
+                let flag = true;
+                for (let m = i; m < i + h; m++) {
+                    for (let n = j; n < j + w; n++) {
+                        if (grid[m][n] === 1) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        break;
+                    }
+                }
+                if (flag) {
+                    x = j;
+                    y = i;
+                    break;
+                }
+            }
+            if (x || y) {
+                break;
+            }
+        }
+        // x y 都 +1 , 权宜之计
+        // return {
+        //     x: getPixelPosition(x + 1, y + 1).x,
+        //     y: getPixelPosition(x + 1, y + 1).y,
+        // };
+        return {
+            x: getPixelPosition(x, y).x,
+            y: getPixelPosition(x, y).y,
+        };
+    }
+
     // 通过返回值暴露所管理的状态
     return {
         layout,
         nearestPosition,
+        getNearestEmptyPosition
     };
 }
