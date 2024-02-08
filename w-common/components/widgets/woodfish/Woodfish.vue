@@ -48,11 +48,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  disabledFn: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
 });
 
 const muyu = ref<HTMLElement | null>(null);

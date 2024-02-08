@@ -2,7 +2,6 @@
     <component
       :is="widgets.get(widgetData.key)"
       :widgetData="widgetData"
-      :disabledFn="disabledFn"
       class="transition-class rounded-xl overflow-hidden select-none"
     />
 </template>
@@ -23,11 +22,6 @@ const props = defineProps({
   widgetData: {
     type: Object,
     required: true,
-  },
-  disabledFn: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
 });
 

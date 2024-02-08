@@ -29,11 +29,6 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    disabledFn: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
 });
 
 const isShowAppList = ref(false);

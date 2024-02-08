@@ -4,10 +4,11 @@
     <div v-for="item in allWidgets" :key="item.key"
       class="flex flex-grow-0 flex-shrink-0 flex-col items-center gap-2 p-2">
       <div class="card rounded-xl w-full overflow-hidden relative">
-        <div class="add absolute right-1 top-1 z-10 cursor-pointer" @click="addWidget(item.key)">
-          <img src="../../w-common/assets/icons/add-100.png" class="w-8 h-8">
+        <!-- 添加按钮 -->
+        <div class="add absolute right-2 top-2 z-10 cursor-pointer" @click="addWidget(item.key)">
+          <img src="../../w-common/assets/icons/add-100.png" class="w-7 h-7">
         </div>
-        <WidgetComp :widgetName="item.key" :widgetData="item" :id="item.key" :disabledFn="true" />
+        <WidgetComp :widgetName="item.key" :widgetData="item" :id="item.key" />
       </div>
       <div class="text-slate-700 dark:text-slate-100 font-bold text-center">
         {{ item.name }}
@@ -172,10 +173,22 @@ onMounted(() => {
 
 .add {
   display: none;
+  opacity: 0.8;
 }
 
 .card:hover .add {
   display: block;
+  animation: add-btn-fade-in 0.5s;
+}
+
+@keyframes add-btn-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.8;
+  }
 }
 </style>
   
