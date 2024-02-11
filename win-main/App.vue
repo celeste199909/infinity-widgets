@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-screen h-screen flex flex-row justify-center dark:text-slate-100 overflow-hidden"
+    class="w-screen h-screen flex flex-row justify-center bg-gradient-to-br bg-white dark:text-slate-100 overflow-hidden"
   >
     <!-- 左侧导航栏 -->
     <div

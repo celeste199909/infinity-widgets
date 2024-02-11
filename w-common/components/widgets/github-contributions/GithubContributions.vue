@@ -3,7 +3,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="rounded-xl bg-blue-400 backdrop-blur-sm flex justify-center items-center"
+    class="rounded-xl bg-black  backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -12,7 +12,7 @@
     <img
       class="w-14 h-14"
       draggable="false"
-      src="../../../assets/icons/paint-palette-96.png"
+      src="../../../assets/icons/github-96-white.png"
     />
   </div>
   <!-- 有样式 -->
@@ -37,7 +37,7 @@
       </div>
       <!-- 星期 -->
       <div
-        class="absolute -left-4 top-0 text-[12px] flex flex-col h-full justify-evenly"
+        class="absolute -left-4 top-1 text-[10px] flex flex-col h-full py-[6px] justify-evenly"
       >
         <div>一</div>
         <div>三</div>

@@ -1,32 +1,72 @@
 <template>
-  <div id="widgets-wrapper"
-    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative" :style="{
+  <div
+    id="widgets-wrapper"
+    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative"
+    :style="{
       padding: `${layout.padding}px`,
       paddingBottom: `${layout.padding + layout.extraPaddingBottom}px`,
-    }">
-    <DraggableContainer :disabled="true" :style="{
-      width: `${layout.gridWidth}px`,
-      height: `${layout.gridHeight}px`,
-    }">
-      <Vue3DraggableResizable v-for="(item, index) in showWidgets" :key="item.id" :id="item.id"
-        class="widget select-none border-0" :class="item.draggable ? 'drag-mode' : ''" :initW="item.size.w"
-        :initH="item.size.h" v-model:x="item.position.x" v-model:y="item.position.y" v-model:w="item.size.w"
-        v-model:h="item.size.h" :lockAspectRatio="true" :draggable="item.draggable" :resizable="false" :active="true"
-        :parent="true" classNameDragging="dragging" classNameDraggable="draggable" @drag-start="dragStartHandle"
-        @dragging="draggingHandle" @drag-end="dragEndHandle" @mousedown="handleMouseDown(item, $event)">
-        <WidgetComp :widgetData="item" :id="'w-' + item.id" :modifyWidgetData="modifyWidgetData" />
+    }"
+  >
+    <DraggableContainer
+      :disabled="true"
+      :style="{
+        width: `${layout.gridWidth}px`,
+        height: `${layout.gridHeight}px`,
+      }"
+    >
+      <Vue3DraggableResizable
+        v-for="(item, index) in showWidgets"
+        :key="item.id"
+        :id="item.id"
+        class="widget select-none border-0"
+        :class="item.draggable ? 'drag-mode' : ''"
+        :initW="item.size.w"
+        :initH="item.size.h"
+        v-model:x="item.position.x"
+        v-model:y="item.position.y"
+        v-model:w="item.size.w"
+        v-model:h="item.size.h"
+        :lockAspectRatio="true"
+        :draggable="item.draggable"
+        :resizable="false"
+        :active="true"
+        :parent="true"
+        classNameDragging="dragging"
+        classNameDraggable="draggable"
+        @drag-start="dragStartHandle"
+        @dragging="draggingHandle"
+        @drag-end="dragEndHandle"
+        @mousedown="handleMouseDown(item, $event)"
+      >
+        <WidgetComp
+          :widgetData="item"
+          :id="'w-' + item.id"
+          :modifyWidgetData="modifyWidgetData"
+        />
       </Vue3DraggableResizable>
       <!-- 下一个位置 -->
-      <Vue3DraggableResizable v-if="dragTarget?.draggable === true"
-        class="next-position bg-blue-300/60 backdrop-blur-sm -z-10 rounded-xl" :initW="nextPosistion.size.w"
-        :initH="nextPosistion.size.h" v-model:x="nextPosistion.position.x" v-model:y="nextPosistion.position.y"
-        v-model:w="nextPosistion.size.w" v-model:h="nextPosistion.size.h" classNameDragging="next-dragging"
-        classNameDraggable="next-draggable">
+      <Vue3DraggableResizable
+        v-if="dragTarget?.draggable === true"
+        class="next-position bg-blue-300/60 backdrop-blur-sm -z-10 rounded-xl"
+        :initW="nextPosistion.size.w"
+        :initH="nextPosistion.size.h"
+        v-model:x="nextPosistion.position.x"
+        v-model:y="nextPosistion.position.y"
+        v-model:w="nextPosistion.size.w"
+        v-model:h="nextPosistion.size.h"
+        classNameDragging="next-dragging"
+        classNameDraggable="next-draggable"
+      >
       </Vue3DraggableResizable>
     </DraggableContainer>
     <!-- 右键菜单 -->
-    <ContextMenu :showWidgets="showWidgets" :onBulkEdit="onBulkEdit" :modifyWidgetData="modifyWidgetData"
-      :removeWidget="removeWidget" :bulkEdit="bulkEdit" />
+    <ContextMenu
+      :showWidgets="showWidgets"
+      :onBulkEdit="onBulkEdit"
+      :modifyWidgetData="modifyWidgetData"
+      :removeWidget="removeWidget"
+      :bulkEdit="bulkEdit"
+    />
   </div>
 </template>
 <script lang="ts" setup>
@@ -149,7 +189,7 @@ const allWidgets: Widget[] = [
   },
   {
     key: "todo",
-    name: "待办",
+    name: "To do",
     position: {
       x: 0,
       y: 0,
@@ -166,6 +206,14 @@ const allWidgets: Widget[] = [
       },
       "3x5": {
         w: getWidgetLength(3),
+        h: getWidgetLength(5),
+      },
+      "4x4": {
+        w: getWidgetLength(4),
+        h: getWidgetLength(4),
+      },
+      "4x5": {
+        w: getWidgetLength(4),
         h: getWidgetLength(5),
       },
     },
@@ -346,8 +394,6 @@ function bulkEdit() {
 }
 
 function handleMouseDown(item: Widget, event: MouseEvent) {
-  event.preventDefault();
-  event.stopPropagation();
   dragTarget.value = item;
 }
 

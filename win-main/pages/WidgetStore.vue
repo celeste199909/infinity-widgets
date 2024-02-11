@@ -75,7 +75,7 @@ const widgetsList = [
   },
   {
     key: "todo",
-    name: "待办",
+    name: "To Do",
     position: {
       x: 0,
       y: 0,

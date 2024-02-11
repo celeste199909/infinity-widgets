@@ -137,6 +137,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  modifyWidgetData: {
+    type: Function,
+    required: false,
+  },
 });
 
 onMounted(() => {
