@@ -1,18 +1,16 @@
 <template>
-    <component
-      :is="widgets.get(widgetData.key)"
-      :widgetData="widgetData"
-      class="transition-class rounded-xl overflow-hidden select-none"
-    />
+  <component :is="widgets.get(widgetData.key)" :widgetData="widgetData" :modifyWidgetData="modifyWidgetData" :id="'w-' + widgetData.id"
+    class="transition-class rounded-xl overflow-hidden select-none" />
 </template>
 
 <script setup lang="ts">
 import Calendar from "./widgets/calendar/Calendar.vue";
-import AppStarter from "./widgets/app-starter/AppStarter.vue"; 
+import AppStarter from "./widgets/app-starter/AppStarter.vue";
 import Todo from "./widgets/todo/Todo.vue";
 import Weather from "./widgets/weather/Weather.vue";
 import Woodfish from "./widgets/woodfish/Woodfish.vue";
 import PaintBoard from "./widgets/paint-board/PaintBoard.vue";
+import GithubContributions from "./widgets/github-contributions/GithubContributions.vue";
 
 import { gsap } from "gsap";
 
@@ -22,6 +20,10 @@ const props = defineProps({
   widgetData: {
     type: Object,
     required: true,
+  },
+  modifyWidgetData: {
+    type: Function,
+    required: false,
   },
 });
 
@@ -34,10 +36,11 @@ const widgets = new Map([
   ["weather", Weather],
   ["woodfish", Woodfish],
   ["paint-board", PaintBoard],
+  ["github-contributions", GithubContributions],
 ]);
 
 onMounted(() => {
-  const widget = document.getElementById('w-'+widgetId);
+  const widget = document.getElementById('w-' + widgetId);
   if (widget) {
     gsap.from(`#w-${widgetId}`, {
       duration: 0.3,

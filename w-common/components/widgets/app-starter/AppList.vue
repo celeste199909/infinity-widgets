@@ -1,6 +1,6 @@
 <template>
     <Teleport to="body">
-        <CustomWindow :name="'应用启动器'" :winId="'custom-win-' + widgetData.id" :width="800" :height="600"
+        <CustomWindow :name="'应用启动器'" :winId="'custom-win-' + widgetData.id" :width="1000" :height="700"
             :closeFunction="handleClose">
             <div :id="'app-list-' + widgetData.id" class="apps-wrapper p-3 pt-12 w-full h-full overflow-hidden">
                 <div class="w-full h-full flex flex-row flex-wrap content-start justify-center overflow-y-scroll">

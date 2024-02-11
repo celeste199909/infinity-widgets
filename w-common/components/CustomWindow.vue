@@ -49,11 +49,11 @@ const props = defineProps({
     },
     width: {
         type: Number,
-        default: 800,
+        default: 1000,
     },
     height: {
         type: Number,
-        default: 600,
+        default: 700,
     },
     closeFunction: {
         type: Function,

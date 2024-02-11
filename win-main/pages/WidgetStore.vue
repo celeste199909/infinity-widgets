@@ -26,6 +26,18 @@ const { layout, nearestPosition } = useLayout();
 
 const widgetsList = [
   {
+    key: "github-contributions",
+    name: "GitHub贡献图",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+  },
+  {
     key: "app-starter",
     name: "应用启动器",
     position: {

@@ -1,68 +1,32 @@
 <template>
-  <div
-    id="widgets-wrapper"
-    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative"
-    :style="{
+  <div id="widgets-wrapper"
+    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative" :style="{
       padding: `${layout.padding}px`,
       paddingBottom: `${layout.padding + layout.extraPaddingBottom}px`,
-    }"
-  >
-    <DraggableContainer
-      :disabled="true"
-      :style="{
-        width: `${layout.gridWidth}px`,
-        height: `${layout.gridHeight}px`,
-      }"
-    >
-      <Vue3DraggableResizable
-        v-for="(item, index) in showWidgets"
-        :key="item.id"
-        :id="item.id"
-        class="widget select-none border-0"
-        :class="item.draggable ? 'drag-mode' : ''"
-        :initW="item.size.w"
-        :initH="item.size.h"
-        v-model:x="item.position.x"
-        v-model:y="item.position.y"
-        v-model:w="item.size.w"
-        v-model:h="item.size.h"
-        :lockAspectRatio="true"
-        :draggable="item.draggable"
-        :resizable="false"
-        :active="true"
-        :parent="true"
-        classNameDragging="dragging"
-        classNameDraggable="draggable"
-        @drag-start="dragStartHandle"
-        @dragging="draggingHandle"
-        @drag-end="dragEndHandle"
-        @mousedown="dragTarget = item"
-      >
-        <WidgetComp :widgetData="item" :id="'w-' + item.id" />
+    }">
+    <DraggableContainer :disabled="true" :style="{
+      width: `${layout.gridWidth}px`,
+      height: `${layout.gridHeight}px`,
+    }">
+      <Vue3DraggableResizable v-for="(item, index) in showWidgets" :key="item.id" :id="item.id"
+        class="widget select-none border-0" :class="item.draggable ? 'drag-mode' : ''" :initW="item.size.w"
+        :initH="item.size.h" v-model:x="item.position.x" v-model:y="item.position.y" v-model:w="item.size.w"
+        v-model:h="item.size.h" :lockAspectRatio="true" :draggable="item.draggable" :resizable="false" :active="true"
+        :parent="true" classNameDragging="dragging" classNameDraggable="draggable" @drag-start="dragStartHandle"
+        @dragging="draggingHandle" @drag-end="dragEndHandle" @mousedown="handleMouseDown(item, $event)">
+        <WidgetComp :widgetData="item" :id="'w-' + item.id" :modifyWidgetData="modifyWidgetData" />
       </Vue3DraggableResizable>
       <!-- 下一个位置 -->
-      <Vue3DraggableResizable
-        v-if="dragTarget?.draggable === true"
-        class="next-position bg-blue-300/60 backdrop-blur-sm -z-10 rounded-xl"
-        :initW="nextPosistion.size.w"
-        :initH="nextPosistion.size.h"
-        v-model:x="nextPosistion.position.x"
-        v-model:y="nextPosistion.position.y"
-        v-model:w="nextPosistion.size.w"
-        v-model:h="nextPosistion.size.h"
-        classNameDragging="next-dragging"
-        classNameDraggable="next-draggable"
-      >
+      <Vue3DraggableResizable v-if="dragTarget?.draggable === true"
+        class="next-position bg-blue-300/60 backdrop-blur-sm -z-10 rounded-xl" :initW="nextPosistion.size.w"
+        :initH="nextPosistion.size.h" v-model:x="nextPosistion.position.x" v-model:y="nextPosistion.position.y"
+        v-model:w="nextPosistion.size.w" v-model:h="nextPosistion.size.h" classNameDragging="next-dragging"
+        classNameDraggable="next-draggable">
       </Vue3DraggableResizable>
     </DraggableContainer>
     <!-- 右键菜单 -->
-    <ContextMenu
-      :showWidgets="showWidgets"
-      :onBulkEdit="onBulkEdit"
-      :modifyWidgetData="modifyWidgetData"
-      :removeWidget="removeWidget"
-      :bulkEdit="bulkEdit"
-    />
+    <ContextMenu :showWidgets="showWidgets" :onBulkEdit="onBulkEdit" :modifyWidgetData="modifyWidgetData"
+      :removeWidget="removeWidget" :bulkEdit="bulkEdit" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -91,6 +55,25 @@ function getWidgetLength(units: number) {
 }
 
 const allWidgets: Widget[] = [
+  {
+    key: "github-contributions",
+    name: "GitHub贡献图",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(10),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "10x2",
+    style: {
+      "10x2": {
+        w: getWidgetLength(10),
+        h: getWidgetLength(2),
+      },
+    },
+  },
   {
     key: "app-starter",
     name: "应用启动器",
@@ -297,11 +280,11 @@ function saveWidgetData() {
     "showWidgets",
     JSON.parse(JSON.stringify(toValue(showWidgets.value)))
   );
-  console.log(
-    "%c [ showWidgets ]-266",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    utools.dbStorage.getItem("showWidgets")
-  );
+  // console.log(
+  //   "%c [ showWidgets ]-266",
+  //   "font-size:13px; background:pink; color:#bf2c9f;",
+  //   utools.dbStorage.getItem("showWidgets")
+  // );
 }
 
 // 修改widget数据
@@ -326,6 +309,7 @@ function addWidget(key: string) {
       key: widget.key,
       name: widget.name,
       // draggable: onBulkEdit.value ? true : false,
+      isDragging: false,
       draggable: true,
       resizable: false,
       position: {
@@ -361,10 +345,23 @@ function bulkEdit() {
   }
 }
 
+function handleMouseDown(item: Widget, event: MouseEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+  dragTarget.value = item;
+}
+
 function dragStartHandle(payload: { x: number; y: number }) {
   if (dragTarget.value) {
     nextPosistion.value.size.w = dragTarget.value?.size.w;
     nextPosistion.value.size.h = dragTarget.value?.size.h;
+
+    // 设置 isDragging
+    // showWidgets.value.forEach((item) => {
+    //   if (item.id === dragTarget.value?.id) {
+    //     item.isDragging = true;
+    //   }
+    // });
   }
   nextPosistion.value.position.x = nearestPosition(payload.x, payload.y).x;
   nextPosistion.value.position.y = nearestPosition(payload.x, payload.y).y;
@@ -387,6 +384,9 @@ function dragEndHandle(payload: { x: number; y: number }) {
     if (item.id === dragTargetId) {
       item.position.x = nextPosistion.value.position.x;
       item.position.y = nextPosistion.value.position.y;
+
+      // 设置 isDragging
+      // item.isDragging = false;
     }
   });
   dragTarget.value = null;

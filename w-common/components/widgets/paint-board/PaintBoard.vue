@@ -1,3 +1,4 @@
+<!-- PaintBoard.vue -->
 <template>
     <!-- 无样式 -->
     <div v-if="!widgetData.style" class="rounded-xl bg-blue-400 backdrop-blur-sm flex justify-center items-center" :style="{
@@ -7,29 +8,55 @@
         <img class="w-14 h-14" draggable="false" src="../../../assets/icons/paint-palette-96.png" />
     </div>
     <!-- 有样式 -->
-    <div v-else class="rounded-xl bg-blue-500 backdrop-blur-sm flex justify-center items-center" :style="{
+    <div v-else ref="paintBoard" class="rounded-xl bg-blue-500 backdrop-blur-sm flex justify-center items-center" :style="{
         width: widgetData.style[widgetData.currentStyle].w + 'px',
         height: widgetData.style[widgetData.currentStyle].h + 'px',
-    }" @click="handleCilck">
+    }" 
+    @mousedown="handleMouseDown"
+    @mouseup="handleMouseUp"
+    >
         <img class="w-14 h-14" draggable="false" src="../../../assets/icons/paint-palette-96.png" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
-// 组合函数
-function handleCilck() {
-    // 打开"必应" 并搜索 "uTools"
-    utools.ubrowser
-        .goto("https://songlh.top/paint-board/")
-        .run({ width: 1000, height: 600 });
-}
+import { defineProps, ref } from "vue";
+
 const props = defineProps({
     widgetData: {
         type: Object,
         required: true,
     },
+    modifyWidgetData: {
+        type: Function,
+        required: false,
+    },
 });
+
+const paintBoard = ref(null);
+
+// function handleCilck(event: MouseEvent) {
+//     utools.ubrowser
+//         .goto("https://songlh.top/paint-board/")
+//         .run({ width: 1000, height: 700 });
+// }
+const originPosition = ref({ x: 0, y: 0 });
+function handleMouseDown(event: MouseEvent) {
+    console.log('%c [ isDragging ]-34', 'font-size:13px; background:pink; color:#bf2c9f;', props.widgetData.isDragging)
+    originPosition.value = { x: event.clientX, y: event.clientY };
+}
+
+function handleMouseUp(event: MouseEvent) {
+    console.log('%c [ isDragging ]-34', 'font-size:13px; background:pink; color:#bf2c9f;', props.widgetData.isDragging)
+    const { x, y } = originPosition.value;
+    const offsetX = event.clientX - x;
+    const offsetY = event.clientY - y;
+    if (offsetX === 0 && offsetY === 0) {
+        utools.ubrowser
+            .goto("https://songlh.top/paint-board/")
+            .run({ width: 1000, height: 600 });
+    }
+}
 </script>
 <style scoped>
 .widget:hover {

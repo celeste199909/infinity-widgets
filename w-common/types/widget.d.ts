@@ -2,6 +2,7 @@ export interface Widget {
     id?: string;
     key: string;
     name: string;
+    isDragging?: boolean;
     draggable?: boolean;
     resizable?: boolean;
     position: {
