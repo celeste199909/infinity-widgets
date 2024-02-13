@@ -1,12 +1,20 @@
 <template>
   <!-- 小组件列表 -->
-  <div class="w-full h-full select-none flex-1 p-2 overflow-y-scroll flex flex-row flex-wrap content-start gap-2">
-    <div v-for="item in allWidgets" :key="item.key"
-      class="flex flex-grow-0 flex-shrink-0 flex-col items-center gap-2 p-2">
+  <div
+    class="w-full h-full select-none flex-1 p-2 overflow-y-scroll flex flex-row flex-wrap content-start gap-2"
+  >
+    <div
+      v-for="item in allWidgets"
+      :key="item.key"
+      class="flex flex-grow-0 flex-shrink-0 flex-col items-center gap-2 p-2"
+    >
       <div class="card rounded-xl w-full overflow-hidden relative">
         <!-- 添加按钮 -->
-        <div class="add absolute right-2 top-2 z-10 cursor-pointer" @click="addWidget(item.key)">
-          <img src="../../w-common/assets/icons/add-100.png" class="w-7 h-7">
+        <div
+          class="add absolute right-2 top-2 z-10 cursor-pointer"
+          @click="addWidget(item.key)"
+        >
+          <img src="../../w-common/assets/icons/add-100.png" class="w-7 h-7" />
         </div>
         <WidgetComp :widgetName="item.key" :widgetData="item" :id="item.key" />
       </div>
@@ -26,6 +34,54 @@ const { layout, nearestPosition } = useLayout();
 
 const widgetsList = [
   {
+    key: "juejin-hot",
+    name: "掘金热榜",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+  },
+  {
+    key: "hot-search",
+    name: "热搜",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+  },
+  {
+    key: "alarm",
+    name: "闹钟",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+  },
+  {
+    key: "countdown",
+    name: "倒计时",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+  },
+  {
     key: "github-contributions",
     name: "GitHub贡献图",
     position: {
@@ -33,7 +89,7 @@ const widgetsList = [
       y: 0,
     },
     size: {
-      w: getWidgetLength(2),
+      w: getWidgetLength(3),
       h: getWidgetLength(2),
     },
   },
@@ -85,30 +141,6 @@ const widgetsList = [
       h: getWidgetLength(2),
     },
   },
-  {
-    key: "woodfish",
-    name: "电子木鱼",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(2),
-      h: getWidgetLength(2),
-    },
-  },
-  {
-    key: "paint-board",
-    name: "画板",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(2),
-      h: getWidgetLength(2),
-    },
-  }
 ];
 
 function getWidgetLength(units: number) {
@@ -131,7 +163,6 @@ onMounted(() => {
     ? document.documentElement.classList.add("dark")
     : document.documentElement.classList.remove("dark");
 });
-
 </script>
 <style scoped>
 .ghost {
@@ -155,9 +186,11 @@ onMounted(() => {
   right: -100%;
   width: 200%;
   height: 20%;
-  background: linear-gradient(transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent);
+  background: linear-gradient(
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   z-index: 1;
   transform: rotate(30deg) translateY(0);
   transform-origin: top right;
@@ -203,4 +236,3 @@ onMounted(() => {
   }
 }
 </style>
-  

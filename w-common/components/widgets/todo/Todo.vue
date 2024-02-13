@@ -2,7 +2,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="rounded-xl bg-fuchsia-200 backdrop-blur-sm flex justify-center items-center"
+    class="rounded-xl bg-fuchsia-100 backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -18,7 +18,7 @@
   <!-- 有样式 -->
   <div
     v-else
-    class="rounded-xl w-full h-full px-2 pb-2 pb-4 bg-gradient-to-br from-cyan-50 to-slate-50 backdrop-blur-sm flex flex-col justify-start items-center relative"
+    class="rounded-xl w-full h-full px-2 pb-2 pb-4 bg-gradient-to-br from-cyan-100 to-slate-100 backdrop-blur-sm flex flex-col justify-start items-center relative"
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',
@@ -63,7 +63,7 @@
       <input
         v-model="newTodo"
         @keyup.enter="addTodo"
-        class="px-3 w-full text-slate-500 h-12 outline-none py-2 border rounded-lg flex-1 border-slate-100 focus:border-slate-200"
+        class="px-3 w-full bg-white text-slate-500 h-12 outline-none py-2 border rounded-lg flex-1 border-slate-100 focus:border-slate-200"
         type="text"
         placeholder="添加"
       />

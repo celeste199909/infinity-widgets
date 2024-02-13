@@ -96,6 +96,98 @@ function getWidgetLength(units: number) {
 
 const allWidgets: Widget[] = [
   {
+    key: "juejin-hot",
+    name: "掘金热榜",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "2x2",
+    style: {
+      "2x2": {
+        w: getWidgetLength(2),
+        h: getWidgetLength(2),
+      },
+      "3x2": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(2),
+      },
+      "3x3": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(3),
+      },
+    },
+  },
+  {
+    key: "hot-search",
+    name: "热搜",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "2x2",
+    style: {
+      "2x2": {
+        w: getWidgetLength(2),
+        h: getWidgetLength(2),
+      },
+      "3x2": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(2),
+      },
+      "3x3": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(3),
+      },
+    },
+  },
+  {
+    key: "alarm",
+    name: "闹钟",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(3),
+      h: getWidgetLength(3),
+    },
+    currentStyle: "3x3",
+    style: {
+      "3x3": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(3),
+      },
+    },
+  },
+  {
+    key: "countdown",
+    name: "倒计时",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(3),
+      h: getWidgetLength(3),
+    },
+    currentStyle: "3x3",
+    style: {
+      "3x3": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(3),
+      },
+    },
+  },
+  {
     key: "github-contributions",
     name: "GitHub贡献图",
     position: {
@@ -103,13 +195,13 @@ const allWidgets: Widget[] = [
       y: 0,
     },
     size: {
-      w: getWidgetLength(10),
+      w: getWidgetLength(9),
       h: getWidgetLength(2),
     },
-    currentStyle: "10x2",
+    currentStyle: "9x2",
     style: {
-      "10x2": {
-        w: getWidgetLength(10),
+      "9x2": {
+        w: getWidgetLength(9),
         h: getWidgetLength(2),
       },
     },
