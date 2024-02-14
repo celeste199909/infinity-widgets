@@ -20,4 +20,5 @@ export interface Widget {
             h: number;
         };
     };
+    data?: any; // 每个组件产生的不同数据
 }

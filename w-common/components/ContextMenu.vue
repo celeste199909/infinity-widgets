@@ -39,11 +39,11 @@
       {{ onBulkEdit ? "退出批量编辑" : "进入批量编辑" }}
     </div>
     <!-- 添加新组件 -->
-    <div class="cursor-pointer hover:bg-slate-500 p-2 rounded-xl"
+    <!-- <div class="cursor-pointer hover:bg-slate-500 p-2 rounded-xl"
     @click="handleAddWidget"
     >
       添加新组件
-    </div>
+    </div> -->
     <!-- 删除组件 -->
     <div
       class="text-red-500 cursor-pointer hover:bg-slate-500 p-2 rounded-xl"

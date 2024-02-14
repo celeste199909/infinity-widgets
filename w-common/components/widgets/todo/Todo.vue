@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { defineProps, ref,computed } from "vue";
 
 const props = defineProps({
   widgetData: {
@@ -98,8 +98,12 @@ interface Todo {
 
 const newTodo = ref("");
 const todos = ref<Todo[]>([]);
+const isOnEdit = computed(() => {
+  return props.widgetData.draggable;
+});
 
 function addTodo() {
+  if(isOnEdit.value) return;
   if (newTodo.value.trim() !== "") {
     todos.value.push({ text: newTodo.value, completed: false });
     newTodo.value = "";
@@ -107,6 +111,7 @@ function addTodo() {
 }
 
 function deleteTodo(index: number) {
+  if(isOnEdit.value) return;
   todos.value.splice(index, 1);
 }
 </script>

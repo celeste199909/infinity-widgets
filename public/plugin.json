@@ -13,7 +13,7 @@
   "features": [
     {
       "code": "widgets-wrapper",
-      "explain": "infinity-widgets-wrapper",
+      "explain": "打开小组件商店",
       "icon": "logo.png",
       "platform": ["win32", "darwin", "linux"],
       "cmds": ["无限小组件"]

@@ -70,7 +70,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, Ref, toValue } from "vue";
+import { ref, onMounted, Ref, toValue, computed } from "vue";
 import WidgetComp from "../w-common/components/WidgetComp.vue";
 import ContextMenu from "../w-common/components/ContextMenu.vue";
 // 组合函数
@@ -121,6 +121,7 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(3),
       },
     },
+    data: {},
   },
   {
     key: "hot-search",
@@ -148,6 +149,7 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(3),
       },
     },
+    data: {},
   },
   {
     key: "alarm",
@@ -167,6 +169,7 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(3),
       },
     },
+    data: {},
   },
   {
     key: "countdown",
@@ -186,6 +189,7 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(3),
       },
     },
+    data: {},
   },
   {
     key: "github-contributions",
@@ -205,6 +209,7 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(2),
       },
     },
+    data: {},
   },
   {
     key: "app-starter",
@@ -228,6 +233,7 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(2),
       },
     },
+    data: {},
   },
   {
     key: "weather",
@@ -255,6 +261,7 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(2),
       },
     },
+    data: {},
   },
   {
     key: "calendar",
@@ -278,6 +285,7 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(3),
       },
     },
+    data: {},
   },
   {
     key: "todo",
@@ -309,49 +317,8 @@ const allWidgets: Widget[] = [
         h: getWidgetLength(5),
       },
     },
-  },
-  {
-    key: "woodfish",
-    name: "电子木鱼",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(2),
-      h: getWidgetLength(2),
-    },
-    currentStyle: "2x2",
-    style: {
-      "2x2": {
-        w: getWidgetLength(2),
-        h: getWidgetLength(2),
-      },
-      "3x3": {
-        w: getWidgetLength(3),
-        h: getWidgetLength(3),
-      },
-    },
-  },
-  {
-    key: "paint-board",
-    name: "画板",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(1),
-      h: getWidgetLength(1),
-    },
-    currentStyle: "1x1",
-    style: {
-      "1x1": {
-        w: getWidgetLength(1),
-        h: getWidgetLength(1),
-      },
-    },
-  },
+    data: {},
+  }
 ];
 
 const dragTarget: Ref<Widget | null> = ref(null);
@@ -360,15 +327,22 @@ const showWidgets = ref<Widget[]>(
 );
 watchDeep(showWidgets, () => {
   saveWidgetData();
+  console.log(
+    "%c [ watchDeep方法执行 ]-364",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    showWidgets.value
+  );
 });
-const onBulkEdit = ref(false);
+// 如果至少有一个小组件的 draggable 为 true，则onBulkEdit 为 true
+const onBulkEdit = computed(() => {
+  return showWidgets.value.some((item) => item.draggable);
+});
 const nextPosistion: Ref<Widget> = ref({
   id: "next-position",
   key: "next-position",
   name: "下个位置",
   draggable: false,
   resizable: false,
-  isDragging: false,
   position: {
     x: 0,
     y: 0,
@@ -420,20 +394,33 @@ function saveWidgetData() {
     "showWidgets",
     JSON.parse(JSON.stringify(toValue(showWidgets.value)))
   );
-  // console.log(
-  //   "%c [ showWidgets ]-266",
-  //   "font-size:13px; background:pink; color:#bf2c9f;",
-  //   utools.dbStorage.getItem("showWidgets")
-  // );
+  console.log(
+    "%c [ saveWidgetData方法执行 ]-425",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    showWidgets.value
+  );
 }
 
 // 修改widget数据
-function modifyWidgetData(widgetData: Widget) {
+function modifyWidgetData(widgetData: Widget, attribution: string) {
   showWidgets.value.forEach((item) => {
     if (item.id === widgetData.id) {
-      item = widgetData;
+      item.currentStyle = widgetData.currentStyle;
+      item.size = widgetData.size;
+      item.style = widgetData.style;
+      item.data = widgetData.data;
+      item.name = widgetData.name;
+      item.draggable = widgetData.draggable;
+      item.resizable = widgetData.resizable;
+      item.position = widgetData.position;
     }
   });
+
+  console.log(
+    "%c [ app  modifyWidgetData ]-434",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    widgetData
+  );
 }
 
 // 添加 widget
@@ -448,8 +435,6 @@ function addWidget(key: string) {
       id: nanoid(),
       key: widget.key,
       name: widget.name,
-      // draggable: onBulkEdit.value ? true : false,
-      isDragging: false,
       draggable: true,
       resizable: false,
       position: {
@@ -462,6 +447,7 @@ function addWidget(key: string) {
       },
       currentStyle: widget.currentStyle,
       style: widget.style,
+      data: widget.data,
     });
   }
 }
@@ -473,14 +459,13 @@ function removeWidget(id: string) {
 
 // 批量编辑
 function bulkEdit() {
-  onBulkEdit.value = !onBulkEdit.value;
   if (onBulkEdit.value) {
     showWidgets.value.forEach((item) => {
-      item.draggable = true;
+      item.draggable = false;
     });
   } else {
     showWidgets.value.forEach((item) => {
-      item.draggable = false;
+      item.draggable = true;
     });
   }
 }
@@ -493,13 +478,6 @@ function dragStartHandle(payload: { x: number; y: number }) {
   if (dragTarget.value) {
     nextPosistion.value.size.w = dragTarget.value?.size.w;
     nextPosistion.value.size.h = dragTarget.value?.size.h;
-
-    // 设置 isDragging
-    // showWidgets.value.forEach((item) => {
-    //   if (item.id === dragTarget.value?.id) {
-    //     item.isDragging = true;
-    //   }
-    // });
   }
   nextPosistion.value.position.x = nearestPosition(payload.x, payload.y).x;
   nextPosistion.value.position.y = nearestPosition(payload.x, payload.y).y;
@@ -522,9 +500,6 @@ function dragEndHandle(payload: { x: number; y: number }) {
     if (item.id === dragTargetId) {
       item.position.x = nextPosistion.value.position.x;
       item.position.y = nextPosistion.value.position.y;
-
-      // 设置 isDragging
-      // item.isDragging = false;
     }
   });
   dragTarget.value = null;

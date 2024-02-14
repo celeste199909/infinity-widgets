@@ -13,8 +13,6 @@ import Calendar from "./widgets/calendar/Calendar.vue";
 import AppStarter from "./widgets/app-starter/AppStarter.vue";
 import Todo from "./widgets/todo/Todo.vue";
 import Weather from "./widgets/weather/Weather.vue";
-import Woodfish from "./widgets/woodfish/Woodfish.vue";
-import PaintBoard from "./widgets/paint-board/PaintBoard.vue";
 import GithubContributions from "./widgets/github-contributions/GithubContributions.vue";
 import Countdown from "./widgets/countdown/Countdown.vue";
 import Alarm from "./widgets/alarm/Alarm.vue";
@@ -43,8 +41,6 @@ const widgets = new Map([
   ["app-starter", AppStarter],
   ["todo", Todo],
   ["weather", Weather],
-  ["woodfish", Woodfish],
-  ["paint-board", PaintBoard],
   ["github-contributions", GithubContributions],
   ["countdown", Countdown],
   ["alarm", Alarm],

@@ -48,7 +48,7 @@
     >
       <div
         v-if="weatherInfo"
-        class="w-full h-full flex flex-col justify-center items-center gap-3 "
+        class="w-full h-full flex flex-col justify-center items-center gap-3"
       >
         <div
           class="h-14 flex justify-center items-center text-center cursor-pointer"
@@ -97,6 +97,17 @@ import { defineProps, ref, onMounted, Ref } from "vue";
 import weatherPhenomenaMap from "./weatherMap";
 import provinceDistricts from "./provinceDistricts";
 
+const props = defineProps({
+  widgetData: {
+    type: Object,
+    required: true,
+  },
+  modifyWidgetData: {
+    type: Function,
+    required: false,
+  },
+});
+
 interface WeatherInfo {
   province: string;
   city: string;
@@ -112,36 +123,10 @@ interface WeatherInfo {
 }
 
 const showSelectDistrict = ref(false);
-const weatherInfo: Ref<WeatherInfo | null> = ref({
-  province: "河南",
-  city: "洛阳市",
-  adcode: "410300",
-  weather: "阴",
-  temperature: "-1",
-  winddirection: "东",
-  windpower: "≤3",
-  humidity: "75",
-  reporttime: "2024-02-05 19:30:05",
-  temperature_float: "-1.0",
-  humidity_float: "75.0",
-});
+const weatherInfo: Ref<WeatherInfo | null> = ref(null);
 const currentIndex = ref(0);
 const selectList = ref(provinceDistricts);
-const userDistrict = ref({
-  name: "北京",
-  adcode: "110101",
-});
-
-const props = defineProps({
-  widgetData: {
-    type: Object,
-    required: true,
-  },
-  modifyWidgetData: {
-    type: Function,
-    required: false,
-  },
-});
+const userDistrict = ref(props.widgetData.data?.userDistrict || provinceDistricts[1]);
 
 onMounted(() => {
   // 获取天气信息
@@ -156,6 +141,15 @@ function handleShowSelectDistrict() {
 function handleSelect() {
   userDistrict.value = selectList.value[currentIndex.value];
   fetchNextDistrict(userDistrict.value.adcode);
+  // 保存用户选择的地区
+  if (props.modifyWidgetData) {
+    props.modifyWidgetData({
+      ...props.widgetData,
+      data: {
+        userDistrict: userDistrict.value,
+      },
+    });
+  }
   currentIndex.value = 0;
   fetchWeatherInfo(userDistrict.value.adcode);
 }
@@ -234,28 +228,4 @@ function getLocalImage(name: string) {
 }
 </script>
 <style scoped>
-.widget:hover {
-  /* filter: drop-shadow(0 0 0.5rem rgba(206, 206, 206, 0.438)); */
-}
-
-.widget:active {
-  /* animation: widget-hover 0.6s ease-in-out forwards; */
-}
-
-@keyframes widget-hover {
-  0% {
-    transform: scale(0.98);
-  }
-
-  50% {
-    transform: scale(1.02);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-.weather {
-  background-color: #2e8fff;
-}
 </style>

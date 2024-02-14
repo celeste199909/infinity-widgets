@@ -57,30 +57,30 @@ const widgetsList = [
       h: getWidgetLength(2),
     },
   },
-  {
-    key: "alarm",
-    name: "闹钟",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(2),
-      h: getWidgetLength(2),
-    },
-  },
-  {
-    key: "countdown",
-    name: "倒计时",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(2),
-      h: getWidgetLength(2),
-    },
-  },
+  // {
+  //   key: "alarm",
+  //   name: "闹钟",
+  //   position: {
+  //     x: 0,
+  //     y: 0,
+  //   },
+  //   size: {
+  //     w: getWidgetLength(2),
+  //     h: getWidgetLength(2),
+  //   },
+  // },
+  // {
+  //   key: "countdown",
+  //   name: "倒计时",
+  //   position: {
+  //     x: 0,
+  //     y: 0,
+  //   },
+  //   size: {
+  //     w: getWidgetLength(2),
+  //     h: getWidgetLength(2),
+  //   },
+  // },
   {
     key: "github-contributions",
     name: "GitHub贡献图",

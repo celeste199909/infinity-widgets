@@ -20,7 +20,7 @@
 </template>
   
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { computed, defineProps, ref } from "vue";
 import AppList from "./AppList.vue";
 import { gsap } from "gsap";
 
@@ -32,8 +32,12 @@ const props = defineProps({
 });
 
 const isShowAppList = ref(false);
+const isOnEdit = computed(() => {
+    return props.widgetData.draggable;
+});
 
 function handleToggleAppList() {
+    if(isOnEdit.value) return;
     if (isShowAppList.value) {
         const appListId = "app-list-" + props.widgetData.id;
         const appList = document.getElementById(appListId);
@@ -52,6 +56,7 @@ function handleToggleAppList() {
 }
 
 function handleCloseAppList() {
+    if(isOnEdit.value) return;
     isShowAppList.value = false;
 }
 </script>

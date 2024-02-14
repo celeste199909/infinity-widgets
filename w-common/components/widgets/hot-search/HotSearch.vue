@@ -3,12 +3,22 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="wrapper-card rounded-xl flex justify-center items-center"
+    class="wrapper-card bg-slate-200 border-2 rounded-xl flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
     }"
-  ></div>
+  >
+    <div
+      class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
+    >
+      <img
+        class="rounded-xl w-14 h-14"
+        src="../../../assets/icons/weibo.png"
+        alt=""
+      />
+    </div>
+  </div>
   <!-- 有样式 -->
   <div
     v-else
@@ -25,7 +35,10 @@
       <div class="text-red-400 text-sm font-bold">
         {{ item.rank }}
       </div>
-      <div class="truncate text-gray-800  text-sm cursor-pointer" @click="openLink(item.link)">
+      <div
+        class="truncate text-gray-800 text-sm cursor-pointer"
+        @click="openLink(item.link)"
+      >
         {{ item.title }}
       </div>
     </div>
@@ -33,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, Ref } from "vue";
+import { defineProps, ref, onMounted, Ref, computed } from "vue";
 
 const props = defineProps({
   widgetData: {
@@ -57,6 +70,9 @@ const cateMap = new Map([
 ]);
 
 const hotSearchList: Ref<any[]> = ref([]);
+const isOnEdit = computed(() => {
+  return props.widgetData.draggable;
+});
 
 onMounted(async () => {
   const res = await fetchHotSearch();
@@ -72,7 +88,6 @@ onMounted(async () => {
 async function fetchHotSearch(cate: string = "realtimehot") {
   const data = await utools.ubrowser
     .goto(`https://s.weibo.com/top/summary?cate=${cate}`)
-    .hide()
     .wait(".m-wrap table tbody")
     .evaluate(() => {
       const list = Array.from(
@@ -95,13 +110,14 @@ async function fetchHotSearch(cate: string = "realtimehot") {
         .slice(0, 16);
       return list;
     })
-    .run({ width: 1000, height: 600 });
+    .run({ show: false, width: 1000, height: 600 });
 
   const res = data[0].filter((item: any) => item);
   return res;
 }
 
 function openLink(link: string) {
+  if (isOnEdit.value) return;
   const baseUri = "https://s.weibo.com";
   console.log(
     "%c [ baseUri + link ]-97",
@@ -112,11 +128,4 @@ function openLink(link: string) {
 }
 </script>
 <style scoped>
-.wrapper-card {
-  background-image: url(../../../assets/images/github-contribution.png);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: grayscale(50%);
-}
 </style>

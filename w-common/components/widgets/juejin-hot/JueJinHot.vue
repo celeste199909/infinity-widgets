@@ -3,12 +3,22 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="wrapper-card rounded-xl flex justify-center items-center"
+    class="wrapper-card bg-[#1E80FF] rounded-xl flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
     }"
-  ></div>
+  >
+    <div
+      class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
+    >
+      <img
+        class="rounded-xl w-14 h-14"
+        src="../../../assets/icons/juejin.png"
+        alt=""
+      />
+    </div>
+  </div>
   <!-- 有样式 -->
   <div
     v-else
@@ -36,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, Ref } from "vue";
+import { defineProps, ref, onMounted, Ref, computed } from "vue";
 
 const props = defineProps({
   widgetData: {
@@ -51,6 +61,9 @@ const props = defineProps({
 
 const url = "https://juejin.cn/hot/articles";
 const hotArticleList: Ref<any[]> = ref([]);
+const isOnEdit = computed(() => {
+  return props.widgetData.draggable;
+});
 
 onMounted(async () => {
   const res = await fetchHotArticle(url);
@@ -73,6 +86,7 @@ async function fetchHotArticle(url: string) {
       )
         .map((aEl) => {
           const rank = aEl.querySelector(".article-number")?.textContent || "";
+          const link = aEl.getAttribute("href") || "";
           const title =
             aEl.querySelector(".article-detail .article-title")?.textContent ||
             "";
@@ -88,6 +102,7 @@ async function fetchHotArticle(url: string) {
 
           return {
             rank,
+            link,
             title,
             authorImg,
             authorName,
@@ -97,14 +112,15 @@ async function fetchHotArticle(url: string) {
         .slice(0, 15);
       return list;
     })
-    .run({ width: 1000, height: 600 });
+    .run({ show: false, width: 1000, height: 600 });
 
   const res = data[0].filter((item: any) => item);
   return res;
 }
 
 function openLink(link: string) {
-  const baseUri = "https://juejin.cn/post";
+  if (isOnEdit.value) return;
+  const baseUri = "https://juejin.cn";
   console.log(
     "%c [ baseUri + link ]-97",
     "font-size:13px; background:pink; color:#bf2c9f;",
@@ -113,12 +129,4 @@ function openLink(link: string) {
   utools.shellOpenExternal(baseUri + link);
 }
 </script>
-<style scoped>
-.wrapper-card {
-  background-image: url(../../../assets/images/github-contribution.png);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: grayscale(50%);
-}
-</style>
+<style scoped></style>
