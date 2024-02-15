@@ -12,7 +12,7 @@
   >
     <!-- bar -->
     <div
-      class="w-full h-12 absolute top-0 left-0 right-0 text-slate-200 min-h-12 max-h-12 p-4 flex flex-row justify-between items-center z-10"
+      class="w-full h-12 absolute top-0 left-0 right-0 text-slate-200 min-h-12 max-h-12 p-4 flex flex-row justify-between items-center select-none z-10"
       @mousedown="startDrag"
     >
       <!-- 名字 -->
@@ -23,11 +23,13 @@
         <div v-if="maxminze" @click="toggleFullscreen">
           <img
             v-if="maxminzeBtnStyle === 'black'"
+            draggable="false"
             src="../assets/icons/maxminze-50-black.png"
             class="w-6 h-6"
           />
           <img
             v-else
+            draggable="false"
             src="../assets/icons/maxminze-50-white.png"
             class="w-6 h-6"
           />
@@ -35,11 +37,13 @@
         <div @click="closeWindow" class="flex justify-center items-center overflow-hidden">
           <img
             v-if="closeBtnStyle === 'black'"
+            draggable="false"
             src="../assets/icons/close-50-black.png"
             class="w-6 h-6"
           />
           <img
             v-else
+            draggable="false"
             src="../assets/icons/close-50-white.png"
             class="w-6 h-6"
           />

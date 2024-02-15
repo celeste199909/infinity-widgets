@@ -8,15 +8,25 @@
     >
       <router-link
         to="/"
-        class="w-14 h-14 p-3  overflow-hidden rounded-2xl hover:bg-slate-100 flex justify-center items-center"
+        class="w-14 h-14 p-3 overflow-hidden rounded-2xl hover:bg-slate-100 flex justify-center items-center"
       >
-        <img class="w-full h-full" src="../w-common/assets/icons/app-96.png" alt="" srcset="" />
+        <img
+          class="w-full h-full"
+          src="../w-common/assets/icons/app-96.png"
+          alt=""
+          srcset=""
+        />
       </router-link>
       <router-link
         to="/setting"
         class="w-14 h-14 p-3 rounded-2xl hover:bg-slate-100 flex justify-center items-center"
       >
-        <img class="w-full h-full"  src="../w-common/assets/icons/setting-96.png" alt="" srcset="" />
+        <img
+          class="w-full h-full"
+          src="../w-common/assets/icons/setting-96.png"
+          alt=""
+          srcset=""
+        />
       </router-link>
     </div>
     <!-- 小组件列表 -->

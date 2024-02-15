@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isShowContextMenu"
-    class="absolute w-40 p-3 select-none text-white bg-slate-700 rounded-md flex flex-col gap-y-1 z-10"
+    class="absolute w-48 p-3 select-none text-white bg-slate-700 rounded-md flex flex-col gap-y-1 z-10"
     :style="{
       left: contextMenuPosition.x - 5 + 'px',
       top: contextMenuPosition.y - 5 + 'px',
@@ -59,6 +59,7 @@ import { computed, defineProps, onMounted, ref, Ref } from "vue";
 import { useMouse } from "@vueuse/core";
 import _ from "lodash";
 import { Widget } from "../types/widget";
+import gsap from "gsap";
 
 const props = defineProps({
   showWidgets: {
@@ -109,8 +110,11 @@ onMounted(() => {
       return false;
     });
 
-
-    console.log('%c [ contextmenu widget ]-113', 'font-size:13px; background:pink; color:#bf2c9f;', widget)
+    console.log(
+      "%c [ contextmenu widget ]-113",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      widget
+    );
 
     if (widget instanceof HTMLElement) {
       const widgetId = widget.id; // 这里可以安全地访问 id 属性
@@ -134,7 +138,28 @@ function toggleEdit() {
 
 function handleRemoveWidget(widgetData: Widget | undefined) {
   if (widgetData) {
-    props.removeWidget(widgetData.id);
+    const widget = document.getElementById("w-" + clickTargetId.value);
+
+    console.log(
+      "%c [ clickTargetId ]-142",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      clickTargetId
+    );
+    console.log(
+      "%c [ widget ]-142",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      widget
+    );
+    if (widget) {
+      gsap.to(`#w-${clickTargetId.value}`, {
+        duration: 0.3,
+        scale: 0,
+        ease: "back.in(1.4)",
+      });
+    }
+    setTimeout(() => {
+      props.removeWidget(widgetData.id);
+    }, 300);
   }
   isShowContextMenu.value = false;
 }
@@ -155,7 +180,7 @@ function changeStyle(key: string) {
 
 function handleAddWidget() {
   // window.utools.showMainWindow();
-  window.utools.redirect('无限小组件', '无限小组件')
+  window.utools.redirect("无限小组件", "无限小组件");
   isShowContextMenu.value = false;
 }
 </script>

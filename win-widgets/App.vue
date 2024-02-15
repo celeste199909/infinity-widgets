@@ -120,6 +120,14 @@ const allWidgets: Widget[] = [
         w: getWidgetLength(3),
         h: getWidgetLength(3),
       },
+      "4x2": {
+        w: getWidgetLength(4),
+        h: getWidgetLength(2),
+      },
+      "4x3": {
+        w: getWidgetLength(4),
+        h: getWidgetLength(3),
+      },
     },
     data: {},
   },
@@ -254,10 +262,6 @@ const allWidgets: Widget[] = [
       },
       "3x2": {
         w: getWidgetLength(3),
-        h: getWidgetLength(2),
-      },
-      "4x2": {
-        w: getWidgetLength(4),
         h: getWidgetLength(2),
       },
     },

@@ -83,47 +83,48 @@
     >
       <img class="w-3 h-3" src="../../../assets/icons/edit-48-666.png" />
     </div>
+    <!-- 设置 -->
+    <Teleport to="body">
+      <CustomWindow
+        v-if="isShowSetting"
+        :widgetData="widgetData"
+        :name="'设置'"
+        :winId="'custom-win-' + widgetData.id"
+        :width="400"
+        :height="300"
+        :maxminze="false"
+        :closeFunction="closeSetting"
+        :closeBtnStyle="'white'"
+        :showTitle="false"
+      >
+        <!--  -->
+        <div class="form p-8 pt-14 w-full h-full relative">
+          <div
+            class="text-[24px] font-bold text-slate-100 cursor-pointer hover:underline"
+            @click="openGithub"
+          >
+            @{{ username }}
+          </div>
+          <p class="description text-slate-300">
+            请输入你想查看的 Github 用户名, 每小时自动更新一次。受网络影响,
+            若重试过后依旧不行，请勿使用该组件。
+          </p>
+          <div class="my-2">
+            <input
+              type="text"
+              class="title"
+              v-model="username"
+              placeholder="输入github用户名"
+            />
+            <button @click="loadData">确定</button>
+          </div>
+          <div class="text-[12px] text-slate-300">
+            最近更新：{{ lastUpdateTime }}
+          </div>
+        </div>
+      </CustomWindow>
+    </Teleport>
   </div>
-  <!-- 设置 -->
-  <Teleport to="body">
-    <CustomWindow
-      v-if="isShowSetting"
-      :widgetData="widgetData"
-      :name="'设置'"
-      :winId="'custom-win-' + widgetData.id"
-      :width="400"
-      :height="300"
-      :maxminze="false"
-      :closeFunction="closeSetting"
-      :closeBtnStyle="'white'"
-      :showTitle="false"
-    >
-      <!--  -->
-      <div class="form p-8 pt-14 w-full h-full relative">
-        <div
-          class="text-[24px] font-bold text-slate-100 cursor-pointer hover:underline"
-          @click="openGithub"
-        >
-          @{{ username }}
-        </div>
-        <p class="description text-slate-300">
-          请输入你想查看的 Github 用户名, 每小时自动更新一次。受网络影响, 若重试过后依旧不行，请勿使用该组件。
-        </p>
-        <div class="my-2">
-          <input
-            type="text"
-            class="title"
-            v-model="username"
-            placeholder="输入github用户名"
-          />
-          <button @click="loadData">确定</button>
-        </div>
-        <div class="text-[12px] text-slate-300">
-          最近更新：{{ lastUpdateTime }}
-        </div>
-      </div>
-    </CustomWindow>
-  </Teleport>
 </template>
 
 <script setup lang="ts">

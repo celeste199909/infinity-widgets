@@ -3,11 +3,12 @@
     :is="widgets.get(widgetData.key)"
     :widgetData="widgetData"
     :modifyWidgetData="modifyWidgetData"
-    :id="'w-' + widgetData.id"
+
     class="transition-class rounded-xl overflow-hidden select-none"
+    @click="playAnimation"
   />
 </template>
-
+<!-- :id="'w-' + widgetData.id" -->
 <script setup lang="ts">
 import Calendar from "./widgets/calendar/Calendar.vue";
 import AppStarter from "./widgets/app-starter/AppStarter.vue";
@@ -58,6 +59,25 @@ onMounted(() => {
     });
   }
 });
+
+function playAnimation() {
+  const widget = document.getElementById("w-" + widgetId);
+  // 播放弹一弹动画
+  if (widget) {
+    gsap.to(`#w-${widgetId}`, {
+      duration: 0.3,
+      scale: 1.05,
+      ease: "back.out(1.4)",
+    });
+    setTimeout(() => {
+      gsap.to(`#w-${widgetId}`, {
+        duration: 0.3,
+        scale: 1,
+        ease: "back.out(1.4)",
+      });
+    }, 300);
+  }
+}
 </script>
 <style scoped>
 .transition-class {

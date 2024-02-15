@@ -30,7 +30,7 @@
   >
     <!-- 加载动画 -->
     <Loader v-if="isLoading" />
-    <!-- 内容 -->
+    <!-- 内容 --> 
     <div
       v-else-if="!isLoadFailed && hotSearchList"
       class="w-full h-full overflow-y-scroll flex flex-col justify-start items-start gap-y-[5px]"
