@@ -8,14 +8,14 @@
       height: widgetData.size.h + 'px',
     }"
   >
-  <div class="w-14 h-14 backdrop-blur-[5px] flex justify-center items-center">
+    <div class="w-14 h-14 backdrop-blur-[5px] flex justify-center items-center">
       <img
         class="rounded-xl w-14 h-14"
         src="../../../assets/icons/stopwatch-64.png"
         alt=""
       />
     </div>
-</div>
+  </div>
   <!-- 有样式 -->
   <div
     v-else

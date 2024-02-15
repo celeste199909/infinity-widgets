@@ -26,27 +26,39 @@
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',
     }"
-    class="p-[10px] w-full h-full overflow-y-scroll rounded-xl border flex flex-col justify-start items-start bg-slate-100 gap-y-[1px]"
+    class="p-[10px] w-full h-full overflow-y-scroll rounded-xl flex flex-col justify-center items-center text-white bg-gradient-to-tr from-blue-500 to-sky-500 gap-y-[1px]"
   >
+    <!-- 加载动画 -->
+    <Loader v-if="isLoading" />
+    <!-- 内容 -->
     <div
-      v-for="item in hotArticleList"
-      class="w-full flex flex-row flex-nowrap justify-start items-center gap-x-[6px]"
+      v-else-if="!isLoadFailed && hotArticleList"
+      class="w-full h-full overflow-y-scroll flex flex-col justify-start items-start gap-y-[5px]"
     >
-      <div class="text-red-400 text-sm font-bold">
-        {{ item.rank }}
-      </div>
       <div
-        class="truncate text-gray-800 text-sm cursor-pointer"
-        @click="openLink(item.link)"
+        v-for="item in hotArticleList"
+        class="w-full flex flex-row flex-nowrap justify-start items-center gap-x-[6px]"
       >
-        {{ item.title }}
+        <div class="text-sm font-bold">
+          {{ item.rank }}
+        </div>
+        <div
+          class="truncate text-sm cursor-pointer"
+          @click="openLink(item.link)"
+        >
+          {{ item.title }}
+        </div>
       </div>
     </div>
+    <!-- 加载失败 -->
+    <LoadFailed v-else :retryFn="loadData" :retryBtnStyle="'circle-white'" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, Ref, computed } from "vue";
+import { defineProps, ref, onMounted, Ref, computed, onBeforeMount } from "vue";
+import Loader from "../../Loader.vue";
+import LoadFailed from "../../LoadFailed.vue";
 
 const props = defineProps({
   widgetData: {
@@ -59,63 +71,94 @@ const props = defineProps({
   },
 });
 
-const url = "https://juejin.cn/hot/articles";
+const isLoading = ref(false);
+const isLoadFailed = ref(false);
+const intervalTimer = ref<number | null>(null);
+
 const hotArticleList: Ref<any[]> = ref([]);
 const isOnEdit = computed(() => {
   return props.widgetData.draggable;
 });
 
 onMounted(async () => {
-  const res = await fetchHotArticle(url);
-  console.log(
-    "%c [ res ]-63",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    res
-  );
-  hotArticleList.value = res;
+  if (props.widgetData.style) {
+    loadData();
+    intervalTimer.value = setInterval(loadData, 1000 * 60 * 60);
+  }
 });
 
-async function fetchHotArticle(url: string) {
-  const data = await utools.ubrowser
-    .goto(url)
-    .hide()
-    .wait(".hot-list")
-    .evaluate(() => {
-      const list = Array.from(
-        document.querySelectorAll(".hot-list a.article-item-link")
-      )
-        .map((aEl) => {
-          const rank = aEl.querySelector(".article-number")?.textContent || "";
-          const link = aEl.getAttribute("href") || "";
-          const title =
-            aEl.querySelector(".article-detail .article-title")?.textContent ||
-            "";
-          const authorImg =
-            aEl
-              .querySelector(".article-author .article-author-img img")
-              ?.getAttribute("src") || "";
-          const authorName =
-            aEl.querySelector(".article-author .article-author-name-text")
-              ?.textContent || "";
-          const hotNumber =
-            aEl.querySelector(".article-hot .hot-number")?.textContent || "";
+onBeforeMount(() => {
+  if (intervalTimer.value) {
+    clearInterval(intervalTimer.value);
+  }
+  utools.clearUBrowserCache();
+});
 
-          return {
-            rank,
-            link,
-            title,
-            authorImg,
-            authorName,
-            hotNumber,
-          };
-        })
-        .slice(0, 15);
-      return list;
-    })
-    .run({ show: false, width: 1000, height: 600 });
+// 获取并更新数据
+async function loadData() {
+  hotArticleList.value = [];
+  try {
+    // 加载中
+    isLoading.value = true;
+    isLoadFailed.value = false;
+    const res = await fetchHotArticle();
+    hotArticleList.value = res.slice(0, 10);
+  } catch (error) {
+    isLoadFailed.value = true;
+  } finally {
+    isLoading.value = false;
+    utools.clearUBrowserCache();
+  }
+}
 
-  const res = data[0].filter((item: any) => item);
-  return res;
+// 获取数据
+async function fetchHotArticle() {
+  const url = "https://juejin.cn/hot/articles";
+  let data;
+  try {
+    data = await utools.ubrowser
+      .goto(url)
+      .hide()
+      .wait(".hot-list")
+      .evaluate(() => {
+        const list = Array.from(
+          document.querySelectorAll(".hot-list a.article-item-link")
+        )
+          .map((aEl) => {
+            const rank =
+              aEl.querySelector(".article-number")?.textContent || "";
+            const link = aEl.getAttribute("href") || "";
+            const title =
+              aEl.querySelector(".article-detail .article-title")
+                ?.textContent || "";
+            const authorImg =
+              aEl
+                .querySelector(".article-author .article-author-img img")
+                ?.getAttribute("src") || "";
+            const authorName =
+              aEl.querySelector(".article-author .article-author-name-text")
+                ?.textContent || "";
+            const hotNumber =
+              aEl.querySelector(".article-hot .hot-number")?.textContent || "";
+
+            return {
+              rank,
+              link,
+              title,
+              authorImg,
+              authorName,
+              hotNumber,
+            };
+          })
+          .slice(0, 15);
+        return list;
+      })
+      .run({ show: false, width: 1000, height: 600 });
+    const res = data[0].filter((item: any) => item);
+    return res;
+  } catch (error) {
+    return Error("获取数据失败");
+  }
 }
 
 function openLink(link: string) {

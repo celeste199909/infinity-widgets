@@ -83,7 +83,7 @@ const widgetsList = [
   // },
   {
     key: "github-contributions",
-    name: "GitHub贡献图",
+    name: "GitHub贡献图(beta)",
     position: {
       x: 0,
       y: 0,

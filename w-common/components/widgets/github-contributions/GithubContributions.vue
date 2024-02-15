@@ -71,16 +71,11 @@
       </div>
     </div>
     <!-- 错误 -->
-    <div
+    <LoadFailed
       v-else
-      class="absolute w-full h-full flex flex-col justify-center items-center space-y-3 rounded-xl"
-    >
-      <div class="text-slate-800">
-        加载失败，请检测用户名是否正确，或者网络是否可用。
-      </div>
-      <!-- 重试 -->
-      <div class="button" @click="handleSubmit">重试</div>
-    </div>
+      :tooltip="'加载失败, 请检查用户名和网络。'"
+      :retryFn="loadData"
+    />
     <!-- 设置 -->
     <div
       class="absolute flex justify-center items-center gap-x-1 bottom-4 right-4 cursor-pointer"
@@ -106,25 +101,24 @@
       <!--  -->
       <div class="form p-8 pt-14 w-full h-full relative">
         <div
-          class="text-2xl font-bold text-slate-100 cursor-pointer hover:underline"
+          class="text-[24px] font-bold text-slate-100 cursor-pointer hover:underline"
           @click="openGithub"
         >
           @{{ username }}
         </div>
-        <p class="description">
-          请输入你想查看的 Github 用户名, 点击确定即可查看该用户的 Github
-          贡献图, 每小时更新一次。
+        <p class="description text-slate-300">
+          请输入你想查看的 Github 用户名, 每小时自动更新一次。受网络影响, 若重试过后依旧不行，请勿使用该组件。
         </p>
-        <div>
+        <div class="my-2">
           <input
             type="text"
             class="title"
             v-model="username"
             placeholder="输入github用户名"
           />
-          <button @click="handleSubmit">确定</button>
+          <button @click="loadData">确定</button>
         </div>
-        <div class="mt-2 text-[10px] text-slate-100">
+        <div class="text-[12px] text-slate-300">
           最近更新：{{ lastUpdateTime }}
         </div>
       </div>
@@ -136,6 +130,7 @@
 import { defineProps, ref, onMounted, Ref, onBeforeMount, computed } from "vue";
 import CustomWindow from "../../CustomWindow.vue";
 import Loader from "../../Loader.vue";
+import LoadFailed from "../../LoadFailed.vue";
 
 const props = defineProps({
   widgetData: {
@@ -169,7 +164,13 @@ const isShowSetting = ref(false);
 const isLoadFailed = ref(false);
 
 onMounted(async () => {
-  handleSubmit();
+  if (props.widgetData.style) {
+    loadData();
+    // 设置定时器
+    intervalTimer.value = setInterval(() => {
+      loadData();
+    }, 1000 * 60 * 60);
+  }
 });
 
 onBeforeMount(() => {
@@ -184,7 +185,7 @@ async function fetchGitHubContributions(): Promise<any> {
   let data;
   try {
     data = await utools.ubrowser
-      .goto(url)
+      .goto(url, { Referer: "", userAgent: "" }, 10000)
       .wait(".js-calendar-graph table tbody")
       .evaluate(() => {
         // 1 获取月份数据
@@ -233,8 +234,8 @@ async function fetchGitHubContributions(): Promise<any> {
   }
 }
 
-async function handleSubmit() {
-  if (intervalTimer.value) clearInterval(intervalTimer.value!);
+async function loadData() {
+  // 保存用户名
   const widgetData = {
     ...props.widgetData,
     data: {
@@ -247,15 +248,13 @@ async function handleSubmit() {
   }
 
   try {
+    // 重置状态
     isLoading.value = true;
     isLoadFailed.value = false;
+    // 获取数据 & 更新数据
     const res = await fetchGitHubContributions();
     gridList.value = res.gridList;
     monthList.value = res.monthList;
-
-    intervalTimer.value = setInterval(() => {
-      handleSubmit();
-    }, 3600000);
   } catch (error) {
     isLoadFailed.value = true;
   } finally {
@@ -307,14 +306,6 @@ function openGithub() {
   line-height: 1.5rem;
   font-size: 1rem;
   margin-top: 1rem;
-  color: rgb(209 213 219);
-}
-
-.form div {
-  display: flex;
-  max-width: 28rem;
-  margin-top: 1rem;
-  column-gap: 0.5rem;
 }
 
 .form div input {

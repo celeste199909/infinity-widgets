@@ -1,85 +1,41 @@
 <template>
-  <div class="loader">
-    <div class="justify-content-center jimu-primary-loading"></div>
+  <div class="loading">
+    <svg viewBox="0 0 187.3 93.7" height="100px" width="150px" class="svgbox">
+      <defs>
+        <linearGradient y2="0%" x2="100%" y1="0%" x1="0%" id="gradient">
+          <stop stop-color="pink" offset="0%"></stop>
+
+          <stop stop-color="blue" offset="100%"></stop>
+        </linearGradient>
+      </defs>
+
+      <path
+        stroke="url(#gradient)"
+        d="M93.9,46.4c9.3,9.5,13.8,17.9,23.5,17.9s17.5-7.8,17.5-17.5s-7.8-17.6-17.5-17.5c-9.7,0.1-13.3,7.2-22.1,17.1c-8.9,8.8-15.7,17.9-25.4,17.9s-17.5-7.8-17.5-17.5s7.8-17.5,17.5-17.5S86.2,38.6,93.9,46.4z"
+      ></path>
+    </svg>
   </div>
 </template>
 
 <script setup lang="ts"></script>
 <style scoped>
-.loader {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.svgbox {
+  --blue: rgb(148, 66, 63);
+  stroke: var(--blue);
+  stroke-width: 5;
+  fill: none;
+  stroke-dasharray: 50, 14;
+  stroke-dashoffset: 192;
+  animation: dash_682 1.4s linear infinite;
 }
 
-.jimu-primary-loading:before,
-.jimu-primary-loading:after {
-  position: absolute;
-  top: 0;
-  content: "";
-}
-
-.jimu-primary-loading:before {
-  left: -19.992px;
-}
-
-.jimu-primary-loading:after {
-  left: 19.992px;
-  -webkit-animation-delay: 0.32s !important;
-  animation-delay: 0.32s !important;
-}
-
-.jimu-primary-loading:before,
-.jimu-primary-loading:after,
-.jimu-primary-loading {
-  background: #076fe5;
-  -webkit-animation: loading-keys-app-loading 0.8s infinite ease-in-out;
-  animation: loading-keys-app-loading 0.8s infinite ease-in-out;
-  width: 13.6px;
-  height: 32px;
-}
-
-.jimu-primary-loading {
-  text-indent: -9999em;
-  margin: auto;
-  position: absolute;
-  right: calc(50% - 6.8px);
-  top: calc(50% - 16px);
-  -webkit-animation-delay: 0.16s !important;
-  animation-delay: 0.16s !important;
-}
-
-@-webkit-keyframes loading-keys-app-loading {
-  0%,
-  80%,
-  100% {
-    opacity: 0.75;
-    box-shadow: 0 0 #076fe5;
-    height: 32px;
-  }
-
-  40% {
+@keyframes dash_682 {
+  72.5% {
     opacity: 1;
-    box-shadow: 0 -8px #076fe5;
-    height: 40px;
-  }
-}
-
-@keyframes loading-keys-app-loading {
-  0%,
-  80%,
-  100% {
-    opacity: 0.75;
-    box-shadow: 0 0 #076fe5;
-    height: 32px;
   }
 
-  40% {
-    opacity: 1;
-    box-shadow: 0 -8px #076fe5;
-    height: 40px;
+  to {
+    stroke-dashoffset: 1;
   }
 }
 </style>

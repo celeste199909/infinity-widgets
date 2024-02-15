@@ -1,7 +1,7 @@
 <template>
   <div
     id="widgets-wrapper"
-    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative"
+    class="font-serif flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative"
     :style="{
       padding: `${layout.padding}px`,
       paddingBottom: `${layout.padding + layout.extraPaddingBottom}px`,
@@ -193,7 +193,7 @@ const allWidgets: Widget[] = [
   },
   {
     key: "github-contributions",
-    name: "GitHub贡献图",
+    name: "GitHub贡献图(beta)",
     position: {
       x: 0,
       y: 0,
