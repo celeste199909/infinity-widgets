@@ -78,11 +78,13 @@ import { useLayout } from "./composables/useLayout";
 import { watchDeep } from "@vueuse/core";
 
 import { customAlphabet } from "nanoid";
+
 const nanoid = customAlphabet(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
   16
 );
 import { Widget } from "../w-common/types/widget";
+
 const { layout, nearestPosition, getNearestEmptyPosition } = useLayout();
 
 function getWidgetLength(units: number) {
@@ -322,7 +324,7 @@ const allWidgets: Widget[] = [
       },
     },
     data: {},
-  }
+  },
 ];
 
 const dragTarget: Ref<Widget | null> = ref(null);
@@ -331,11 +333,6 @@ const showWidgets = ref<Widget[]>(
 );
 watchDeep(showWidgets, () => {
   saveWidgetData();
-  console.log(
-    "%c [ watchDeep方法执行 ]-364",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    showWidgets.value
-  );
 });
 // 如果至少有一个小组件的 draggable 为 true，则onBulkEdit 为 true
 const onBulkEdit = computed(() => {
@@ -398,11 +395,6 @@ function saveWidgetData() {
     "showWidgets",
     JSON.parse(JSON.stringify(toValue(showWidgets.value)))
   );
-  console.log(
-    "%c [ saveWidgetData方法执行 ]-425",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    showWidgets.value
-  );
 }
 
 // 修改widget数据
@@ -419,12 +411,6 @@ function modifyWidgetData(widgetData: Widget, attribution: string) {
       item.position = widgetData.position;
     }
   });
-
-  console.log(
-    "%c [ app  modifyWidgetData ]-434",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    widgetData
-  );
 }
 
 // 添加 widget
@@ -508,6 +494,7 @@ function dragEndHandle(payload: { x: number; y: number }) {
   });
   dragTarget.value = null;
 }
+
 </script>
 <style scoped>
 .dragging {

@@ -132,6 +132,7 @@ import { defineProps, ref, onMounted, Ref, onBeforeMount, computed } from "vue";
 import CustomWindow from "../../CustomWindow.vue";
 import Loader from "../../Loader.vue";
 import LoadFailed from "../../LoadFailed.vue";
+import { getRandomUA } from "../../../utils/getRandomUA";
 
 const props = defineProps({
   widgetData: {
@@ -178,7 +179,6 @@ onBeforeMount(() => {
   if (intervalTimer.value) {
     clearInterval(intervalTimer.value);
   }
-  utools.clearUBrowserCache();
 });
 
 async function fetchGitHubContributions(): Promise<any> {
@@ -186,7 +186,7 @@ async function fetchGitHubContributions(): Promise<any> {
   let data;
   try {
     data = await utools.ubrowser
-      .goto(url, { Referer: "", userAgent: "" }, 10000)
+      .goto(url, { Referer: "https://github.com/", userAgent: getRandomUA() }, 10000)
       .wait(".js-calendar-graph table tbody")
       .evaluate(() => {
         // 1 获取月份数据

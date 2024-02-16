@@ -33,6 +33,7 @@
     <AppList
       class="z-20"
       :widgetData="widgetData"
+      :modifyWidgetData="modifyWidgetData"
       v-if="isShowAppList"
       @closeAppList="handleCloseAppList"
     />

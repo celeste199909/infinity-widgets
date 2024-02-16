@@ -110,15 +110,9 @@ onMounted(() => {
       return false;
     });
 
-    console.log(
-      "%c [ contextmenu widget ]-113",
-      "font-size:13px; background:pink; color:#bf2c9f;",
-      widget
-    );
 
     if (widget instanceof HTMLElement) {
       const widgetId = widget.id; // 这里可以安全地访问 id 属性
-      // console.log(widgetId);
       clickTargetId.value = widgetId;
     }
   });
@@ -139,17 +133,6 @@ function toggleEdit() {
 function handleRemoveWidget(widgetData: Widget | undefined) {
   if (widgetData) {
     const widget = document.getElementById("w-" + clickTargetId.value);
-
-    console.log(
-      "%c [ clickTargetId ]-142",
-      "font-size:13px; background:pink; color:#bf2c9f;",
-      clickTargetId
-    );
-    console.log(
-      "%c [ widget ]-142",
-      "font-size:13px; background:pink; color:#bf2c9f;",
-      widget
-    );
     if (widget) {
       gsap.to(`#w-${clickTargetId.value}`, {
         duration: 0.3,

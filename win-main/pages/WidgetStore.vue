@@ -219,6 +219,7 @@ onMounted(() => {
 .add {
   display: none;
   opacity: 0.8;
+  filter:drop-shadow(0 0 0.5rem rgba(74, 74, 74, 0.358));
 }
 
 .card:hover .add {

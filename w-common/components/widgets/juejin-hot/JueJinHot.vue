@@ -30,9 +30,15 @@
   >
     <!-- 加载动画 -->
     <Loader v-if="isLoading" />
+    <!-- 加载失败 -->
+    <LoadFailed
+      v-else-if="isLoadFailed"
+      :retryFn="loadData"
+      :retryBtnStyle="'circle-white'"
+    />
     <!-- 内容 -->
     <div
-      v-else-if="!isLoadFailed && hotArticleList"
+      v-else
       class="w-full h-full overflow-y-scroll flex flex-col justify-start items-start gap-y-[5px]"
     >
       <div
@@ -50,8 +56,6 @@
         </div>
       </div>
     </div>
-    <!-- 加载失败 -->
-    <LoadFailed v-else :retryFn="loadData" :retryBtnStyle="'circle-white'" />
   </div>
 </template>
 
@@ -59,6 +63,7 @@
 import { defineProps, ref, onMounted, Ref, computed, onBeforeMount } from "vue";
 import Loader from "../../Loader.vue";
 import LoadFailed from "../../LoadFailed.vue";
+import { getRandomUA } from "../../../utils/getRandomUA";
 
 const props = defineProps({
   widgetData: {
@@ -91,7 +96,6 @@ onBeforeMount(() => {
   if (intervalTimer.value) {
     clearInterval(intervalTimer.value);
   }
-  utools.clearUBrowserCache();
 });
 
 // 获取并更新数据
@@ -105,6 +109,7 @@ async function loadData() {
     hotArticleList.value = res.slice(0, 10);
   } catch (error) {
     isLoadFailed.value = true;
+    console.log('%c [ error ]-114', 'font-size:13px; background:pink; color:#bf2c9f;', error)
   } finally {
     isLoading.value = false;
     utools.clearUBrowserCache();
@@ -117,7 +122,14 @@ async function fetchHotArticle() {
   let data;
   try {
     data = await utools.ubrowser
-      .goto(url)
+      .goto(
+        url,
+        {
+          Referer: "https://juejin.cn/",
+          userAgent: getRandomUA(),
+        },
+        10000
+      )
       .hide()
       .wait(".hot-list")
       .evaluate(() => {
@@ -157,18 +169,14 @@ async function fetchHotArticle() {
     const res = data[0].filter((item: any) => item);
     return res;
   } catch (error) {
-    return Error("获取数据失败");
+    console.log('%c [ error ]-174', 'font-size:13px; background:pink; color:#bf2c9f;', error)
+    throw Error(JSON.stringify(error));
   }
 }
 
 function openLink(link: string) {
   if (isOnEdit.value) return;
   const baseUri = "https://juejin.cn";
-  console.log(
-    "%c [ baseUri + link ]-97",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    baseUri + link
-  );
   utools.shellOpenExternal(baseUri + link);
 }
 </script>

@@ -11,9 +11,11 @@
     >
       <div
         :id="'app-list-' + widgetData.id"
-        class="apps-wrapper p-3 pt-12 w-full h-full overflow-hidden"
+        class="apps-wrapper p-3 pt-12 w-full h-full overflow-hidden relative"
       >
+        <!-- 图标 -->
         <div
+          v-if="!isShowSetting"
           class="w-fit mx-auto h-full flex flex-row flex-wrap content-start overflow-y-scroll"
         >
           <template v-for="item in appListData">
@@ -29,6 +31,51 @@
             </div>
           </template>
         </div>
+        <!-- 设置内容 -->
+        <div
+          v-else
+          class="setting-window mt-5 pb-10 text-white min-w-[300px] w-[400px] h-full overflow-y-scroll mx-auto flex flex-col justify-start items-start gap-y-3"
+        >
+          <div
+            class="flex flex-row justify-star items-centert gap-x-2 text-2xl"
+          >
+            <div class="font-bold">应用路径列表</div>
+          </div>
+          <div class="text-slate-100">
+            使用方法：你可以把只用于点击打开的应用放到一个文件夹中，然后再把文件夹的路径设置在这里，这样就不需要在桌面放很多应用的图标了。
+          </div>
+          <!-- 卡片 -->
+          <div class="my-2 w-full transition-all flex flex-row gap-x-2 py-4 px-5 justify-start items-center rounded-2xl border-[3px] border-blue-600">
+            <!-- 名字和路径 -->
+            <div class="flex flex-1 h-18 flex-col gap-y-1">
+              <div class="font-bold text-lg">
+                {{ appPath.name }}
+              </div>
+              <div
+                class="border-blue-600 hover:border-blue-700 hover:underline cursor-pointer line-clamp-1"
+                @click="openPathInExplorer(appPath.path)"
+              >
+                {{ appPath.path }}
+              </div>
+            </div>
+            <!-- 设置  -->
+            <div
+              class="w-20 h-14 text-red-500 rounded-xl flex justify-center items-center hover:text-red-500 hover:bg-slate-600/60 cursor-pointer"
+              @click="setAppPath"
+            >
+              设置
+            </div>
+          </div>
+        </div>
+        <!-- 设置按钮 -->
+        <button
+          class="setting-btn absolute right-4 bottom-4 cursor-pointer"
+          @click="toggleShowSetting"
+        >
+          <span class="bar bar1"></span>
+          <span class="bar bar2"></span>
+          <span class="bar bar1"></span>
+        </button>
       </div>
     </CustomWindow>
   </Teleport>
@@ -39,6 +86,8 @@ import { onMounted, ref, Ref, defineEmits, onBeforeUnmount } from "vue";
 import { gsap } from "gsap";
 import { customAlphabet } from "nanoid";
 import CustomWindow from "../../CustomWindow.vue";
+import _ from "lodash";
+import { watchDeep } from "@vueuse/core";
 
 const nanoid = customAlphabet(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -55,10 +104,20 @@ interface Icon {
   realPath: string;
 }
 
+interface Path {
+  id: string;
+  name: string;
+  path: string;
+}
+
 const props = defineProps({
   widgetData: {
     type: Object,
     required: true,
+  },
+  modifyWidgetData: {
+    type: Function,
+    required: false,
   },
 });
 
@@ -67,20 +126,72 @@ const emit = defineEmits(["closeAppList"]);
 const width = ref(document.documentElement.clientWidth);
 const height = ref(document.documentElement.clientHeight);
 const appListData: Ref<Icon[]> = ref([]);
+const isShowSetting = ref(false);
 
-onMounted(async () => {
-  const desktopPath = utools.getPath("desktop");
-  const result = (await window.getIconsByPath(desktopPath)) as Icon[];
-  if (result) {
-    result.forEach((item: Icon) => {
-      item.id = nanoid();
-    });
-    appListData.value = result as any;
+const appPath: Ref<Path> = ref(
+  props.widgetData.data.appPath || {
+    id: "desktop",
+    name: "桌面",
+    path: utools.getPath("desktop"),
+  }
+);
+
+watchDeep(appPath, () => {
+  const _widgetData = _.cloneDeep(props.widgetData);
+  _widgetData.data.appPath = appPath.value;
+  console.log(
+    "%c [ _widgetData ]-160",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    _widgetData
+  );
+  if (props.modifyWidgetData) {
+    props.modifyWidgetData(_widgetData);
   }
 });
 
+onMounted(async () => {
+  loadIcons();
+});
+
+async function loadIcons() {
+  const result =
+    ((await window.getIconsByPath(appPath.value.path)) as Icon[]) || [];
+  result.forEach((item: Icon) => {
+    item.id = nanoid();
+  });
+  appListData.value = result as any;
+}
+
+function setAppPath() {
+  const paths = utools.showOpenDialog({
+    properties: ["openDirectory"],
+    defaultPath: utools.getPath("desktop"),
+  });
+
+  if (!paths) return;
+
+  const path = paths[0];
+  const pathName = _.last(path.split("\\"));
+
+  appPath.value = {
+    id: nanoid(),
+    name: pathName,
+    path: path,
+  };
+
+  loadIcons();
+}
+
+function toggleShowSetting() {
+  isShowSetting.value = !isShowSetting.value;
+}
+
 function handleClose() {
   emit("closeAppList");
+}
+
+function openPathInExplorer(path: string) {
+  utools.shellOpenPath(path);
 }
 
 function openApp(realPath: string) {
@@ -144,5 +255,51 @@ function openApp(realPath: string) {
   100% {
     transform: scale(1);
   }
+}
+
+.setting-btn {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+.bar {
+  width: 50%;
+  height: 2px;
+  background-color: rgb(229, 229, 229);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 2px;
+}
+.bar::before {
+  content: "";
+  width: 2px;
+  height: 2px;
+  background-color: rgb(126, 117, 255);
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid white;
+  transition: all 0.3s;
+  box-shadow: 0px 0px 5px white;
+}
+.bar1::before {
+  transform: translateX(-4px);
+}
+.bar2::before {
+  transform: translateX(4px);
+}
+.setting-btn:hover .bar1::before {
+  transform: translateX(4px);
+}
+.setting-btn:hover .bar2::before {
+  transform: translateX(-4px);
 }
 </style>

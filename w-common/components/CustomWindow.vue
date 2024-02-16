@@ -8,6 +8,8 @@
       left: windowState.windowLeft + 'px',
       top: windowState.windowTop + 'px',
       borderRadius: borderRadius,
+      minWidth: props.minWidth + 'px',
+      minHeight: props.minHeight + 'px',
     }"
   >
     <!-- bar -->
@@ -116,6 +118,16 @@ const props = defineProps({
   maxminzeBtnStyle: {
     type: String,
     default: "white",
+    required: false,
+  },
+  minWidth: {
+    type: Number,
+    default: 400,
+    required: false,
+  },
+  minHeight: {
+    type: Number,
+    default: 300,
     required: false,
   },
 });

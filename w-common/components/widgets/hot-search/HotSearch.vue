@@ -30,7 +30,7 @@
   >
     <!-- 加载动画 -->
     <Loader v-if="isLoading" />
-    <!-- 内容 --> 
+    <!-- 内容 -->
     <div
       v-else-if="!isLoadFailed && hotSearchList"
       class="w-full h-full overflow-y-scroll flex flex-col justify-start items-start gap-y-[5px]"
@@ -59,6 +59,7 @@
 import { defineProps, ref, onMounted, Ref, computed, onBeforeMount } from "vue";
 import Loader from "../../Loader.vue";
 import LoadFailed from "../../LoadFailed.vue";
+import { getRandomUA } from "../../../utils/getRandomUA";
 
 const props = defineProps({
   widgetData: {
@@ -100,7 +101,6 @@ onBeforeMount(() => {
   if (intervalTimer.value) {
     clearInterval(intervalTimer.value);
   }
-  utools.clearUBrowserCache();
 });
 
 // 获取并更新数据
@@ -127,7 +127,7 @@ async function fetchHotSearch(cate: string = "realtimehot") {
     data = await utools.ubrowser
       .goto(
         `https://s.weibo.com/top/summary?cate=${cate}`,
-        { Referer: "", userAgent: "" },
+        { Referer: "https://s.weibo.com/", userAgent: getRandomUA() },
         10000
       )
       .wait(".m-wrap table tbody")
