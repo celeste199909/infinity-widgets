@@ -3,9 +3,8 @@
     <svg viewBox="0 0 187.3 93.7" height="100px" width="150px" class="svgbox">
       <defs>
         <linearGradient y2="0%" x2="100%" y1="0%" x1="0%" id="gradient">
-          <stop stop-color="pink" offset="0%"></stop>
-
-          <stop stop-color="blue" offset="100%"></stop>
+          <stop stop-color="#5E17EB" offset="0%"></stop>
+          <stop stop-color="#D96FFF" offset="100%"></stop>
         </linearGradient>
       </defs>
 
@@ -20,7 +19,7 @@
 <script setup lang="ts"></script>
 <style scoped>
 .svgbox {
-  --blue: rgb(148, 66, 63);
+  --blue: rgb(61, 132, 255);
   stroke: var(--blue);
   stroke-width: 5;
   fill: none;

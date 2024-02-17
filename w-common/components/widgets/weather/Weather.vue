@@ -13,15 +13,14 @@
       class="w-full h-full flex flex-col justify-center items-center"
     >
       <div class="h-14 flex justify-center items-center text-center">
-        <img class="w-5 h-5" src="../../../assets/icons/location-48.png" />
+        <Icon name="location" class="w-5 h-5" color="#ffffff" />
         <div>{{ weatherInfo?.city }}</div>
       </div>
       <div class="flex justify-center items-center overflow-hidden">
         <img
+        draggable="false"
           class="w-full h-full block select-none"
           :src="getLocalImage(weatherPhenomenaMap.get(weatherInfo?.weather) as string)"
-          alt=""
-          srcset=""
         />
       </div>
       <div
@@ -54,7 +53,7 @@
           class="h-14 flex justify-center items-center text-center cursor-pointer"
           @click="handleShowSelectDistrict"
         >
-          <img class="w-5 h-5" src="../../../assets/icons/location-48.png" />
+          <Icon name="location" class="w-5 h-5" color="#ffffff" />
           <div>{{ weatherInfo?.city }}</div>
         </div>
         <div class="flex justify-center items-center overflow-hidden">
@@ -96,6 +95,7 @@
 import { defineProps, ref, onMounted, Ref } from "vue";
 import weatherPhenomenaMap from "./weatherMap";
 import provinceDistricts from "./provinceDistricts";
+import Icon from "../../icon/Icon.vue";
 
 const props = defineProps({
   widgetData: {
@@ -126,7 +126,9 @@ const showSelectDistrict = ref(false);
 const weatherInfo: Ref<WeatherInfo | null> = ref(null);
 const currentIndex = ref(0);
 const selectList = ref(provinceDistricts);
-const userDistrict = ref(props.widgetData.data?.userDistrict || provinceDistricts[1]);
+const userDistrict = ref(
+  props.widgetData.data?.userDistrict || provinceDistricts[1]
+);
 
 onMounted(() => {
   // 获取天气信息
@@ -227,5 +229,4 @@ function getLocalImage(name: string) {
     .href;
 }
 </script>
-<style scoped>
-</style>
+<style scoped></style>

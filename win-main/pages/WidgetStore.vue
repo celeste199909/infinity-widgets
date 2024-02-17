@@ -1,20 +1,25 @@
 <template>
   <!-- 小组件列表 -->
   <div
-    class="w-full h-full select-none flex-1 p-2 overflow-y-scroll flex flex-row flex-wrap content-start gap-2"
-  >
+    class="w-full h-full gap-4 select-none flex-1 p-2 overflow-y-scroll flex flex-row flex-wrap content-start"
+  > 
+    <!-- 提示 -->
+    <div v-if="!isOnWidgetContainer" class="w-full h-12 bg-orange-600 shadow-lg text-white p-2 px-4 rounded-xl flex flex-row justify-between items-center">
+      <div>注意：使用前请先到设置中开启<span class="font-bold"> 小组件容器 </span>方可添加组件到桌面，开启前请仔细阅读说明。</div>
+    </div>
+    <!-- 列表 -->
     <div
       v-for="item in allWidgets"
       :key="item.key"
-      class="flex flex-grow-0 flex-shrink-0 flex-col items-center gap-2 p-2"
+      class="flex flex-grow-0 flex-shrink-0 flex-col items-center gap-6 p-2"
     >
       <div class="card rounded-xl w-full overflow-hidden relative">
         <!-- 添加按钮 -->
         <div
-          class="add absolute right-2 top-2 z-10 cursor-pointer"
+          class="add w-7 h-7 absolute right-2 top-2 z-10 cursor-pointer"
           @click="addWidget(item.key)"
         >
-          <img src="../../w-common/assets/icons/add-100.png" class="w-7 h-7" />
+          <img src="../../w-common/assets/icons/add-96-green.png" class="" />
         </div>
         <WidgetComp :widgetName="item.key" :widgetData="item" :id="item.key" />
       </div>
@@ -25,12 +30,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, Ref } from "vue";
+import { onMounted, ref, Ref, inject } from "vue";
 import WidgetComp from "../../w-common/components/WidgetComp.vue";
 import { Widget } from "../../w-common/types/widget";
 // 组合函数
 import { useLayout } from "../../win-widgets/composables/useLayout";
 const { layout, nearestPosition } = useLayout();
+
+const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
 
 const widgetsList = [
   {
@@ -81,18 +88,18 @@ const widgetsList = [
   //     h: getWidgetLength(2),
   //   },
   // },
-  {
-    key: "github-contributions",
-    name: "GitHub贡献图(beta)",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(3),
-      h: getWidgetLength(2),
-    },
-  },
+  // {
+  //   key: "github-contributions",
+  //   name: "GitHub贡献图(beta)",
+  //   position: {
+  //     x: 0,
+  //     y: 0,
+  //   },
+  //   size: {
+  //     w: getWidgetLength(3),
+  //     h: getWidgetLength(2),
+  //   },
+  // },
   {
     key: "app-starter",
     name: "应用启动器",
@@ -113,7 +120,7 @@ const widgetsList = [
       y: 0,
     },
     size: {
-      w: getWidgetLength(3),
+      w: getWidgetLength(2),
       h: getWidgetLength(2),
     },
   },
@@ -137,7 +144,7 @@ const widgetsList = [
       y: 0,
     },
     size: {
-      w: getWidgetLength(3),
+      w: getWidgetLength(2),
       h: getWidgetLength(2),
     },
   },
@@ -176,6 +183,7 @@ onMounted(() => {
 .card {
   transition: all 0.2s;
   position: relative;
+  filter: drop-shadow(6px 6px 1rem rgba(0, 0, 0, 0.1));
 }
 
 .card::after {
@@ -211,15 +219,19 @@ onMounted(() => {
   }
 }
 
-.card:hover {
+/* .card:hover {
   transform: scale(1.05);
   border-radius: 12px;
-}
+} */
 
 .add {
   display: none;
   opacity: 0.8;
-  filter:drop-shadow(0 0 0.5rem rgba(74, 74, 74, 0.358));
+  transition: opacity 0.5s;
+}
+
+.add:hover {
+  opacity: 1;
 }
 
 .card:hover .add {

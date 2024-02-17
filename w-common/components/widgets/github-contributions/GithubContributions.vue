@@ -13,6 +13,7 @@
       class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
     >
       <img
+      draggable="false"
         class="rounded-xl w-14 h-14"
         src="../../../assets/icons/github-96.png"
         alt=""
@@ -75,13 +76,14 @@
       v-else
       :tooltip="'加载失败, 请检查用户名和网络。'"
       :retryFn="loadData"
+      :btnColor="'#666666'"
     />
     <!-- 设置 -->
     <div
       class="absolute flex justify-center items-center gap-x-1 bottom-4 right-4 cursor-pointer"
       @click="openSetting"
     >
-      <img class="w-3 h-3" src="../../../assets/icons/edit-48-666.png" />
+      <Icon :name="'edit'" :color="'#666'" class="w-3 h-3"/>
     </div>
     <!-- 设置 -->
     <Teleport to="body">
@@ -94,7 +96,7 @@
         :height="300"
         :maxminze="false"
         :closeFunction="closeSetting"
-        :closeBtnStyle="'white'"
+        :btnColor="'#ffffff'"
         :showTitle="false"
       >
         <!--  -->
@@ -133,6 +135,7 @@ import CustomWindow from "../../CustomWindow.vue";
 import Loader from "../../Loader.vue";
 import LoadFailed from "../../LoadFailed.vue";
 import { getRandomUA } from "../../../utils/getRandomUA";
+import Icon from "../../icon/Icon.vue";
 
 const props = defineProps({
   widgetData: {

@@ -13,6 +13,7 @@
       class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
     >
       <img
+      draggable="false"
         class="rounded-xl w-14 h-14"
         src="../../../assets/icons/juejin.png"
         alt=""
@@ -30,15 +31,10 @@
   >
     <!-- 加载动画 -->
     <Loader v-if="isLoading" />
-    <!-- 加载失败 -->
-    <LoadFailed
-      v-else-if="isLoadFailed"
-      :retryFn="loadData"
-      :retryBtnStyle="'circle-white'"
-    />
+
     <!-- 内容 -->
     <div
-      v-else
+      v-else-if="!isLoadFailed && hotArticleList.length > 0"
       class="w-full h-full overflow-y-scroll flex flex-col justify-start items-start gap-y-[5px]"
     >
       <div
@@ -56,6 +52,8 @@
         </div>
       </div>
     </div>
+    <!-- 加载失败 -->
+    <LoadFailed v-else :retryFn="loadData" :btnColor="'#ffffff'" />
   </div>
 </template>
 
@@ -109,7 +107,11 @@ async function loadData() {
     hotArticleList.value = res.slice(0, 10);
   } catch (error) {
     isLoadFailed.value = true;
-    console.log('%c [ error ]-114', 'font-size:13px; background:pink; color:#bf2c9f;', error)
+    console.log(
+      "%c [ error ]-114",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      error
+    );
   } finally {
     isLoading.value = false;
     utools.clearUBrowserCache();
@@ -169,7 +171,11 @@ async function fetchHotArticle() {
     const res = data[0].filter((item: any) => item);
     return res;
   } catch (error) {
-    console.log('%c [ error ]-174', 'font-size:13px; background:pink; color:#bf2c9f;', error)
+    console.log(
+      "%c [ error ]-174",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      error
+    );
     throw Error(JSON.stringify(error));
   }
 }

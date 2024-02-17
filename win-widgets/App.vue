@@ -1,7 +1,7 @@
 <template>
   <div
     id="widgets-wrapper"
-    class="font-serif flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative"
+    class="flex flex-row gap-4 w-screen h-screen overflow-hidden justify-center items-center relative"
     :style="{
       padding: `${layout.padding}px`,
       paddingBottom: `${layout.padding + layout.extraPaddingBottom}px`,
@@ -83,6 +83,7 @@ const nanoid = customAlphabet(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
   16
 );
+
 import { Widget } from "../w-common/types/widget";
 
 const { layout, nearestPosition, getNearestEmptyPosition } = useLayout();
@@ -201,26 +202,26 @@ const allWidgets: Widget[] = [
     },
     data: {},
   },
-  {
-    key: "github-contributions",
-    name: "GitHub贡献图(beta)",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(9),
-      h: getWidgetLength(2),
-    },
-    currentStyle: "9x2",
-    style: {
-      "9x2": {
-        w: getWidgetLength(9),
-        h: getWidgetLength(2),
-      },
-    },
-    data: {},
-  },
+  // {
+  //   key: "github-contributions",
+  //   name: "GitHub贡献图(beta)",
+  //   position: {
+  //     x: 0,
+  //     y: 0,
+  //   },
+  //   size: {
+  //     w: getWidgetLength(9),
+  //     h: getWidgetLength(2),
+  //   },
+  //   currentStyle: "9x2",
+  //   style: {
+  //     "9x2": {
+  //       w: getWidgetLength(9),
+  //       h: getWidgetLength(2),
+  //     },
+  //   },
+  //   data: {},
+  // },
   {
     key: "app-starter",
     name: "应用启动器",

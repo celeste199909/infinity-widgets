@@ -3,7 +3,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="wrapper-card bg-white border-2 rounded-xl flex justify-center items-center"
+    class="wrapper-card bg-gradient-to-br from-amber-200 to-amber-100 rounded-xl flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -13,6 +13,7 @@
       class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
     >
       <img
+        draggable="false"
         class="rounded-xl w-14 h-14"
         src="../../../assets/icons/weibo.png"
         alt=""
@@ -51,7 +52,7 @@
       </div>
     </div>
     <!-- 加载失败 -->
-    <LoadFailed v-else :retryFn="loadData" :retryBtnStyle="'circle-white'" />
+    <LoadFailed v-else :retryFn="loadData" :btnColor="'#ffffff'" />
   </div>
 </template>
 

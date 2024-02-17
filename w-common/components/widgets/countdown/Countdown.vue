@@ -10,6 +10,7 @@
   >
     <div class="w-14 h-14 backdrop-blur-[5px] flex justify-center items-center">
       <img
+      draggable="false"
         class="rounded-xl w-14 h-14"
         src="../../../assets/icons/stopwatch-64.png"
         alt=""

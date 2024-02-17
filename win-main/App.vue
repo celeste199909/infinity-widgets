@@ -10,33 +10,44 @@
         to="/"
         class="w-14 h-14 p-3 overflow-hidden rounded-2xl hover:bg-slate-100 flex justify-center items-center"
       >
-        <img
-          class="w-full h-full"
-          src="../w-common/assets/icons/app-96.png"
-          alt=""
-          srcset=""
-        />
+        <Icon name="all-app" />
       </router-link>
       <router-link
         to="/setting"
         class="w-14 h-14 p-3 rounded-2xl hover:bg-slate-100 flex justify-center items-center"
       >
-        <img
-          class="w-full h-full"
-          src="../w-common/assets/icons/setting-96.png"
-          alt=""
-          srcset=""
-        />
+        <Icon name="setting" />
       </router-link>
     </div>
     <!-- 小组件列表 -->
     <div class="flex-1 h-full">
-      <router-view></router-view>
+      <router-view :isOnWidgetContainer="isOnWidgetContainer"></router-view>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, provide } from "vue";
+import Icon from "../w-common/components/icon/Icon.vue";
+import { watchDeep } from "@vueuse/core";
+
+const isOnWidgetContainer = ref(utools.dbStorage.getItem("isOnWidgetContainer") || false);
+watchDeep(isOnWidgetContainer, (value) => {
+  utools.dbStorage.setItem("isOnWidgetContainer", value);
+});
+
+function turnOnWidgetContainer() {
+  isOnWidgetContainer.value = true;
+  window.preload.createWidgetsWrapper();
+}
+
+function turnOffWidgetContainer() {
+  isOnWidgetContainer.value = false;
+  window.preload.removeWidgetsWrapper();
+}
+
+provide("isOnWidgetContainer", isOnWidgetContainer);
+provide("turnOnWidgetContainer", turnOnWidgetContainer);
+provide("turnOffWidgetContainer", turnOffWidgetContainer);
 
 onMounted(() => {
   window.utools.isDarkColors()
@@ -72,6 +83,7 @@ onMounted(() => {
   transform: rotate(30deg) translateY(0);
   transform-origin: top right; /* 设置为右上角 */
 }
+
 .card:hover::after {
   animation: shine 0.5s linear;
 }

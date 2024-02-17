@@ -6,37 +6,18 @@
       {{ tooltip }}
     </div>
     <!-- 重试 -->
-    <!-- circle -->
     <div
-      v-if="retryBtnStyle === 'circle-white'"
       @click="handleRetry"
       class="flex justify-center items-center overflow-hidden cursor-pointer"
     >
-      <img
-        class="w-6 h-6"
-        src="../assets/icons/retry-96-white.png"
-        alt=""
-        srcset=""
-      />
+      <Icon class="w-6 h-6" name="redo" :color="btnColor" />
     </div>
-    <div
-      v-else-if="retryBtnStyle === 'circle-black'"
-      @click="handleRetry"
-      class="flex justify-center items-center overflow-hidden cursor-pointer"
-    >
-      <img
-        class="w-6 h-6"
-        src="../assets/icons/retry-96-black.png"
-        alt=""
-        srcset=""
-      />
-    </div>
-    <div v-else class="button cursor-pointer" @click="handleRetry">重试</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
+import Icon from "./icon/Icon.vue";
 
 const props = defineProps({
   tooltip: {
@@ -48,7 +29,7 @@ const props = defineProps({
     type: Function,
     required: true,
   },
-  retryBtnStyle: {
+  btnColor: {
     type: String,
     required: false,
     default: "default",

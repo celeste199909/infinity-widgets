@@ -7,7 +7,6 @@ interface Window {
         removeWidget: (widget: string) => void;
         setEditMode: (editMode: boolean) => void;
         removeAllWidgets: () => void;
-
     },
     // win-widgets
     getIconsByPath: (path: string) => Promise<Object[]>;

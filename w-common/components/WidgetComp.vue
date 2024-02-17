@@ -3,7 +3,6 @@
     :is="widgets.get(widgetData.key)"
     :widgetData="widgetData"
     :modifyWidgetData="modifyWidgetData"
-
     class="transition-class rounded-xl overflow-hidden select-none"
   />
 </template>
@@ -13,7 +12,7 @@ import Calendar from "./widgets/calendar/Calendar.vue";
 import AppStarter from "./widgets/app-starter/AppStarter.vue";
 import Todo from "./widgets/todo/Todo.vue";
 import Weather from "./widgets/weather/Weather.vue";
-import GithubContributions from "./widgets/github-contributions/GithubContributions.vue";
+// import GithubContributions from "./widgets/github-contributions/GithubContributions.vue";
 import Countdown from "./widgets/countdown/Countdown.vue";
 import Alarm from "./widgets/alarm/Alarm.vue";
 import HotSearch from "./widgets/hot-search/HotSearch.vue";
@@ -41,7 +40,7 @@ const widgets = new Map([
   ["app-starter", AppStarter],
   ["todo", Todo],
   ["weather", Weather],
-  ["github-contributions", GithubContributions],
+  // ["github-contributions", GithubContributions],
   ["countdown", Countdown],
   ["alarm", Alarm],
   ["hot-search", HotSearch],

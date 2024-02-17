@@ -14,7 +14,7 @@
   >
     <!-- bar -->
     <div
-      class="w-full h-12 absolute top-0 left-0 right-0 text-slate-200 min-h-12 max-h-12 p-4 flex flex-row justify-between items-center select-none z-10"
+      class="w-full h-14 absolute top-0 left-0 right-0 text-slate-200 min-h-14 max-h-14 p-4 flex flex-row justify-between items-center select-none z-10"
       @mousedown="startDrag"
     >
       <!-- 名字 -->
@@ -22,33 +22,18 @@
       <div v-else></div>
       <!-- 操作按钮 -->
       <div class="flex flex-row gap-3">
-        <div v-if="maxminze" @click="toggleFullscreen">
-          <img
-            v-if="maxminzeBtnStyle === 'black'"
-            draggable="false"
-            src="../assets/icons/maxminze-50-black.png"
-            class="w-6 h-6"
-          />
-          <img
-            v-else
-            draggable="false"
-            src="../assets/icons/maxminze-50-white.png"
-            class="w-6 h-6"
-          />
+        <div
+          v-if="maxminze"
+          @click="toggleFullscreen"
+          class="w-10 h-10 rounded-xl hover:bg-white/20 p-2 flex justify-center items-center overflow-hidden"
+        >
+          <Icon :name="'maxmize'" :color="btnColor" />
         </div>
-        <div @click="closeWindow" class="flex justify-center items-center overflow-hidden">
-          <img
-            v-if="closeBtnStyle === 'black'"
-            draggable="false"
-            src="../assets/icons/close-50-black.png"
-            class="w-6 h-6"
-          />
-          <img
-            v-else
-            draggable="false"
-            src="../assets/icons/close-50-white.png"
-            class="w-6 h-6"
-          />
+        <div
+          @click="closeWindow"
+          class="w-10 h-10 rounded-xl hover:bg-white/20 p-2 flex justify-center items-center overflow-hidden"
+        >
+          <Icon :name="'close'" :color="btnColor" />
         </div>
       </div>
     </div>
@@ -78,7 +63,7 @@
 <script setup lang="ts">
 import { ref, reactive, defineProps, onMounted } from "vue";
 import { gsap } from "gsap";
-import { set } from "@vueuse/core";
+import Icon from "./icon/Icon.vue";
 const props = defineProps({
   winId: {
     type: String,
@@ -110,14 +95,9 @@ const props = defineProps({
     default: true,
     required: false,
   },
-  closeBtnStyle: {
+  btnColor: {
     type: String,
-    default: "white",
-    required: false,
-  },
-  maxminzeBtnStyle: {
-    type: String,
-    default: "white",
+    default: "#ffffff",
     required: false,
   },
   minWidth: {

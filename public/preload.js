@@ -21,7 +21,7 @@ const createWidgetsWrapper = () => {
   }, () => {
     // 显示
     // widgetsWrapper.show();
-    widgetsWrapper.webContents.openDevTools();
+    // widgetsWrapper.webContents.openDevTools();
     ipcRenderer.sendTo(widgetsWrapper.webContents.id, "init");
     utools.showMainWindow();
     // 在窗口失去焦点时将其置于最底层
@@ -42,8 +42,11 @@ const createWidgetsWrapper = () => {
 
 utools.onPluginEnter(({ code, type, payload, option }) => {
   console.log('用户进入插件应用', code, type, payload)
-  if (!widgetsWrapper) {
+  const isOnWidgetContainer = utools.dbStorage.getItem('isOnWidgetContainer');
+  if (isOnWidgetContainer) {
     createWidgetsWrapper();
+  }else{
+    // utools.showNotification('请先开启容小组件容器');
   }
 })
 

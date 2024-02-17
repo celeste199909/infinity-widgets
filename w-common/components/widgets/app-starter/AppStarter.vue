@@ -2,7 +2,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="rounded-xl w-full h-full p-4 flex justify-center items-center bg-white border-2 overflow-hidden relative"
+    class="rounded-xl w-full h-full p-4 flex justify-center items-center bg-white overflow-hidden relative"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',

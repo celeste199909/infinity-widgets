@@ -2,7 +2,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="rounded-xl bg-fuchsia-100 backdrop-blur-sm flex justify-center items-center"
+    class="rounded-xl bg-green-300 backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -10,6 +10,7 @@
   >
     <!-- completed-96.png -->
     <img
+    
       class="w-14 h-14"
       draggable="false"
       src="../../../assets/icons/completed-96.png"

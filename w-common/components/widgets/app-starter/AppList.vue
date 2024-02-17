@@ -6,22 +6,22 @@
       :width="1000"
       :height="700"
       :closeFunction="handleClose"
-      :maxminzeBtnStyle="'white'"
-      :closeBtnStyle="'white'"
+      :btnColor="'#ffffff'"
     >
       <div
         :id="'app-list-' + widgetData.id"
-        class="apps-wrapper p-3 pt-12 w-full h-full overflow-hidden relative"
+        class="apps-wrapper p-5 pt-12 w-full h-full overflow-hidden relative  "
       >
         <!-- 图标 -->
         <div
           v-if="!isShowSetting"
-          class="w-fit mx-auto h-full flex flex-row flex-wrap content-start overflow-y-scroll"
+          class="w-full h-full flex flex-row flex-wrap overflow-y-scroll place-content-start justify-start items-start"
         >
           <template v-for="item in appListData">
-            <div v-if="!item.isDirectory" class="icon">
+            <div v-if="!item.isDirectory" class="icon ">
               <img
-                class="icon-image rounded-xl"
+                draggable="false"
+                class="icon-image border-white/60 rounded-2xl p-[6px]"
                 :id="`icon-image-${item.id}`"
                 :src="item.iconImage"
                 ref="iconImage"
@@ -45,7 +45,9 @@
             使用方法：你可以把只用于点击打开的应用放到一个文件夹中，然后再把文件夹的路径设置在这里，这样就不需要在桌面放很多应用的图标了。
           </div>
           <!-- 卡片 -->
-          <div class="my-2 w-full transition-all flex flex-row gap-x-2 py-4 px-5 justify-start items-center rounded-2xl border-[3px] border-blue-600">
+          <div
+            class="my-2 w-full transition-all flex flex-row gap-x-2 py-4 px-5 justify-start items-center rounded-2xl border-[3px] border-blue-600"
+          >
             <!-- 名字和路径 -->
             <div class="flex flex-1 h-18 flex-col gap-y-1">
               <div class="font-bold text-lg">
@@ -60,7 +62,7 @@
             </div>
             <!-- 设置  -->
             <div
-              class="w-20 h-14 text-red-500 rounded-xl flex justify-center items-center hover:text-red-500 hover:bg-slate-600/60 cursor-pointer"
+              class="w-20 h-14 rounded-xl font-bold flex justify-center items-center hover:bg-slate-600/60 cursor-pointer"
               @click="setAppPath"
             >
               设置
@@ -68,14 +70,14 @@
           </div>
         </div>
         <!-- 设置按钮 -->
-        <button
+        <div
           class="setting-btn absolute right-4 bottom-4 cursor-pointer"
           @click="toggleShowSetting"
         >
           <span class="bar bar1"></span>
           <span class="bar bar2"></span>
           <span class="bar bar1"></span>
-        </button>
+        </div>
       </div>
     </CustomWindow>
   </Teleport>
