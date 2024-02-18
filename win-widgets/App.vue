@@ -357,9 +357,9 @@ const nextPosistion: Ref<Widget> = ref({
 
 onMounted(() => {
   // 系统主题
-  window.utools.isDarkColors()
-    ? document.documentElement.classList.add("dark")
-    : document.documentElement.classList.remove("dark");
+  // window.utools.isDarkColors()
+  //   ? document.documentElement.classList.add("dark")
+  //   : document.documentElement.classList.remove("dark");
 
   // 监听自定义事件
   document.addEventListener("addWidgetEvent", function (event: any) {

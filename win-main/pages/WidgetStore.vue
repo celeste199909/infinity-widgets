@@ -35,7 +35,7 @@ import WidgetComp from "../../w-common/components/WidgetComp.vue";
 import { Widget } from "../../w-common/types/widget";
 // 组合函数
 import { useLayout } from "../../win-widgets/composables/useLayout";
-const { layout, nearestPosition } = useLayout();
+const { layout } = useLayout();
 
 const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
 
@@ -162,6 +162,10 @@ function getWidgetLength(units: number) {
 const allWidgets: Ref<Widget[]> = ref(widgetsList);
 
 function addWidget(key: string) {
+  if(!isOnWidgetContainer.value) {
+    window.utools.showNotification("请先在设置中开启【小组件容器】");
+    return;
+  }
   window.preload.addWidget(key);
 }
 
@@ -184,6 +188,10 @@ onMounted(() => {
   transition: all 0.2s;
   position: relative;
   filter: drop-shadow(6px 6px 1rem rgba(0, 0, 0, 0.1));
+}
+
+.dark .card {
+  filter: drop-shadow(6px 6px 1rem rgba(0, 0, 0, 0.3));
 }
 
 .card::after {

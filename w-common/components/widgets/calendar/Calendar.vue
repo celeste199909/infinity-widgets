@@ -2,7 +2,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="rounded-xl w-full h-full bg-gradient-to-b from-slate-300 to-slate-200 backdrop-blur-sm flex justify-center items-center"
+    class="rounded-xl w-full h-full bg-white text-slate-900 backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -22,7 +22,7 @@
   <!-- 有样式 -->
   <div
     v-else
-    class="rounded-xl w-full h-full bg-slate-100 text-slate-800 backdrop-blur-sm flex justify-center items-center"
+    class="rounded-xl w-full h-full bg-white text-slate-900 backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',

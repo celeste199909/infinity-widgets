@@ -1,22 +1,30 @@
 <template>
   <div
-    class="w-screen h-screen flex flex-row justify-center bg-gradient-to-br bg-white dark:text-slate-100 overflow-hidden"
+    class="w-screen h-screen flex flex-row justify-center bg-gradient-to-br bg-white dark:bg-[#343434] dark:text-slate-100 overflow-hidden"
   >
     <!-- 左侧导航栏 -->
     <div
-      class="w-14 p-2 box-content h-full flex flex-col justify-start gap-2 border-r-2 border-gray-100"
+      class="w-14 p-2 box-content h-full flex flex-col justify-start gap-2 border-r-2 border-gray-100 dark:border-white/10"
     >
       <router-link
         to="/"
-        class="w-14 h-14 p-3 overflow-hidden rounded-2xl hover:bg-slate-100 flex justify-center items-center"
+        class="w-14 h-14 p-3 overflow-hidden rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-600 flex justify-center items-center"
       >
-        <Icon name="all-app" />
+        <Icon
+          name="all-app"
+          :width="route.name === 'WidgetStore' ? 4 : 2"
+          :color="route.name === 'WidgetStore' ? '#8D8DF9' : '#666666'"
+        />
       </router-link>
       <router-link
         to="/setting"
-        class="w-14 h-14 p-3 rounded-2xl hover:bg-slate-100 flex justify-center items-center"
+        class="w-14 h-14 p-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-600 flex justify-center items-center"
       >
-        <Icon name="setting" />
+        <Icon
+          name="setting"
+          :width="route.name === 'Setting' ? 4 : 2"
+          :color="route.name === 'Setting' ? '#8D8DF9' : '#666666'"
+        />
       </router-link>
     </div>
     <!-- 小组件列表 -->
@@ -29,8 +37,13 @@
 import { onMounted, ref, provide } from "vue";
 import Icon from "../w-common/components/icon/Icon.vue";
 import { watchDeep } from "@vueuse/core";
+import { useRoute } from "vue-router";
 
-const isOnWidgetContainer = ref(utools.dbStorage.getItem("isOnWidgetContainer") || false);
+const route = useRoute();
+
+const isOnWidgetContainer = ref(
+  utools.dbStorage.getItem("isOnWidgetContainer") || false
+);
 watchDeep(isOnWidgetContainer, (value) => {
   utools.dbStorage.setItem("isOnWidgetContainer", value);
 });
@@ -38,6 +51,7 @@ watchDeep(isOnWidgetContainer, (value) => {
 function turnOnWidgetContainer() {
   isOnWidgetContainer.value = true;
   window.preload.createWidgetsWrapper();
+
 }
 
 function turnOffWidgetContainer() {

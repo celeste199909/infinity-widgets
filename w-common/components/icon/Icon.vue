@@ -13,6 +13,7 @@ import Minus from "./icons/Minus.vue";
 import Edit from "./icons/Edit.vue";
 import Location from "./icons/Location.vue";
 import Redo from "./icons/Redo.vue";
+import Check from "./icons/Check.vue";
 
 const componentMap = new Map<string, any>([
   ["all-app", AllApp],
@@ -25,6 +26,7 @@ const componentMap = new Map<string, any>([
   ["edit", Edit],
   ["location", Location],
   ["redo", Redo],
+  ["check", Check],
 ]);
 
 const props = defineProps({

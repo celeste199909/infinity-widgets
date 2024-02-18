@@ -10,7 +10,6 @@
   >
     <!-- completed-96.png -->
     <img
-    
       class="w-14 h-14"
       draggable="false"
       src="../../../assets/icons/completed-96.png"
@@ -19,48 +18,46 @@
   <!-- 有样式 -->
   <div
     v-else
-    class="rounded-xl w-full h-full px-2 pb-2 pb-4 bg-gradient-to-br from-cyan-100 to-slate-100 backdrop-blur-sm flex flex-col justify-start items-center relative"
+    class="rounded-xl w-full h-full p-2 pb-3 bg-gradient-to-br from-cyan-200 to-slate-100 backdrop-blur-sm flex flex-col justify-start items-center relative"
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',
     }"
   >
-    <div
-      class="text-xl px-1 w-full h-12 font-bold text-blue-500 flex flex-row justify-start items-center"
-    >
-      To Do
-    </div>
     <!-- ToDo 列表 -->
     <div
-      class="w-full flex-1 flex flex-col justify-start items-center gap-y-2 overflow-y-scroll pb-14"
+      class="w-full text-[12px] gap-y-2 flex-1 flex flex-col justify-start items-center overflow-y-scroll pb-14"
     >
+      <!-- 一个todo -->
       <div
         v-for="(todo, index) in todos"
         :key="index"
-        class="flex w-full h-12 border rounded-lg justify-between items-center bg-white px-4 py-2"
+        class="flex w-full h-fit border rounded-xl justify-between items-center bg-white px-14 py-4 relative"
       >
-        <div class="flex flex-row justify-start items-center gap-x-1">
-          <input
-            type="checkbox"
-            v-model="todo.completed"
-            class="h-5 w-5 text-blue-400 outline-none border-slate-200 focus:border-slate-300"
-          />
-          <span
-            class="flex-1 text-slate-500"
-            :class="{ 'line-through': todo.completed }"
-            >{{ todo.text }}</span
-          >
-        </div>
+        <!-- 完成 删除 -->
         <div
-          @click="deleteTodo(index)"
-          class="text-gray-300 font-thin hover:text-gray-400 text-[32px] mb-[2px] flex justify-center items-center"
+          class="w-full px-4 h-[50px] flex flex-row justify-between items-center gap-x-1 absolute top-0 left-0"
         >
-          –
+          <div
+            class="w-6 h-6 border-2 rounded-full flex justify-center items-center overflow-hidden"
+            @click="toggleComplete(todo)"
+          >
+            <Icon v-if="todo.completed" name="check" class="w-5 h-5" />
+          </div>
+          <Icon name="close" class="w-6 h-6" @click="deleteTodo(index)" />
         </div>
+        <!-- 文字 -->
+        <span
+          class="w-full h-fit text-slate-500"
+          :class="{ 'line-through': todo.completed }"
+          >{{ todo.text }}</span
+        >
       </div>
     </div>
     <!-- 输入框和添加按钮 -->
-    <div class="flex p-1 h-12 w-full relative">
+    <div
+      class="flex text-[12px] w-full h-14 flex-row gap-x-2 justify-between items-center absolute bottom-2 left-0 px-2 py-2 rounded-lg"
+    >
       <input
         v-model="newTodo"
         @keyup.enter="addTodo"
@@ -68,18 +65,14 @@
         type="text"
         placeholder="添加"
       />
-      <div
-        @click="addTodo"
-        class="w-12 h-12 rounded-lg flex justify-center items-center font-thin text-gray-300 hover:text-gray-400 text-[36px] absolute right-1 top-0 bottom-0"
-      >
-        +
-      </div>
+      <Icon name="add" class="w-8 h-8" @click="addTodo" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref,computed } from "vue";
+import { defineProps, ref, computed } from "vue";
+import Icon from "../../icon/Icon.vue";
 
 const props = defineProps({
   widgetData: {
@@ -104,15 +97,24 @@ const isOnEdit = computed(() => {
 });
 
 function addTodo() {
-  if(isOnEdit.value) return;
+  if (isOnEdit.value) return;
   if (newTodo.value.trim() !== "") {
     todos.value.push({ text: newTodo.value, completed: false });
     newTodo.value = "";
   }
 }
 
+function toggleComplete(todo: Todo) {
+  if (isOnEdit.value) return;
+  todos.value.forEach((item) => {
+    if (item === todo) {
+      item.completed = !item.completed;
+    }
+  });
+}
+
 function deleteTodo(index: number) {
-  if(isOnEdit.value) return;
+  if (isOnEdit.value) return;
   todos.value.splice(index, 1);
 }
 </script>

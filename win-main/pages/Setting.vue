@@ -3,7 +3,7 @@
     <!-- 小组件容器 -->
     <div>
       <div class="mt-2 font-bold text-[16px]">小组件容器</div>
-      <div class="mt-1 mb-2 text-[14px] text-slate-600">
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-300">
         <div>
           <span class="font-bold">注意：</span
           >只有开启此选项才能把小组件添加到桌面上。
@@ -18,7 +18,7 @@
           所有小组件也会被关闭（数据不会被删除）。
         </div>
       </div>
-      <div class="container mb-2">
+      <div class="container my-4">
         <div class="w-24" @click="turnOnWidgetContainer">
           <div :class="isOnWidgetContainer ? 'current' : ''"></div>
           <span>开启</span>
@@ -32,7 +32,7 @@
     <!-- 删除所有组件 -->
     <div>
       <div class="mt-2 font-bold text-[16px]">删除所有组件</div>
-      <div class="mt-1 mb-2 text-[14px] text-slate-600">
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-300">
         此操作将删除桌面上的所有小组件，包括其运行产生的数据。
       </div>
       <button
@@ -56,11 +56,28 @@
         删除
       </button>
     </div>
+    <ul>
+      19
+      <li v-for="country in countries" :key="country.id">{{ country.name }}</li>
+      20
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
 import { inject, Ref } from "vue";
+import { ref, onMounted } from "vue";
+import { supabase } from "../../w-common/lib/supabaseClient";
+
+const countries: Ref<any[] | null> = ref([]);
+async function getCountries() {
+  const { data } = await supabase.from("countries").select();
+  countries.value = data;
+}
+
+onMounted(() => {
+  getCountries();
+});
 
 const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
 const turnOnWidgetContainer = inject("turnOnWidgetContainer") as () => void;
@@ -107,11 +124,14 @@ function removeAllWidgets() {
   padding: 0.375em 0.75em 0.375em 0.375em;
   border-radius: 99em;
   transition: 0.25s ease;
-  color: #6969cb;
+  color: #8282ff;
 }
 
 .container span:hover {
-  background-color: #d6d6e5;
+  background-color: #d6d6e5be;
+}
+.dark .container span:hover {
+  background-color: #51516b;
 }
 
 .container span:before {

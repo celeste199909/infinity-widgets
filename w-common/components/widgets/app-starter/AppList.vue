@@ -39,7 +39,7 @@
           <div
             class="flex flex-row justify-star items-centert gap-x-2 text-2xl"
           >
-            <div class="font-bold">应用路径列表</div>
+            <div class="font-bold">应用的路径</div>
           </div>
           <div class="text-slate-100">
             使用方法：你可以把只用于点击打开的应用放到一个文件夹中，然后再把文件夹的路径设置在这里，这样就不需要在桌面放很多应用的图标了。

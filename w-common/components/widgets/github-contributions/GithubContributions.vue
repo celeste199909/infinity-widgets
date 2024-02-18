@@ -156,7 +156,7 @@ interface cellItem {
 const gridList: Ref<Array<cellItem>[]> = ref([]);
 const monthList: Ref<Array<string>> = ref([]);
 const isLoading = ref(false);
-const intervalTimer: Ref<null | number> = ref(null);
+const intervalTimer: Ref<number | null | NodeJS.Timeout> = ref(null);
 const lastUpdate = ref(Date.now());
 const lastUpdateTime = computed(() => {
   return new Date(lastUpdate.value).toLocaleString();

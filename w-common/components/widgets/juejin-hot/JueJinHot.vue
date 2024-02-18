@@ -76,7 +76,7 @@ const props = defineProps({
 
 const isLoading = ref(false);
 const isLoadFailed = ref(false);
-const intervalTimer = ref<number | null>(null);
+const intervalTimer = ref<number | null | NodeJS.Timeout>(null);
 
 const hotArticleList: Ref<any[]> = ref([]);
 const isOnEdit = computed(() => {

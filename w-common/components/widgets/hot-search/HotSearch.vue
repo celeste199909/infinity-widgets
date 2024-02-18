@@ -40,14 +40,34 @@
         v-for="item in hotSearchList"
         class="w-full flex flex-row flex-nowrap justify-start items-center gap-x-[6px]"
       >
+        <!-- 排名 -->
         <div class="text-sm">
-          {{ item.rank }}
+          <div>{{ item.rank }}</div>
         </div>
-        <div
-          class="truncate text-sm cursor-pointer"
-          @click="openLink(item.link)"
-        >
-          {{ item.title }}
+        <!-- 关键词 -->
+        <div class="truncate text-sm cursor-pointer" @click="openUrl(item.url)">
+          {{ item.keyword }}
+        </div>
+        <!-- 热 新 沸 -->
+        <div class="text-sm">
+          <div
+            v-if="item.isHot"
+            class="w-5 h-5 p-1 rounded-md bg-orange-500 flex justify-center items-center"
+          >
+            热
+          </div>
+          <div
+            v-else-if="item.isBoil"
+            class="w-5 h-5 p-1 rounded-md bg-orange-500 flex justify-center items-center"
+          >
+            沸
+          </div>
+          <div
+            v-else-if="item.isNew"
+            class="w-5 h-5 p-1 rounded-md bg-orange-500 flex justify-center items-center"
+          >
+            新
+          </div>
         </div>
       </div>
     </div>
@@ -75,7 +95,7 @@ const props = defineProps({
 
 const isLoading = ref(false);
 const isLoadFailed = ref(false);
-const intervalTimer = ref<number | null>(null);
+const intervalTimer: Ref<number | null | NodeJS.Timeout> = ref(null);
 const url = "https://s.weibo.com/top/summary";
 const cate = "realtimehot";
 const cateMap = new Map([
@@ -111,8 +131,8 @@ async function loadData() {
     // 加载中
     isLoading.value = true;
     isLoadFailed.value = false;
-    const res = await fetchHotSearch();
-    hotSearchList.value = res.slice(0, 10);
+    const res = await fetchHotSearchByApiOpen();
+    hotSearchList.value = res;
   } catch (error) {
     isLoadFailed.value = true;
   } finally {
@@ -121,8 +141,8 @@ async function loadData() {
   }
 }
 
-// 获取数据
-async function fetchHotSearch(cate: string = "realtimehot") {
+// 获取数据 ByUbrowser
+async function fetchHotSearchByUbrowser(cate: string = "realtimehot") {
   let data;
   try {
     data = await utools.ubrowser
@@ -160,6 +180,26 @@ async function fetchHotSearch(cate: string = "realtimehot") {
   } catch (error) {
     return Error("获取数据失败");
   }
+}
+
+// 获取数据 By Api open
+async function fetchHotSearchByApiOpen() {
+  let res;
+  const response = await fetch(
+    "https://service-6db672ow-1322077646.gz.tencentapigw.com.cn/release/api/hot-search"
+  );
+  const data = await response.json();
+  if (data.code === 200) {
+    res = data.data;
+  } else {
+    return Error("获取数据失败");
+  }
+  return res as any;
+}
+
+function openUrl(url: string) {
+  if (isOnEdit.value) return;
+  utools.shellOpenExternal(url);
 }
 
 function openLink(link: string) {

@@ -1,14 +1,22 @@
 import { createApp } from 'vue'
 import "../w-common/style.css";
 import App from './App.vue'
-import {createRouter, createWebHashHistory} from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { utools } from "../w-common/plugin/utools";
 import Setting from "./pages/Setting.vue";
 import WidgetStore from "./pages/WidgetStore.vue"
 
 const routes = [
-    { path: '/', component: WidgetStore },
-    { path: '/setting', component: Setting },
+    { 
+        name: 'WidgetStore',
+        path: '/', 
+        component: WidgetStore
+     },
+    { 
+        name: 'Setting',
+        path: '/setting', 
+        component: Setting 
+    },
 ]
 
 const router = createRouter({
