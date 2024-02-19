@@ -21,7 +21,7 @@ const createWidgetsWrapper = () => {
   }, () => {
     // 显示
     // widgetsWrapper.show();
-    widgetsWrapper.webContents.openDevTools();
+    // widgetsWrapper.webContents.openDevTools();
     ipcRenderer.sendTo(widgetsWrapper.webContents.id, "init");
     utools.showMainWindow();
     // 在窗口失去焦点时将其置于最底层

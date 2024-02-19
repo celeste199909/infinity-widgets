@@ -14,6 +14,9 @@ import Edit from "./icons/Edit.vue";
 import Location from "./icons/Location.vue";
 import Redo from "./icons/Redo.vue";
 import Check from "./icons/Check.vue";
+import DataArrival from "./icons/DataArrival.vue";
+import ListTodo from "./icons/ListTodo.vue";
+import ListCompleted from "./icons/ListCompleted.vue";
 
 const componentMap = new Map<string, any>([
   ["all-app", AllApp],
@@ -27,6 +30,9 @@ const componentMap = new Map<string, any>([
   ["location", Location],
   ["redo", Redo],
   ["check", Check],
+  ["data-arrival", DataArrival],
+  ["list-todo", ListTodo],
+  ["list-completed", ListCompleted],
 ]);
 
 const props = defineProps({

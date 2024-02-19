@@ -141,11 +141,6 @@ const appPath: Ref<Path> = ref(
 watchDeep(appPath, () => {
   const _widgetData = _.cloneDeep(props.widgetData);
   _widgetData.data.appPath = appPath.value;
-  console.log(
-    "%c [ _widgetData ]-160",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    _widgetData
-  );
   if (props.modifyWidgetData) {
     props.modifyWidgetData(_widgetData);
   }

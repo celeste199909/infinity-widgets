@@ -26,46 +26,73 @@
   >
     <!-- ToDo 列表 -->
     <div
-      class="w-full text-[12px] gap-y-2 flex-1 flex flex-col justify-start items-center overflow-y-scroll pb-14"
+      v-if="currentPage === 0"
+      class="w-full text-[12px] gap-y-2 flex-1 flex flex-col rounded-lg justify-start items-center overflow-y-scroll pb-32"
     >
-      <!-- 一个todo -->
-      <div
-        v-for="(todo, index) in todos"
-        :key="index"
-        class="flex w-full h-fit border rounded-xl justify-between items-center bg-white px-14 py-4 relative"
-      >
-        <!-- 完成 删除 -->
-        <div
-          class="w-full px-4 h-[50px] flex flex-row justify-between items-center gap-x-1 absolute top-0 left-0"
-        >
-          <div
-            class="w-6 h-6 border-2 rounded-full flex justify-center items-center overflow-hidden"
-            @click="toggleComplete(todo)"
-          >
-            <Icon v-if="todo.completed" name="check" class="w-5 h-5" />
-          </div>
-          <Icon name="close" class="w-6 h-6" @click="deleteTodo(index)" />
+      <template v-if="notCompletedTodos.length === 0">
+        <div class="w-full h-full flex justify-center items-center text-[12px]">
+          <div class="text-[#8F4EFF] font-bold">在下方输入后按回车添加</div>
         </div>
-        <!-- 文字 -->
-        <span
-          class="w-full h-fit text-slate-500"
-          :class="{ 'line-through': todo.completed }"
-          >{{ todo.text }}</span
-        >
-      </div>
+      </template>
+      <!-- 一个todo -->
+      <template v-else>
+        <template v-for="(todo, index) in notCompletedTodos" :key="index">
+          <TodoCard
+            :todo="todo"
+            :toggleComplete="toggleComplete"
+            :deleteTodo="deleteTodo"
+          />
+        </template>
+      </template>
+    </div>
+    <!-- 完成的列表 -->
+    <div
+      v-else
+      class="w-full text-[12px] gap-y-2 flex-1 flex flex-col rounded-lg justify-start items-center overflow-y-scroll pb-32"
+    >
+      <template v-if="completedTodos.length === 0">
+        <div class="w-full h-full flex justify-center items-center text-[12px]">
+          <div class="text-[#8F4EFF] font-bold">还没有已完成的任务</div>
+        </div>
+      </template>
+      <template v-else>
+        <!-- 一个todo -->
+        <template v-for="(todo, index) in completedTodos" :key="index">
+          <TodoCard
+            :todo="todo"
+            :toggleComplete="toggleComplete"
+            :deleteTodo="deleteTodo"
+          />
+        </template>
+      </template>
     </div>
     <!-- 输入框和添加按钮 -->
     <div
-      class="flex text-[12px] w-full h-14 flex-row gap-x-2 justify-between items-center absolute bottom-2 left-0 px-2 py-2 rounded-lg"
+      class="flex text-[12px] w-full h-16 bg-white/60 backdrop-blur-sm flex-row gap-x-2 justify-between items-center absolute bottom-0 left-0 px-2 py-3 rounded-bl-lg rounded-br-lg"
     >
       <input
         v-model="newTodo"
         @keyup.enter="addTodo"
-        class="px-3 w-full bg-white text-slate-500 h-12 outline-none py-2 border rounded-lg flex-1 border-slate-100 focus:border-slate-200"
+        class="todo-input px-3 w-full bg-white text-slate-600 h-12 outline-none py-2 border rounded-lg flex-1 border-slate-100 focus:border-slate-200"
         type="text"
-        placeholder="添加"
+        placeholder="按下回车添加"
+        :disabled="isOnEdit"
       />
-      <Icon name="add" class="w-8 h-8" @click="addTodo" />
+      <!-- <Icon name="add" class="w-8 h-8" @click="addTodo" /> -->
+      <Icon
+        v-if="currentPage === 1"
+        name="list-todo"
+        color="#8F4EFF"
+        class="w-11 h-11 p-2 cursor-pointer hover:bg-slate-200 rounded-xl"
+        @click="toggleList"
+      />
+      <Icon
+        v-else
+        name="list-completed"
+        color="#8F4EFF"
+        class="w-11 h-11 p-2 cursor-pointer hover:bg-slate-200 rounded-xl"
+        @click="toggleList"
+      />
     </div>
   </div>
 </template>
@@ -73,6 +100,9 @@
 <script setup lang="ts">
 import { defineProps, ref, computed } from "vue";
 import Icon from "../../icon/Icon.vue";
+import TodoCard from "./TodoCard.vue";
+import { watchDeep } from "@vueuse/core";
+import _ from "lodash";
 
 const props = defineProps({
   widgetData: {
@@ -91,10 +121,27 @@ interface Todo {
 }
 
 const newTodo = ref("");
-const todos = ref<Todo[]>([]);
+const todos = ref<Todo[]>(props.widgetData.data?.todos || []);
+watchDeep(todos, (newVal) => {
+  const _widgetData = _.cloneDeep(props.widgetData);
+  _widgetData.data.todos = todos.value;
+  if (props.modifyWidgetData) {
+    props.modifyWidgetData(_widgetData);
+  }
+});
+
+const notCompletedTodos = computed(() => {
+  return todos.value.filter((todo) => !todo.completed);
+});
+
+const completedTodos = computed(() => {
+  return todos.value.filter((todo) => todo.completed);
+});
 const isOnEdit = computed(() => {
   return props.widgetData.draggable;
 });
+
+const currentPage = ref(0);
 
 function addTodo() {
   if (isOnEdit.value) return;
@@ -113,13 +160,22 @@ function toggleComplete(todo: Todo) {
   });
 }
 
-function deleteTodo(index: number) {
+function deleteTodo(todo: Todo) {
   if (isOnEdit.value) return;
-  todos.value.splice(index, 1);
+  todos.value = todos.value.filter((item) => item !== todo);
+}
+
+function toggleList() {
+  if (isOnEdit.value) return;
+  currentPage.value = currentPage.value === 0 ? 1 : 0;
 }
 </script>
 <style scoped>
 .widget:hover {
   filter: drop-shadow(0 0 0.5rem rgba(206, 206, 206, 0.438));
+}
+
+.todo-input {
+  filter: drop-shadow(0 0 0.5rem 0.5rem rgba(206, 206, 206, 0.299));
 }
 </style>

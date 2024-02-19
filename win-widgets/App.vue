@@ -311,14 +311,6 @@ const allWidgets: Widget[] = [
         w: getWidgetLength(3),
         h: getWidgetLength(4),
       },
-      "3x5": {
-        w: getWidgetLength(3),
-        h: getWidgetLength(5),
-      },
-      "4x4": {
-        w: getWidgetLength(4),
-        h: getWidgetLength(4),
-      },
       "4x5": {
         w: getWidgetLength(4),
         h: getWidgetLength(5),

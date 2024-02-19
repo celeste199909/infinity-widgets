@@ -56,28 +56,11 @@
         删除
       </button>
     </div>
-    <ul>
-      19
-      <li v-for="country in countries" :key="country.id">{{ country.name }}</li>
-      20
-    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
 import { inject, Ref } from "vue";
-import { ref, onMounted } from "vue";
-import { supabase } from "../../w-common/lib/supabaseClient";
-
-const countries: Ref<any[] | null> = ref([]);
-async function getCountries() {
-  const { data } = await supabase.from("countries").select();
-  countries.value = data;
-}
-
-onMounted(() => {
-  getCountries();
-});
 
 const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
 const turnOnWidgetContainer = inject("turnOnWidgetContainer") as () => void;
