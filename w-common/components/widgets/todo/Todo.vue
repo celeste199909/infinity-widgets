@@ -2,7 +2,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="rounded-xl bg-green-300 backdrop-blur-sm flex justify-center items-center"
+    class="rounded-xl bg-gradient-to-br from-cyan-100 to-slate-50 backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -18,7 +18,7 @@
   <!-- 有样式 -->
   <div
     v-else
-    class="rounded-xl w-full h-full p-2 pb-3 bg-gradient-to-br from-cyan-200 to-slate-100 backdrop-blur-sm flex flex-col justify-start items-center relative"
+    class="rounded-xl w-full h-full p-2 pb-3 text-[#8D8EFC] bg-gradient-to-br from-cyan-200 to-cyan-100 backdrop-blur-sm flex flex-col justify-start items-center relative"
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',
@@ -31,7 +31,7 @@
     >
       <template v-if="notCompletedTodos.length === 0">
         <div class="w-full h-full flex justify-center items-center text-[12px]">
-          <div class="text-[#8F4EFF] font-bold">在下方输入后按回车添加</div>
+          <div class="font-bold">在下方输入后按回车添加</div>
         </div>
       </template>
       <!-- 一个todo -->
@@ -52,7 +52,7 @@
     >
       <template v-if="completedTodos.length === 0">
         <div class="w-full h-full flex justify-center items-center text-[12px]">
-          <div class="text-[#8F4EFF] font-bold">还没有已完成的任务</div>
+          <div class="font-bold">还没有已完成的任务</div>
         </div>
       </template>
       <template v-else>
@@ -82,14 +82,14 @@
       <Icon
         v-if="currentPage === 1"
         name="list-todo"
-        color="#8F4EFF"
+        color="#777"
         class="w-11 h-11 p-2 cursor-pointer hover:bg-slate-200 rounded-xl"
         @click="toggleList"
       />
       <Icon
         v-else
         name="list-completed"
-        color="#8F4EFF"
+        color="#777"
         class="w-11 h-11 p-2 cursor-pointer hover:bg-slate-200 rounded-xl"
         @click="toggleList"
       />

@@ -17,6 +17,7 @@ import Countdown from "./widgets/countdown/Countdown.vue";
 import Alarm from "./widgets/alarm/Alarm.vue";
 import HotSearch from "./widgets/hot-search/HotSearch.vue";
 import JueJinHot from "./widgets/juejin-hot/JueJinHot.vue";
+import DrinkWater from "./widgets/drink-water/DrinkWater.vue";
 
 import { gsap } from "gsap";
 
@@ -45,6 +46,7 @@ const widgets = new Map([
   ["alarm", Alarm],
   ["hot-search", HotSearch],
   ["juejin-hot", JueJinHot],
+  ["drink-water", DrinkWater],
 ]);
 
 onMounted(() => {

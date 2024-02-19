@@ -40,6 +40,18 @@ const { layout } = useLayout();
 const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
 
 const widgetsList = [
+{
+    key: "drink-water",
+    name: "喝水",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+  },
   {
     key: "juejin-hot",
     name: "掘金热榜",

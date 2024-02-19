@@ -13,7 +13,7 @@
       class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
     >
       <img
-      draggable="false"
+        draggable="false"
         class="rounded-xl w-14 h-14"
         src="../../../assets/icons/juejin.png"
         alt=""
@@ -132,7 +132,6 @@ async function fetchHotArticle() {
         },
         10000
       )
-      .hide()
       .wait(".hot-list")
       .evaluate(() => {
         const list = Array.from(
@@ -167,7 +166,9 @@ async function fetchHotArticle() {
           .slice(0, 15);
         return list;
       })
+      .hide()
       .run({ show: false, width: 1000, height: 600 });
+
     const res = data[0].filter((item: any) => item);
     return res;
   } catch (error) {

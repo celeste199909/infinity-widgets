@@ -8,7 +8,7 @@
       class="w-full px-4 h-[50px] flex flex-row justify-between items-center gap-x-1 absolute -top-[1px] left-0"
     >
       <div
-        class="group w-6 h-6 border-2 border-[#8F4EFF] hover:border-[#5E17EB] cursor-pointer rounded-full flex justify-center items-center overflow-hidden"
+        class="group w-6 h-6 border-2 border-[#8D8EFC] hover:border-[#7375ff] cursor-pointer rounded-full flex justify-center items-center overflow-hidden"
         @click="toggleComplete(todo)"
       >
         <Icon

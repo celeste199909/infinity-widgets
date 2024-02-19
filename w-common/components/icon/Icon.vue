@@ -1,5 +1,10 @@
 <template>
-  <component :is="componentMap.get(name)" :color="color" :width="width" draggable="false"/>
+  <component
+    :is="componentMap.get(name)"
+    :color="color"
+    :width="width"
+    draggable="false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -17,6 +22,7 @@ import Check from "./icons/Check.vue";
 import DataArrival from "./icons/DataArrival.vue";
 import ListTodo from "./icons/ListTodo.vue";
 import ListCompleted from "./icons/ListCompleted.vue";
+import ThreeDotsMenu from "./icons/ThreeDotsMenu.vue";
 
 const componentMap = new Map<string, any>([
   ["all-app", AllApp],
@@ -33,6 +39,7 @@ const componentMap = new Map<string, any>([
   ["data-arrival", DataArrival],
   ["list-todo", ListTodo],
   ["list-completed", ListCompleted],
+  ["three-dots-menu", ThreeDotsMenu],
 ]);
 
 const props = defineProps({

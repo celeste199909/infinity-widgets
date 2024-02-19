@@ -278,17 +278,17 @@ const allWidgets: Widget[] = [
       y: 0,
     },
     size: {
-      w: getWidgetLength(3),
+      w: getWidgetLength(2),
       h: getWidgetLength(2),
     },
-    currentStyle: "3x2",
+    currentStyle: "2x2",
     style: {
-      "3x2": {
-        w: getWidgetLength(3),
+      "2x2": {
+        w: getWidgetLength(2),
         h: getWidgetLength(2),
       },
-      "4x3": {
-        w: getWidgetLength(4),
+      "3x3": {
+        w: getWidgetLength(3),
         h: getWidgetLength(3),
       },
     },
@@ -314,6 +314,30 @@ const allWidgets: Widget[] = [
       "4x5": {
         w: getWidgetLength(4),
         h: getWidgetLength(5),
+      },
+    },
+    data: {},
+  },
+  {
+    key: "drink-water",
+    name: "喝水",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "2x2",
+    style: {
+      "2x2": {
+        w: getWidgetLength(2),
+        h: getWidgetLength(2),
+      },
+      "3x3": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(3),
       },
     },
     data: {},
@@ -487,7 +511,6 @@ function dragEndHandle(payload: { x: number; y: number }) {
   });
   dragTarget.value = null;
 }
-
 </script>
 <style scoped>
 .dragging {
