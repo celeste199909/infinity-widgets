@@ -44,7 +44,7 @@ const route = useRoute();
 const isOnWidgetContainer = ref(
   utools.dbStorage.getItem("isOnWidgetContainer") || false
 );
-watchDeep(isOnWidgetContainer, (value) => {
+watchDeep(isOnWidgetContainer, (value) => {g
   utools.dbStorage.setItem("isOnWidgetContainer", value);
 });
 

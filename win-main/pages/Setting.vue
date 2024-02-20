@@ -56,6 +56,13 @@
         删除
       </button>
     </div>
+    <!-- 说明 -->
+    <div>
+      <div class="mt-2 font-bold text-[16px]">组件晃动无法使用？</div>
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-300">
+        每一个小组件被添加时自动进入编辑模式，处于编辑模式的小组件可以拖动位置，右键退出编辑模式即可正常使用功能。
+      </div>
+    </div>
   </div>
 </template>
 
