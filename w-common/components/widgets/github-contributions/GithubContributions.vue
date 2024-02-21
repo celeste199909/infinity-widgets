@@ -3,7 +3,7 @@
   <!-- 无样式 -->
   <div
     v-if="!widgetData.style"
-    class="wrapper-card rounded-xl flex justify-center items-center"
+    class="wrapper-card rounded-xl bg-slate-900 flex justify-center items-center"
     :style="{
       width: widgetData.size.w + 'px',
       height: widgetData.size.h + 'px',
@@ -13,9 +13,9 @@
       class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
     >
       <img
-      draggable="false"
+        draggable="false"
         class="rounded-xl w-14 h-14"
-        src="../../../assets/icons/github-96.png"
+        src="../../../assets/icons/github-96-white.png"
         alt=""
       />
     </div>
@@ -83,7 +83,7 @@
       class="absolute flex justify-center items-center gap-x-1 bottom-4 right-4 cursor-pointer"
       @click="openSetting"
     >
-      <Icon :name="'edit'" :color="'#666'" class="w-3 h-3"/>
+      <Icon :name="'edit'" :color="'#666'" class="w-3 h-3" />
     </div>
     <!-- 设置 -->
     <Teleport to="body">
@@ -184,60 +184,18 @@ onBeforeMount(() => {
   }
 });
 
-async function fetchGitHubContributions(): Promise<any> {
-  const url = "https://github.com/" + username.value;
-  let data;
+async function fetchGitHubContributions() {
+  const baseUrl =
+    "https://fc-mp-88e0a288-76cf-4cb2-a4ef-ea52b8178603.next.bspapp.com/github-contributions";
+
   try {
-    data = await utools.ubrowser
-      .goto(url, { Referer: "https://github.com/", userAgent: getRandomUA() }, 10000)
-      .wait(".js-calendar-graph table tbody")
-      .evaluate(() => {
-        // 1 获取月份数据
-        const monthList: string[] = [];
-        const tdEls = Array.from(
-          document.querySelectorAll(
-            ".js-calendar-graph table thead td.ContributionCalendar-label"
-          )
-        );
-
-        tdEls.forEach((tdEl) => {
-          const month = tdEl.firstElementChild?.textContent || "";
-          monthList.push(month);
-        });
-
-        // 2 获取贡献图数据
-        const gridList: Array<Object>[] = [];
-        const trEls = Array.from(
-          document.querySelectorAll(".js-calendar-graph table tbody tr")
-        );
-
-        trEls.forEach((trEl) => {
-          const rowList: Object[] = [];
-          const tdEls = Array.from(trEl.querySelectorAll("td"));
-          tdEls.forEach((tdEl) => {
-            if (!tdEl.classList.contains("ContributionCalendar-label")) {
-              rowList.push({
-                date: tdEl.getAttribute("data-date"),
-                level: tdEl.getAttribute("data-level"),
-              });
-            }
-          });
-          gridList.push(rowList);
-        });
-
-        // 3 返回数据
-        return {
-          monthList,
-          gridList,
-        };
-      })
-      .run({ show: false, width: 1000, height: 600 });
-    return data[0] as any;
+    const res = await fetch(`${baseUrl}?username=${username.value}`);
+    const data = await res.json();
+    return data.contributions
   } catch (error) {
-    return Error("获取数据失败");
+    throw new Error("获取数据失败");
   }
 }
-
 async function loadData() {
   // 保存用户名
   const widgetData = {
@@ -282,13 +240,6 @@ function openGithub() {
 }
 </script>
 <style scoped>
-.wrapper-card {
-  background-image: url(../../../assets/images/github-contribution.png);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: grayscale(50%);
-}
 .form {
   display: flex;
   flex-direction: column;

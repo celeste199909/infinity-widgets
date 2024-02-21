@@ -4,7 +4,8 @@ import { Widget } from "@/types/widget";
 // 按照惯例，组合式函数名以“use”开头
 export function useLayout() {
     const padding = 10;
-    const extraPaddingBottom = 50;
+    // 使用 dispaly.workArea 不需要额外的 padding
+    const extraPaddingBottom = 0;
     const cellSize = 30;
     const widgetUnit = 60;
     const gap = 10;

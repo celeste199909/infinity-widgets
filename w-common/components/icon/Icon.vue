@@ -23,6 +23,7 @@ import DataArrival from "./icons/DataArrival.vue";
 import ListTodo from "./icons/ListTodo.vue";
 import ListCompleted from "./icons/ListCompleted.vue";
 import ThreeDotsMenu from "./icons/ThreeDotsMenu.vue";
+import Picture from "./icons/Picture.vue";
 
 const componentMap = new Map<string, any>([
   ["all-app", AllApp],
@@ -40,6 +41,7 @@ const componentMap = new Map<string, any>([
   ["list-todo", ListTodo],
   ["list-completed", ListCompleted],
   ["three-dots-menu", ThreeDotsMenu],
+  ["picture", Picture],
 ]);
 
 const props = defineProps({

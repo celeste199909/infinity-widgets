@@ -10,7 +10,7 @@
         </div>
         <div>
           开启此选项后，该插件将创建一个<span class="font-bold"
-            >全屏的透明窗口</span
+            >最大化的透明窗口</span
           >，称为<span class="font-bold">小组件容器</span>，用于容纳小组件。
         </div>
         <div>

@@ -1,11 +1,14 @@
 const { ipcRenderer } = require("electron");
 
 require("./functions/getIcons.js");
-// 初始化窗口
-ipcRenderer.on("init", () => {
-    console.log("init");
-});
 
+let mainWindowId = ""
+
+// 初始化窗口
+ipcRenderer.on("init", (payload) => {
+    console.log("init", payload);
+    mainWindowId = payload.senderId;
+});
 
 ipcRenderer.on("addWidget", (e, widget) => {
     // 触发自定义事件，并传递参数
@@ -39,6 +42,9 @@ ipcRenderer.on("win-focus", () => {
     document.dispatchEvent(newCustomEvent);
 });
 
-
-
+// 监听窗口置于最底层
+// document.addEventListener("widget-on-click", function (event) {
+//     console.log('%c [ widget-on-click ]-48', 'font-size:13px; background:pink; color:#bf2c9f;',)
+//     ipcRenderer.sendTo(mainWindowId, "setWindowToBottom");
+// });
 

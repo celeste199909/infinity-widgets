@@ -1,3 +1,9 @@
+export interface WidgetCov {
+    key: string;
+    name: string;
+}
+
+
 export interface Widget {
     id?: string;
     key: string;
@@ -22,3 +28,4 @@ export interface Widget {
     };
     data?: any; // 每个组件产生的不同数据
 }
+

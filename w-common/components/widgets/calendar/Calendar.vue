@@ -1,27 +1,6 @@
 <template>
-  <!-- 无样式 -->
-  <div
-    v-if="!widgetData.style"
-    class="rounded-xl w-full h-full bg-white text-slate-900 backdrop-blur-sm flex justify-center items-center"
-    :style="{
-      width: widgetData.size.w + 'px',
-      height: widgetData.size.h + 'px',
-    }"
-  >
-    <div class="flex w-full h-full p-3 flex-col justify-between items-center">
-      <!-- 年月 -->
-      <div class="text-lg font-bold">{{ currentYearMonth }}</div>
-      <!-- 日 -->
-      <div class="text-6xl font-bold">{{ currentDay }}</div>
-      <!-- 农历和周几 -->
-      <div class="flex justify-center items-center">
-        <div>{{ currentWeekday }}</div>
-      </div>
-    </div>
-  </div>
   <!-- 有样式 -->
   <div
-    v-else
     class="rounded-xl w-full h-full bg-white text-slate-900 backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
@@ -94,5 +73,4 @@ const currentWeekday = computed(() => {
 // 获取农历日期（示例，实际需要根据算法获取）
 const lunarDate = ref<LunarDate>({ month: 12, day: 15 }); // 示例数据，需要根据实际情况计算
 </script>
-<style scoped>
-</style>
+<style scoped></style>

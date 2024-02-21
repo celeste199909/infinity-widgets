@@ -38,7 +38,6 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
 import { watchDeep } from "@vueuse/core";
-import { on } from "events";
 
 const props = defineProps({
   count: {

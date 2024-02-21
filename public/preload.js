@@ -1,13 +1,20 @@
 const { ipcRenderer } = require("electron");
+const { set } = require("lodash");
 
 const preload = {};
 let widgetsWrapper = null;
+
+const display = utools.getDisplayNearestPoint({ x: 100, y: 100 })
+console.log(display)
+const { width, height } = display.workAreaSize;
 
 const createWidgetsWrapper = () => {
   widgetsWrapper = utools.createBrowserWindow('./win-widgets/index.html', {
     webPreferences: {
       preload: './win-widgets-pre.js'
     },
+    width: width,
+    height: height,
     alwaysOnTop: false,
     skipTaskbar: true,
     resizable: false,
@@ -15,7 +22,8 @@ const createWidgetsWrapper = () => {
     frame: false,
     transparent: true,
     backgroundColor: "#00000000",
-    fullscreen: true,
+    // 不再使用全屏窗口
+    fullscreen: false,
     show: true,
     focus: false,
   }, () => {
@@ -33,7 +41,7 @@ const createWidgetsWrapper = () => {
 
     // 在窗口重新获得焦点时取消置于最底层
     widgetsWrapper.on('focus', () => {
-      widgetsWrapper.setAlwaysOnTop(false);
+      widgetsWrapper.setAlwaysOnTop(false);  // 原来的代码
       // 发送消息，把右键菜单隐藏
       ipcRenderer.sendTo(widgetsWrapper.webContents.id, "win-focus");
     });
@@ -47,6 +55,11 @@ utools.onPluginEnter(({ code, type, payload, option }) => {
     createWidgetsWrapper();
   }
 })
+
+// 小组件被点击时，将窗口置于最底层
+// ipcRenderer.on("setWindowToBottom", (e, widget) => {
+//     widgetsWrapper.blur();
+// });
 
 const removeWidgetsWrapper = () => {
   if (widgetsWrapper) {

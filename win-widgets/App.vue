@@ -202,26 +202,26 @@ const allWidgets: Widget[] = [
     },
     data: {},
   },
-  // {
-  //   key: "github-contributions",
-  //   name: "GitHub贡献图(beta)",
-  //   position: {
-  //     x: 0,
-  //     y: 0,
-  //   },
-  //   size: {
-  //     w: getWidgetLength(9),
-  //     h: getWidgetLength(2),
-  //   },
-  //   currentStyle: "9x2",
-  //   style: {
-  //     "9x2": {
-  //       w: getWidgetLength(9),
-  //       h: getWidgetLength(2),
-  //     },
-  //   },
-  //   data: {},
-  // },
+  {
+    key: "github-contributions",
+    name: "GitHub贡献图",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(9),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "9x2",
+    style: {
+      "9x2": {
+        w: getWidgetLength(9),
+        h: getWidgetLength(2),
+      },
+    },
+    data: {},
+  },
   {
     key: "app-starter",
     name: "应用启动器",
@@ -321,6 +321,30 @@ const allWidgets: Widget[] = [
   {
     key: "drink-water",
     name: "喝水",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "2x2",
+    style: {
+      "2x2": {
+        w: getWidgetLength(2),
+        h: getWidgetLength(2),
+      },
+      "3x3": {
+        w: getWidgetLength(3),
+        h: getWidgetLength(3),
+      },
+    },
+    data: {},
+  },
+  {
+    key: "wukong",
+    name: "黑神话：悟空",
     position: {
       x: 0,
       y: 0,

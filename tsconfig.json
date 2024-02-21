@@ -20,7 +20,7 @@
       ]
     },
     "noEmit": true,
-    "types": ["utools-api-types"],
+    "types": ["utools-api-types", "node"],
   },
   "include": [
     "w-common/**/*.ts",

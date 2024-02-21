@@ -90,6 +90,11 @@ const props = defineProps({
     default: true,
     required: false,
   },
+  resize: {
+    type: Boolean,
+    default: true,
+    required: false,
+  },
   showTitle: {
     type: Boolean,
     default: true,
@@ -145,7 +150,7 @@ const startDrag = (e: MouseEvent) => {
 };
 
 const startResize = (e: MouseEvent) => {
-  if (windowState.isMaximized) {
+  if (windowState.isMaximized || !props.resize) {
     return;
   }
   windowState.isResizing = true;
@@ -197,6 +202,7 @@ const stopDrag = () => {
 };
 
 const stopResize = () => {
+  if(!windowState.isResizing) return;
   windowState.isResizing = false;
 };
 
