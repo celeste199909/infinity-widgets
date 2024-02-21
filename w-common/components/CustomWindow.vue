@@ -44,16 +44,19 @@
     <!-- 伸缩句柄 -->
     <!-- 右边 -->
     <div
+      v-if="resize"
       class="handle-r cursor-ew-resize absolute right-0 top-0 w-1 h-full"
       @mousedown="startResize"
     ></div>
     <!-- 下边 -->
     <div
+      v-if="resize"
       class="handle-b cursor-ns-resize absolute bottom-0 left-0 right-0 w-full h-1"
       @mousedown="startResize"
     ></div>
     <!-- 右下角 -->
     <div
+      v-if="resize"
       class="handle-rb cursor-nwse-resize absolute right-0 bottom-0 w-3 h-3 rounded-full opacity-20 hover:opacity-50 hover:w-5 hover:h-5 transition bg-blue-500 z-10"
       @mousedown="startResize"
     ></div>
@@ -64,6 +67,9 @@
 import { ref, reactive, defineProps, onMounted } from "vue";
 import { gsap } from "gsap";
 import Icon from "./icon/Icon.vue";
+import { useLayout } from "../composables/useLayout";
+const { layout } = useLayout();
+
 const props = defineProps({
   winId: {
     type: String,
@@ -84,6 +90,10 @@ const props = defineProps({
   closeFunction: {
     type: Function,
     required: true,
+  },
+  maxminzeFunction: {
+    type: Function,
+    required: false,
   },
   maxminze: {
     type: Boolean,
@@ -202,7 +212,7 @@ const stopDrag = () => {
 };
 
 const stopResize = () => {
-  if(!windowState.isResizing) return;
+  if (!windowState.isResizing) return;
   windowState.isResizing = false;
 };
 
@@ -228,7 +238,7 @@ const toggleFullscreen = () => {
     }, 300);
   } else {
     gsap.to(`#${props.winId}`, {
-      duration: 0.3,
+      duration: 0.2,
       width: screenWidth,
       height: screenHeight,
       left: 0,
@@ -243,7 +253,8 @@ const toggleFullscreen = () => {
       windowState.windowTop = 0;
       borderRadius.value = "0px";
       windowState.isMaximized = true;
-    }, 300);
+      
+    }, 200);
   }
 };
 

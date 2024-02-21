@@ -2,7 +2,7 @@
 <template>
   <!-- 无样式 -->
   <div
-    class="wrapper-card rounded-xl bg-slate-900 flex justify-center items-center"
+    class="wrapper-card rounded-xl bg-slate-800 flex justify-center items-center"
     :style="{
       width: width + 'px',
       height: height + 'px',

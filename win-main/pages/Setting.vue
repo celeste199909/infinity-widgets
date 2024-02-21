@@ -3,15 +3,15 @@
     <!-- 小组件容器 -->
     <div>
       <div class="mt-2 font-bold text-[16px]">小组件容器</div>
-      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-300">
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
         <div>
           <span class="font-bold">注意：</span
           >只有开启此选项才能把小组件添加到桌面上。
         </div>
         <div>
           开启此选项后，该插件将创建一个<span class="font-bold"
-            >最大化的透明窗口</span
-          >，称为<span class="font-bold">小组件容器</span>，用于容纳小组件。
+            >与屏幕大小相近的透明窗口</span
+          >，称为<span class="font-bdold">小组件容器</span>，用于容纳小组件。
         </div>
         <div>
           您可以随时关闭该容器, 关闭时容器时,
@@ -32,7 +32,7 @@
     <!-- 删除所有组件 -->
     <div>
       <div class="mt-2 font-bold text-[16px]">删除所有组件</div>
-      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-300">
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
         此操作将删除桌面上的所有小组件，包括其运行产生的数据。
       </div>
       <button
@@ -55,13 +55,6 @@
         </svg>
         删除
       </button>
-    </div>
-    <!-- 说明 -->
-    <div>
-      <div class="mt-2 font-bold text-[16px]">组件晃动无法使用？</div>
-      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-300">
-        每一个小组件被添加时自动进入编辑模式，处于编辑模式的小组件可以拖动位置，右键退出编辑模式即可正常使用功能。
-      </div>
     </div>
   </div>
 </template>

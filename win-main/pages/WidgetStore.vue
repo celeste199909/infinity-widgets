@@ -1,11 +1,11 @@
 <template>
   <div
-    class="w-full h-full gap-4 select-none flex-1 p-2 overflow-y-scroll flex flex-row flex-wrap content-start"
+    class="w-full h-full gap-4 select-none flex-1 p-4 overflow-y-scroll flex flex-row flex-wrap content-start"
   >
     <!-- 提示 -->
     <div
       v-if="!isOnWidgetContainer"
-      class="w-full h-12 bg-orange-600 shadow-lg text-white p-2 px-4 rounded-xl flex flex-row justify-between items-center"
+      class="w-full h-12 bg-[#8080ff] shadow-lg text-white p-2 px-4 rounded-xl flex flex-row justify-between items-center"
     >
       <div>
         注意：使用前请先到设置中开启<span class="font-bold"> 小组件容器 </span
@@ -42,7 +42,7 @@ import WidgetCover from "../../w-common/components/WidgetCover.vue";
 // 类型
 import { WidgetCov } from "../../w-common/types/widget";
 // 组合函数
-import { useLayout } from "../../win-widgets/composables/useLayout";
+import { useLayout } from "../../w-common/composables/useLayout";
 const { layout } = useLayout();
 
 const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
@@ -51,10 +51,7 @@ const width = getWidgetLength(2);
 const height = getWidgetLength(2);
 
 const widgetsList = [
-  {
-    key: "drink-water",
-    name: "喝水",
-  },
+
   {
     key: "juejin-hot",
     name: "掘金热榜",
@@ -71,10 +68,7 @@ const widgetsList = [
   //   key: "countdown",
   //   name: "倒计时",
   // },
-  {
-    key: "github-contributions",
-    name: "GitHub贡献图",
-  },
+
   {
     key: "app-starter",
     name: "应用启动器",
@@ -92,8 +86,16 @@ const widgetsList = [
     name: "To Do",
   },
   {
+    key: "github-contributions",
+    name: "GitHub贡献图",
+  },
+  {
     key: "wukong",
     name: "黑神话：悟空",
+  },
+  {
+    key: "drink-water",
+    name: "喝水",
   },
 ];
 
@@ -129,9 +131,9 @@ onMounted(() => {
   filter: drop-shadow(6px 6px 1rem rgba(0, 0, 0, 0.1));
 }
 
-.dark .card {
+/* .dark .card {
   filter: drop-shadow(6px 6px 1rem rgba(0, 0, 0, 0.3));
-}
+} */
 
 .card::after {
   content: "";

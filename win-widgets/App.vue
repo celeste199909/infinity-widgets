@@ -74,7 +74,7 @@ import { ref, onMounted, Ref, toValue, computed } from "vue";
 import WidgetComp from "../w-common/components/WidgetComp.vue";
 import ContextMenu from "../w-common/components/ContextMenu.vue";
 // 组合函数
-import { useLayout } from "./composables/useLayout";
+import { useLayout } from "../w-common/composables/useLayout";
 import { watchDeep } from "@vueuse/core";
 
 import { customAlphabet } from "nanoid";
@@ -202,26 +202,7 @@ const allWidgets: Widget[] = [
     },
     data: {},
   },
-  {
-    key: "github-contributions",
-    name: "GitHub贡献图",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    size: {
-      w: getWidgetLength(9),
-      h: getWidgetLength(2),
-    },
-    currentStyle: "9x2",
-    style: {
-      "9x2": {
-        w: getWidgetLength(9),
-        h: getWidgetLength(2),
-      },
-    },
-    data: {},
-  },
+
   {
     key: "app-starter",
     name: "应用启动器",
@@ -362,6 +343,26 @@ const allWidgets: Widget[] = [
       "3x3": {
         w: getWidgetLength(3),
         h: getWidgetLength(3),
+      },
+    },
+    data: {},
+  },
+  {
+    key: "github-contributions",
+    name: "GitHub贡献图",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(9),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "9x2",
+    style: {
+      "9x2": {
+        w: getWidgetLength(9),
+        h: getWidgetLength(2),
       },
     },
     data: {},

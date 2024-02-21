@@ -1,7 +1,7 @@
 <!-- GithubContributions.vue -->
 <template>
   <div
-    class="bg-gradient-to-r from-[#060303] to-[#222120] rounded-xl p-3 flex flex-col justify-center items-center relative"
+    class="wukong-cover rounded-xl p-3 flex flex-col justify-center items-center relative"
     :style="{
       width: width + 'px',
       height: height + 'px',
@@ -24,4 +24,8 @@ defineProps({
   },
 });
 </script>
-<style scoped></style>
+<style scoped>
+.wukong-cover {
+  background: radial-gradient(circle at center, #3a475f 0%, #161a1f 100%);
+}
+</style>

@@ -24,6 +24,10 @@ import ListTodo from "./icons/ListTodo.vue";
 import ListCompleted from "./icons/ListCompleted.vue";
 import ThreeDotsMenu from "./icons/ThreeDotsMenu.vue";
 import Picture from "./icons/Picture.vue";
+import Help from "./icons/Help.vue";
+import Download from "./icons/Download.vue";
+import ChangeSize from "./icons/ChangeSize.vue";
+import Delete from "./icons/Delete.vue";
 
 const componentMap = new Map<string, any>([
   ["all-app", AllApp],
@@ -42,6 +46,10 @@ const componentMap = new Map<string, any>([
   ["list-completed", ListCompleted],
   ["three-dots-menu", ThreeDotsMenu],
   ["picture", Picture],
+  ["help", Help],
+  ["download", Download],
+  ["change-size", ChangeSize],
+  ["delete", Delete],
 ]);
 
 const props = defineProps({

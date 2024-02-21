@@ -1,29 +1,42 @@
 <template>
   <div
-    class="w-screen h-screen flex flex-row justify-center bg-gradient-to-br bg-white dark:bg-[#343434] dark:text-slate-100 overflow-hidden"
+    class="w-screen h-screen flex flex-row justify-center text-slate-600 bg-gradient-to-br bg-white dark:bg-[#343434] dark:text-slate-100 overflow-hidden"
   >
     <!-- 左侧导航栏 -->
     <div
       class="w-14 p-2 box-content h-full flex flex-col justify-start gap-2 border-r-2 border-gray-100 dark:border-white/10"
     >
+      <!-- 小组件商店 -->
       <router-link
         to="/"
-        class="w-14 h-14 p-3 overflow-hidden rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-600 flex justify-center items-center"
+        class="w-14 h-14 p-3 overflow-hidden rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-700 flex justify-center items-center"
       >
         <Icon
           name="all-app"
           :width="route.name === 'WidgetStore' ? 4 : 2"
-          :color="route.name === 'WidgetStore' ? '#8D8DF9' : '#666666'"
+          :color="route.name === 'WidgetStore' ? '#8f8ffc' : '#8080ff'"
         />
       </router-link>
+      <!-- 设置 -->
       <router-link
         to="/setting"
-        class="w-14 h-14 p-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-600 flex justify-center items-center"
+        class="w-14 h-14 p-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-700 flex justify-center items-center"
       >
         <Icon
           name="setting"
           :width="route.name === 'Setting' ? 4 : 2"
-          :color="route.name === 'Setting' ? '#8D8DF9' : '#666666'"
+          :color="route.name === 'Setting' ? '#8f8ffc' : '#8080ff'"
+        />
+      </router-link>
+      <!-- 帮助 -->
+      <router-link
+        to="/help"
+        class="w-14 h-14 p-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-700 flex justify-center items-center"
+      >
+        <Icon
+          name="help"
+          :width="route.name === 'Help' ? 4 : 2"
+          :color="route.name === 'Help' ? '#8f8ffc' : '#8080ff'"
         />
       </router-link>
     </div>
@@ -51,7 +64,6 @@ watchDeep(isOnWidgetContainer, (value) => {
 function turnOnWidgetContainer() {
   isOnWidgetContainer.value = true;
   window.preload.createWidgetsWrapper();
-
 }
 
 function turnOffWidgetContainer() {
@@ -69,6 +81,7 @@ onMounted(() => {
     : document.documentElement.classList.remove("dark");
 });
 </script>
+
 <style scoped>
 .ghost {
   opacity: 0;

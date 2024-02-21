@@ -1,55 +1,61 @@
 <template>
   <div
     v-if="isShowContextMenu"
-    class="absolute w-48 p-3 select-none text-white bg-slate-700 rounded-md flex flex-col gap-y-1 z-10"
+    class="absolute w-52 p-3 select-none text-slate-700 bg-gradient-to-br from-cyan-100 to-sky-100 dark:text-slate-100 dark:bg-gradient-to-r dark:from-slate-700 dark:to-slate-600 rounded-md flex flex-col gap-y-1 z-10"
     :style="{
       left: contextMenuPosition.x - 5 + 'px',
       top: contextMenuPosition.y - 5 + 'px',
     }"
     @mouseleave="isShowContextMenu = false"
   >
-    <!-- 编辑 -->
     <div
-      @click="toggleEdit"
-      class="cursor-pointer hover:bg-slate-500 p-2 rounded-xl"
+      class="w-full h-full backdrop-blur-lg bg-white/50 rounded-lg dark:bg-transparent flex flex-col"
     >
-      {{ clickTargetData?.draggable ? "退出编辑" : "进入编辑" }}
-    </div>
-    <!-- 尺寸 -->
-    <div class="cursor-pointer hover:bg-slate-500 p-2 rounded-xl">更改尺寸</div>
-    <div class="flex flex-row flex-wrap gap-2 p-2">
+      <!-- 编辑 -->
       <div
-        v-for="(item, key) in clickTargetData?.style"
-        class="px-2 py-1 rounded-xl flex justify-center items-center cursor-pointer"
-        @click="changeStyle(key as string)"
-        :class="
-          clickTargetData?.currentStyle === key
-            ? 'bg-blue-400 hover:bg-blue-400'
-            : 'bg-slate-500 hover:bg-slate-400'
-        "
+        @click="toggleEdit"
+        class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
       >
-        {{ key }}
+        <Icon :name="'edit'" class="w-5 h-5" color="#8d8df9" :width="3" />
+        <div>{{ clickTargetData?.draggable ? "退出编辑" : "进入编辑" }}</div>
       </div>
-    </div>
-    <!-- 批量编辑 -->
-    <div
-      class="cursor-pointer hover:bg-slate-500 p-2 rounded-xl"
-      @click="bulkEdit()"
-    >
-      {{ onBulkEdit ? "退出批量编辑" : "进入批量编辑" }}
-    </div>
-    <!-- 添加新组件 -->
-    <!-- <div class="cursor-pointer hover:bg-slate-500 p-2 rounded-xl"
-    @click="handleAddWidget"
-    >
-      添加新组件
-    </div> -->
-    <!-- 删除组件 -->
-    <div
-      class="text-red-500 cursor-pointer hover:bg-slate-500 p-2 rounded-xl"
-      @click="handleRemoveWidget(clickTargetData)"
-    >
-      删除组件
+      <!-- 尺寸 -->
+      <div
+        class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
+      >
+        <Icon name="change-size" class="w-5 h-5" color="#8d8df9" :width="3" />
+        <div>尺寸</div>
+      </div>
+      <div class="flex flex-row flex-wrap gap-2 p-2 my-1">
+        <div
+          v-for="(item, key) in clickTargetData?.style"
+          class="px-3 py-1 transition text-sm rounded-2xl flex justify-center items-center cursor-pointer"
+          @click="changeStyle(key as string)"
+          :class="
+            clickTargetData?.currentStyle === key
+              ? 'bg-[#8d8df9] text-white hover:bg-[#8080ff] dark:bg-[#8d8df9] dark:hover:bg-[#8080ff]'
+              : 'bg-white/80 hover:bg-[#8d8df9] hover:text-white dark:bg-slate-500 dark:hover:bg-[#8080ff]'
+          "
+        >
+          {{ key }}
+        </div>
+      </div>
+      <!-- 批量编辑 -->
+      <div
+        class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
+        @click="bulkEdit()"
+      >
+        <Icon :name="'edit'" class="w-5 h-5" color="#8d8df9" :width="3" />
+        <div>{{ onBulkEdit ? "退出批量编辑" : "批量编辑" }}</div>
+      </div>
+      <!-- 删除组件 -->
+      <div
+        class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
+        @click="handleRemoveWidget(clickTargetData)"
+      >
+        <Icon name="delete" class="w-5 h-5" color="#8d8df9" :width="3" />
+        <div>删除组件</div>
+      </div>
     </div>
   </div>
 </template>
@@ -59,6 +65,8 @@ import { computed, defineProps, onMounted, ref, Ref } from "vue";
 import { useMouse } from "@vueuse/core";
 import _ from "lodash";
 import { Widget } from "../types/widget";
+
+import Icon from "./icon/Icon.vue";
 import gsap from "gsap";
 
 const props = defineProps({
@@ -109,7 +117,6 @@ onMounted(() => {
       }
       return false;
     });
-
 
     if (widget instanceof HTMLElement) {
       const widgetId = widget.id; // 这里可以安全地访问 id 属性

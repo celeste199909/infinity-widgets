@@ -24,8 +24,8 @@
 import { ref, computed } from "vue";
 import { defineProps } from "vue";
 // 组合函数
-import { useLayout } from "../../../../win-widgets/composables/useLayout";
-const { layout, nearestPosition } = useLayout();
+import { useLayout } from "../../../composables/useLayout";
+// const { layout, nearestPosition } = useLayout();
 
 const props = defineProps({
   widgetData: {

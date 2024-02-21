@@ -83,7 +83,7 @@
       class="absolute flex justify-center items-center gap-x-1 bottom-4 right-4 cursor-pointer"
       @click="openSetting"
     >
-      <Icon :name="'edit'" :color="'#666'" class="w-3 h-3" />
+      <Icon :name="'edit'" :color="'#666'" class="w-5 h-5" />
     </div>
     <!-- 设置 -->
     <Teleport to="body">
@@ -114,11 +114,10 @@
           <div class="my-2">
             <input
               type="text"
-              class="title"
               v-model="username"
               placeholder="输入github用户名"
             />
-            <button @click="loadData">确定</button>
+            <button class="ml-2" @click="loadData">确定</button>
           </div>
           <div class="text-[12px] text-slate-300">
             最近更新：{{ lastUpdateTime }}
@@ -134,7 +133,6 @@ import { defineProps, ref, onMounted, Ref, onBeforeMount, computed } from "vue";
 import CustomWindow from "../../CustomWindow.vue";
 import Loader from "../../Loader.vue";
 import LoadFailed from "../../LoadFailed.vue";
-import { getRandomUA } from "../../../utils/getRandomUA";
 import Icon from "../../icon/Icon.vue";
 
 const props = defineProps({
@@ -191,7 +189,7 @@ async function fetchGitHubContributions() {
   try {
     const res = await fetch(`${baseUrl}?username=${username.value}`);
     const data = await res.json();
-    return data.contributions
+    return data.contributions;
   } catch (error) {
     throw new Error("获取数据失败");
   }
@@ -249,14 +247,6 @@ function openGithub() {
   border-radius: 10px;
 }
 
-.title {
-  font-size: 2rem;
-  line-height: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: #fff;
-}
-
 .description {
   line-height: 1.5rem;
   font-size: 1rem;
@@ -265,7 +255,7 @@ function openGithub() {
 
 .form div input {
   outline: none;
-  line-height: 1.5rem;
+  line-height: 2;
   font-size: 1rem;
   color: rgb(255 255 255);
   padding: 0.5rem 1rem;

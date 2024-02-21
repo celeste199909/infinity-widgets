@@ -5,17 +5,23 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { utools } from "../w-common/plugin/utools";
 import Setting from "./pages/Setting.vue";
 import WidgetStore from "./pages/WidgetStore.vue"
+import Help from "./pages/Help.vue"
 
 const routes = [
-    { 
+    {
         name: 'WidgetStore',
-        path: '/', 
+        path: '/',
         component: WidgetStore
-     },
-    { 
+    },
+    {
         name: 'Setting',
-        path: '/setting', 
-        component: Setting 
+        path: '/setting',
+        component: Setting
+    },
+    {
+        name: 'Help',
+        path: '/help',
+        component: Help
     },
 ]
 

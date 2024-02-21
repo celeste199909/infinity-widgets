@@ -1,11 +1,9 @@
 const { ipcRenderer } = require("electron");
-const { set } = require("lodash");
 
 const preload = {};
 let widgetsWrapper = null;
 
 const display = utools.getDisplayNearestPoint({ x: 100, y: 100 })
-console.log(display)
 const { width, height } = display.workAreaSize;
 
 const createWidgetsWrapper = () => {
@@ -41,7 +39,7 @@ const createWidgetsWrapper = () => {
 
     // 在窗口重新获得焦点时取消置于最底层
     widgetsWrapper.on('focus', () => {
-      widgetsWrapper.setAlwaysOnTop(false);  // 原来的代码
+      widgetsWrapper.setAlwaysOnTop(false);  
       // 发送消息，把右键菜单隐藏
       ipcRenderer.sendTo(widgetsWrapper.webContents.id, "win-focus");
     });
