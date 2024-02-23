@@ -4,19 +4,40 @@
     <div>
       <div class="mt-2 font-bold text-[16px]">Q: 组件晃动用不了啊！</div>
       <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
-        A: 每一个小组件被添加时自动进入编辑模式，处于编辑模式的小组件可以拖动位置，右键退出编辑模式即可正常使用功能。
+        A:
+        每一个小组件被添加时自动进入编辑模式，处于编辑模式的小组件可以拖动位置，右键退出编辑模式即可正常使用功能。
       </div>
     </div>
     <div>
-      <div class="mt-2 font-bold text-[16px]">Q: 所有的小组件怎么突然消失了？(Window系统)</div>
+      <div class="mt-2 font-bold text-[16px]">
+        Q: 所有的小组件怎么突然消失了？(Window系统)
+      </div>
       <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
-        A: 你可能是点到右下角的 “显示桌面” 按钮了，这个按钮会隐藏所有小组件，再点击一下即可恢复。
+        A: 你可能是点到右下角的 “显示桌面”
+        按钮了，这个按钮会隐藏所有小组件，再点击一下即可恢复。
       </div>
     </div>
     <div>
       <div class="mt-2 font-bold text-[16px]">Q: 你这小组件功能不完善呀！</div>
       <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
         A: 请容我先凑一凑数量😁。
+      </div>
+    </div>
+    <!-- 小组件更新频率说明 -->
+    <div>
+      <div class="mt-2 font-bold text-[16px]">小组件更新频率说明</div>
+      <div class="mt-1 mb-2 text-[14wpx] text-slate-600 dark:text-slate-400">
+        <span class="font-bold">微博：</span>每<span class="font-bold"
+          >30 分</span
+        >更新一次。
+        <br />
+        <span class="font-bold">掘金：</span>每<span class="font-bold"
+          >1 小时</span
+        >更新一次。
+        <br />
+        <span class="font-bold">GitHub：</span>每<span class="font-bold"
+          >1 小时</span
+        >更新一次。
       </div>
     </div>
   </div>

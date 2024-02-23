@@ -33,8 +33,8 @@ export default defineConfig({
                 assetFileNames: 'assets/[name].[ext]',
             },
         },
-        // 不压缩
-        minify: false,
+        // // 不压缩
+        // minify: false,
     },
 
 });

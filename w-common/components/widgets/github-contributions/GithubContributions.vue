@@ -29,10 +29,18 @@
     }"
     class="rounded-xl border flex justify-center items-center bg-white text-[#1f2328]"
   >
-    <Loader v-if="isLoading" />
+    <Loader v-if="isFirstLoading" />
+    <!-- 错误 -->
+    <!-- 无任何数据时 且 不是在首次加载中 -->
+    <LoadFailed
+      v-else-if="contributionsData.gridList.length === 0"
+      :tooltip="'加载失败, 请检查用户名和网络。'"
+      :retryFn="loadData"
+      :btnColor="'#666666'"
+    />
     <!-- graph -->
     <div
-      v-else-if="!isLoadFailed && gridList"
+      v-else
       class="w-fit pt-4 h-fit flex flex-col justify-center items-start space-y-[2px] relative"
     >
       <!-- 星期 -->
@@ -47,11 +55,13 @@
       <div
         class="absolute w-full left-0 -top-1 text-[10px] flex flex-row justify-between items-center"
       >
-        <div v-for="item in monthList">{{ item.slice(0, 3) }}</div>
+        <div v-for="item in contributionsData.monthList">
+          {{ item.slice(0, 3) }}
+        </div>
       </div>
       <!-- 格子 -->
       <div
-        v-for="rowItem in gridList"
+        v-for="rowItem in contributionsData.gridList"
         class="w-fit h-fit flex flex-row justify-start items-center space-x-[2px]"
       >
         <template v-for="cellItem in rowItem">
@@ -71,13 +81,7 @@
         </template>
       </div>
     </div>
-    <!-- 错误 -->
-    <LoadFailed
-      v-else
-      :tooltip="'加载失败, 请检查用户名和网络。'"
-      :retryFn="loadData"
-      :btnColor="'#666666'"
-    />
+
     <!-- 设置 -->
     <div
       class="absolute flex justify-center items-center gap-x-1 bottom-4 right-4 cursor-pointer"
@@ -108,8 +112,7 @@
             @{{ username }}
           </div>
           <p class="description text-slate-300">
-            请输入你想查看的 Github 用户名, 每小时自动更新一次。受网络影响,
-            若重试过后依旧不行，请勿使用该组件。
+            请输入你想查看的 Github 用户名。点击确定后，如果过几秒还不行，多试两次。（交互还没做，先用文字说明）
           </p>
           <div class="my-2">
             <input
@@ -117,10 +120,14 @@
               v-model="username"
               placeholder="输入github用户名"
             />
-            <button class="ml-2" @click="loadData">确定</button>
+            <button class="ml-2" @click="SaveUsernameAndLoadData">确定</button>
           </div>
+          <!-- 更新时间 -->
           <div class="text-[12px] text-slate-300">
-            最近更新：{{ lastUpdateTime }}
+            <!-- 最近更新：{{ lastUpdateTime }} -->
+            更新于：{{
+              new Date(contributionsData.updateTime).toLocaleString()
+            }}
           </div>
         </div>
       </CustomWindow>
@@ -129,11 +136,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, Ref, onBeforeMount, computed } from "vue";
+import { defineProps, ref, onMounted, Ref, onBeforeUnmount } from "vue";
 import CustomWindow from "../../CustomWindow.vue";
 import Loader from "../../Loader.vue";
 import LoadFailed from "../../LoadFailed.vue";
 import Icon from "../../icon/Icon.vue";
+import _ from "lodash";
 
 const props = defineProps({
   widgetData: {
@@ -146,19 +154,33 @@ const props = defineProps({
   },
 });
 
+interface ContributionsData {
+  gridList: Array<Array<cellItem>>;
+  monthList: Array<string>;
+  updateTime: number;
+}
+
 interface cellItem {
   date: string | null;
   level: string | null;
 }
 
-const gridList: Ref<Array<cellItem>[]> = ref([]);
-const monthList: Ref<Array<string>> = ref([]);
-const isLoading = ref(false);
-const intervalTimer: Ref<number | null | NodeJS.Timeout> = ref(null);
-const lastUpdate = ref(Date.now());
-const lastUpdateTime = computed(() => {
-  return new Date(lastUpdate.value).toLocaleString();
+const intervalId: Ref<number | null | NodeJS.Timeout> = ref(null);
+const isFirstLoading = ref(false);
+
+const contributionsData: Ref<ContributionsData> = ref({
+  gridList: [],
+  monthList: [],
+  updateTime: 0,
 });
+
+const lastContributionsData: Ref<ContributionsData> = ref(
+  props.widgetData.data.lastContributionsData || {
+    gridList: [],
+    monthList: [],
+    updateTime: 0,
+  }
+);
 
 const fillColors = ["#EBEDF0", "#9BE9A8", "#40C463", "#30A14E", "#216E39"];
 const borderColors = ["#DFE1E4", "#94DDA0", "#3EBA5F", "#2F9A4B", "#216A38"];
@@ -167,18 +189,37 @@ const isShowSetting = ref(false);
 const isLoadFailed = ref(false);
 
 onMounted(async () => {
-  if (props.widgetData.style) {
+  // 如果没有任何数据, 则加载数据
+  if (lastContributionsData.value.gridList.length === 0) {
     loadData();
-    // 设置定时器
-    intervalTimer.value = setInterval(() => {
-      loadData();
-    }, 1000 * 60 * 60);
   }
+  // 如果有数据，
+  if (lastContributionsData.value.gridList.length !== 0) {
+    // 判断上次更新时间是否超过1小时
+    const now = Date.now();
+    const lastUpdateTime = lastContributionsData.value.updateTime;
+    const isOverOneHour = now - lastUpdateTime > 1000 * 60 * 60;
+    // const isOverOneHour = now - lastUpdateTime > 1000 * 30;
+
+    // 但是超过1小时，也加载数据
+    if (isOverOneHour) {
+      // 暂时使用上次数据，避免空白
+      contributionsData.value = lastContributionsData.value;
+      // utools.showNotification("数据超过30秒 正在加载数据...");
+      loadData();
+    } else {
+      // 否则，使用上次数据
+      contributionsData.value = lastContributionsData.value;
+      // utools.showNotification("未超过30秒,使用上次数据");
+    }
+  }
+  intervalId.value = setInterval(loadData, 1000 * 60 * 60);
+  // intervalId.value = setInterval(loadData, 1000 * 30);
 });
 
-onBeforeMount(() => {
-  if (intervalTimer.value) {
-    clearInterval(intervalTimer.value);
+onBeforeUnmount(() => {
+  if (intervalId.value) {
+    clearInterval(intervalId.value);
   }
 });
 
@@ -189,39 +230,71 @@ async function fetchGitHubContributions() {
   try {
     const res = await fetch(`${baseUrl}?username=${username.value}`);
     const data = await res.json();
+
     return data.contributions;
   } catch (error) {
     throw new Error("获取数据失败");
   }
 }
+
 async function loadData() {
-  // 保存用户名
-  const widgetData = {
-    ...props.widgetData,
-    data: {
-      username: username.value,
-    },
-  };
+  // hotArticleList.value = [];
+  try {
+    // 首次加载中
+    if (lastContributionsData.value.gridList.length === 0) {
+      isFirstLoading.value = true;
+      // utools.showNotification("首次加载中...");
+    } else {
+      // utools.showNotification("非首次加载中...");
+    }
+
+    isLoadFailed.value = false;
+    const res = await fetchGitHubContributions();
+    console.log(
+      "%c [ res ]-260",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      res
+    );
+    // 更新数据
+    contributionsData.value.gridList = res.gridList;
+    contributionsData.value.monthList = res.monthList;
+    contributionsData.value.updateTime = Date.now();
+    // 保存最近数据
+    lastContributionsData.value = _.cloneDeep(contributionsData.value);
+
+    // 保存数据
+    const widgetData = _.cloneDeep(props.widgetData);
+    widgetData.data.lastContributionsData = lastContributionsData.value;
+    if (props.modifyWidgetData) {
+      props.modifyWidgetData(widgetData);
+    }
+  } catch (error) {
+    console.log(
+      "%c [ error ]-114",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      error
+    );
+    // 加载失败 读取上次数据
+    if (lastContributionsData.value.gridList.length > 0) {
+      contributionsData.value = _.cloneDeep(lastContributionsData.value);
+    } else {
+      // 无数据 且 加载失败
+      isLoadFailed.value = true;
+    }
+  } finally {
+    isFirstLoading.value = false;
+    // utools.clearUBrowserCache();
+  }
+}
+
+function SaveUsernameAndLoadData() {
+  const widgetData = _.cloneDeep(props.widgetData);
+  widgetData.data.username = username.value;
 
   if (props.modifyWidgetData) {
     props.modifyWidgetData(widgetData);
   }
-
-  try {
-    // 重置状态
-    isLoading.value = true;
-    isLoadFailed.value = false;
-    // 获取数据 & 更新数据
-    const res = await fetchGitHubContributions();
-    gridList.value = res.gridList;
-    monthList.value = res.monthList;
-  } catch (error) {
-    isLoadFailed.value = true;
-  } finally {
-    isLoading.value = false;
-    utools.clearUBrowserCache();
-    lastUpdate.value = Date.now();
-  }
+  loadData();
 }
 
 function openSetting() {

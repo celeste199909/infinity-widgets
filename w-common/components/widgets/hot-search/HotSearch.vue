@@ -30,14 +30,19 @@
     class="p-[10px] w-full h-full overflow-y-hidden rounded-xl flex flex-col justify-center items-center text-white bg-gradient-to-r from-orange-600 to-amber-500 gap-y-[1px]"
   >
     <!-- 加载动画 -->
-    <Loader v-if="isLoading" />
+    <Loader v-if="isFirstLoading" />
+    <LoadFailed
+      v-else-if="hotSearch.list.length === 0"
+      :retryFn="loadData"
+      :btnColor="'#ffffff'"
+    />
     <!-- 内容 -->
     <div
-      v-else-if="!isLoadFailed && hotSearchList"
+      v-else
       class="w-full h-full overflow-y-scroll flex flex-col justify-start items-start gap-y-[5px]"
     >
       <div
-        v-for="item in hotSearchList"
+        v-for="item in hotSearch.list"
         class="w-full flex flex-row flex-nowrap justify-start items-center gap-x-[6px]"
       >
         <!-- 排名 -->
@@ -70,17 +75,33 @@
           </div>
         </div>
       </div>
+      <!-- 更新时间 不需要日期， 只需要时和分-->
+      <div
+        class="text-sm my-1 text-[#ffffff] flex flex-row justify-start items-center gap-x-1"
+      >
+        <div>
+          更新于: {{ new Date(hotSearch.updateTime).toLocaleTimeString() }}
+        </div>
+        <!-- <Icon class="w-4 h-4 cursor-pointer" name="redo" color="#ffffff" @click="loadData" /> -->
+      </div>
     </div>
     <!-- 加载失败 -->
-    <LoadFailed v-else :retryFn="loadData" :btnColor="'#ffffff'" />
   </div>
 </template>
-
+<!-- 更新内容：无感更新，用户体验更好 -->
 <script setup lang="ts">
-import { defineProps, ref, onMounted, Ref, computed, onBeforeMount } from "vue";
+import {
+  defineProps,
+  ref,
+  onMounted,
+  Ref,
+  computed,
+  onBeforeUnmount,
+} from "vue";
 import Loader from "../../Loader.vue";
 import LoadFailed from "../../LoadFailed.vue";
-import { getRandomUA } from "../../../utils/getRandomUA";
+// import { getRandomUA } from "../../../utils/getRandomUA";
+import _ from "lodash";
 
 const props = defineProps({
   widgetData: {
@@ -93,92 +114,116 @@ const props = defineProps({
   },
 });
 
-const isLoading = ref(false);
-const isLoadFailed = ref(false);
-const intervalTimer: Ref<number | null | NodeJS.Timeout> = ref(null);
-const url = "https://s.weibo.com/top/summary";
-const cate = "realtimehot";
-const cateMap = new Map([
-  ["热搜", "realtimehot"],
-  ["要闻", "socialevent"],
-  ["文娱", "entrank"],
-  ["体育", "sport"],
-  ["游戏", "game"],
-]);
+interface HotSearchItem {
+  rank: number;
+  keyword: string;
+  url: string;
+  isHot: boolean;
+  isBoil: boolean;
+  isNew: boolean;
+}
 
-const hotSearchList: Ref<any[]> = ref([]);
+interface HotSearchData {
+  list: HotSearchItem[];
+  updateTime: number;
+}
+
+const isFirstLoading = ref(false);
+const isLoadFailed = ref(false);
+const intervalId: Ref<number | null | NodeJS.Timeout> = ref(null);
+
+const hotSearch: Ref<HotSearchData> = ref({
+  list: [],
+  updateTime: 0,
+});
+
+const lastHotSearch: Ref<HotSearchData> = ref(
+  props.widgetData.data.lastHotSearch || {
+    list: [],
+    updateTime: 0,
+  }
+);
+
 const isOnEdit = computed(() => {
   return props.widgetData.draggable;
 });
 
 onMounted(async () => {
-  if (props.widgetData.style) {
+  // 如果没有数据, 则加载数据
+  if (lastHotSearch.value.list.length === 0) {
     loadData();
-    intervalTimer.value = setInterval(loadData, 1000 * 60 * 60);
   }
+  // 如果有数据，
+  if (lastHotSearch.value.list.length !== 0) {
+    // 判断上次更新时间是否超过1小时
+    const now = Date.now();
+    const lastUpdateTime = lastHotSearch.value.updateTime;
+    const isOverOneHour = now - lastUpdateTime > 1000 * 60 * 30;
+    // const isOverOneHour = now - lastUpdateTime > 1000 * 30;
+
+    // 但是超过1小时，也加载数据
+    if (isOverOneHour) {
+      // utools.showNotification("数据超过30秒 正在加载数据...");
+      loadData();
+    } else {
+      // 否则，使用上次数据
+      hotSearch.value = lastHotSearch.value;
+      // utools.showNotification("未超过30秒,使用上次数据");
+    }
+  }
+  intervalId.value = setInterval(loadData, 1000 * 60 * 30);
 });
 
-onBeforeMount(() => {
-  if (intervalTimer.value) {
-    clearInterval(intervalTimer.value);
+onBeforeUnmount(() => {
+  if (intervalId.value) {
+    clearInterval(intervalId.value);
   }
 });
 
 // 获取并更新数据
 async function loadData() {
-  hotSearchList.value = [];
   try {
-    // 加载中
-    isLoading.value = true;
+    // 首次加载中
+    if (lastHotSearch.value.list.length === 0) {
+      isFirstLoading.value = true;
+      // utools.showNotification("首次加载中...");
+    } else {
+      // utools.showNotification("非首次加载中...");
+    }
+
     isLoadFailed.value = false;
     const res = await fetchHotSearchByApiOpen();
-    hotSearchList.value = res;
+
+    // 更新数据
+    hotSearch.value.list = res.slice(0, 10);
+    hotSearch.value.updateTime = Date.now();
+    // 保存最近数据
+    lastHotSearch.value.list = hotSearch.value.list;
+    lastHotSearch.value.updateTime = hotSearch.value.updateTime;
+
+    // 保存数据
+    const widgetData = _.cloneDeep(props.widgetData);
+    widgetData.data.lastHotSearch = lastHotSearch.value;
+    if (props.modifyWidgetData) {
+      props.modifyWidgetData(widgetData);
+    }
   } catch (error) {
-    isLoadFailed.value = true;
+    console.log(
+      "%c [ error ]-114",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      error
+    );
+    // 加载失败 读取上次数据
+    if (lastHotSearch.value.list.length > 0) {
+      hotSearch.value.list = lastHotSearch.value.list;
+      hotSearch.value.updateTime = lastHotSearch.value.updateTime;
+    } else {
+      // 无数据 且 加载失败
+      isLoadFailed.value = true;
+    }
   } finally {
-    isLoading.value = false;
-    utools.clearUBrowserCache();
-  }
-}
-
-// 获取数据 ByUbrowser
-async function fetchHotSearchByUbrowser(cate: string = "realtimehot") {
-  let data;
-  try {
-    data = await utools.ubrowser
-      .goto(
-        `https://s.weibo.com/top/summary?cate=${cate}`,
-        { Referer: "https://s.weibo.com/", userAgent: getRandomUA() },
-        10000
-      )
-      .wait(".m-wrap table tbody")
-      .evaluate(() => {
-        const list = Array.from(
-          document.querySelectorAll(".m-wrap table tbody tr")
-        )
-          .map((tr) => {
-            const isAd = tr.querySelector(".td-01 i");
-            const rank = tr.querySelector(".td-01")?.textContent || "";
-            // 排名不是广告
-            if (!isAd && !isNaN(Number(rank))) {
-              const aEl = tr.querySelector(".td-02 a");
-              return {
-                rank: rank,
-                link: aEl?.getAttribute("href") || "",
-                title: aEl?.textContent || "",
-                hot: tr.querySelector(".td-02 span")?.textContent || "",
-              };
-            }
-          })
-          .slice(0, 15);
-        return list;
-      })
-      .run({ show: false, width: 1000, height: 600 });
-
-    const res = data[0].filter((item: any) => item);
-    return res;
-  } catch (error) {
-    return Error("获取数据失败");
+    isFirstLoading.value = false;
+    // utools.clearUBrowserCache();
   }
 }
 

@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.6",
     "@types/node": "^20.11.16",
     "@vueuse/components": "^10.7.2",
     "@vueuse/core": "^10.7.2",
@@ -17,9 +16,7 @@
     "idb-keyval": "^6.2.1",
     "lodash": "^4.17.21",
     "nanoid": "^5.0.5",
-    "pinia": "^2.1.7",
     "vue": "^3.4.15",
-    "vue-draggable-plus": "^0.3.5",
     "vue-router": "^4.2.5",
     "vue3-draggable-resizable": "^1.6.5"
   },

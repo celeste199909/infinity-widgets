@@ -1,5 +1,7 @@
 const { ipcRenderer } = require("electron");
 
+// const { attach, detach, refresh } = require("electron-as-wallpaper");
+
 const preload = {};
 let widgetsWrapper = null;
 
@@ -28,8 +30,10 @@ const createWidgetsWrapper = () => {
     // 显示
     // widgetsWrapper.show();
     // widgetsWrapper.webContents.openDevTools();
+
     ipcRenderer.sendTo(widgetsWrapper.webContents.id, "init");
     utools.showMainWindow();
+
     // 在窗口失去焦点时将其置于最底层
     widgetsWrapper.on('blur', () => {
       widgetsWrapper.setAlwaysOnTop(true);
@@ -39,7 +43,7 @@ const createWidgetsWrapper = () => {
 
     // 在窗口重新获得焦点时取消置于最底层
     widgetsWrapper.on('focus', () => {
-      widgetsWrapper.setAlwaysOnTop(false);  
+      widgetsWrapper.setAlwaysOnTop(false);
       // 发送消息，把右键菜单隐藏
       ipcRenderer.sendTo(widgetsWrapper.webContents.id, "win-focus");
     });

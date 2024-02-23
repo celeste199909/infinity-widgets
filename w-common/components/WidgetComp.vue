@@ -4,8 +4,6 @@
     :widgetData="widgetData"
     :modifyWidgetData="modifyWidgetData"
     class="transition-class rounded-xl overflow-hidden select-none"
-    @mousedown="handleMouseDown"
-    @mouseup="handleMouseUp"
   />
 </template>
 <!-- :id="'w-' + widgetData.id" -->
@@ -66,33 +64,33 @@ onMounted(() => {
   }
 });
 
-let timerout: NodeJS.Timeout;
+// let timerout: NodeJS.Timeout;
 
-function handleMouseDown(event: MouseEvent) {
-  if (event.button === 0) {
-    clearTimeout(timerout);
-    timerout = setTimeout(() => {
-      enterDraggable();
-    }, 1000);
-  }
-}
+// function handleMouseDown(event: MouseEvent) {
+//   if (event.button === 0) {
+//     clearTimeout(timerout);
+//     timerout = setTimeout(() => {
+//       enterDraggable();
+//     }, 1000);
+//   }
+// }
 
-function handleMouseUp(event: MouseEvent) {
-  if (event.button === 0) {
-    clearTimeout(timerout);
-  }
-}
+// function handleMouseUp(event: MouseEvent) {
+//   if (event.button === 0) {
+//     clearTimeout(timerout);
+//   }
+// }
 
-function enterDraggable() {
-  const widget = document.getElementById("w-" + widgetId);
-  if (widget) {
-    const widgetDate = _.cloneDeep(props.widgetData);
-    widgetDate.draggable = true;
-    if (props.modifyWidgetData) {
-      props.modifyWidgetData(widgetDate);
-    }
-  }
-}
+// function enterDraggable() {
+//   const widget = document.getElementById("w-" + widgetId);
+//   if (widget) {
+//     const widgetDate = _.cloneDeep(props.widgetData);
+//     widgetDate.draggable = true;
+//     if (props.modifyWidgetData) {
+//       props.modifyWidgetData(widgetDate);
+//     }
+//   }
+// }
 
 // function setWindowToBottom() {
 //   const newCustomEvent = new CustomEvent("widget-on-click", {
