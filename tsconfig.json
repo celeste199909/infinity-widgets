@@ -16,6 +16,7 @@
       "@/*": [
         "./w-common/*",
         "./win-main/*",
+        "./win-top/*",
         "./win-widgets/*",
       ]
     },
@@ -31,6 +32,10 @@
     "win-main/**/*.d.ts",
     "win-main/**/*.tsx",
     "win-main/**/*.vue",
+    "win-top/**/*.ts",
+    "win-top/**/*.d.ts",
+    "win-top/**/*.tsx",
+    "win-top/**/*.vue",
     "win-widgets/**/*.ts",
     "win-widgets/**/*.d.ts",
     "win-widgets/**/*.tsx",

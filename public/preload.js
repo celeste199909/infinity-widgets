@@ -4,6 +4,7 @@ const { ipcRenderer } = require("electron");
 
 const preload = {};
 let widgetsWrapper = null;
+let topWidgetsWrapper = null;
 
 const display = utools.getDisplayNearestPoint({ x: 100, y: 100 })
 const { width, height } = display.workAreaSize;
@@ -34,21 +35,37 @@ const createWidgetsWrapper = () => {
     ipcRenderer.sendTo(widgetsWrapper.webContents.id, "init");
     utools.showMainWindow();
 
-    // 在窗口失去焦点时将其置于最底层
-    widgetsWrapper.on('blur', () => {
-      widgetsWrapper.setAlwaysOnTop(true);
-      // 发送消息，把右键菜单隐藏
-      ipcRenderer.sendTo(widgetsWrapper.webContents.id, "win-blur");
-    });
-
-    // 在窗口重新获得焦点时取消置于最底层
-    widgetsWrapper.on('focus', () => {
-      widgetsWrapper.setAlwaysOnTop(false);
-      // 发送消息，把右键菜单隐藏
-      ipcRenderer.sendTo(widgetsWrapper.webContents.id, "win-focus");
-    });
   })
 }
+
+// 创建置顶窗口
+const createTopWidgetsWrapper = () => {
+  topWidgetsWrapper = utools.createBrowserWindow('./win-top/index.html', {
+    webPreferences: {
+      preload: './win-top-pre.js'
+    },
+    width: width,
+    height: height,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    resizable: false,
+    movable: true,
+    frame: false,
+    transparent: true,
+    backgroundColor: "#00000000",
+    // 不再使用全屏窗口
+    fullscreen: false,
+    show: true,
+    focus: false,
+  }, () => {
+    // 显示
+    // widgetsWrapper.show();
+    // widgetsWrapper.webContents.openDevTools();
+    ipcRenderer.sendTo(topWidgetsWrapper.webContents.id, "init");
+    utools.showMainWindow();
+  })
+}
+
 
 utools.onPluginEnter(({ code, type, payload, option }) => {
   console.log('用户进入插件应用', code, type, payload)
@@ -58,18 +75,6 @@ utools.onPluginEnter(({ code, type, payload, option }) => {
   }
 })
 
-// 小组件被点击时，将窗口置于最底层
-// ipcRenderer.on("setWindowToBottom", (e, widget) => {
-//     widgetsWrapper.blur();
-// });
-
-const removeWidgetsWrapper = () => {
-  if (widgetsWrapper) {
-    widgetsWrapper.close();
-    widgetsWrapper = null;
-  }
-}
-
 const addWidget = (widget) => {
   ipcRenderer.sendTo(widgetsWrapper.webContents.id, "addWidget", widget);
 }
@@ -78,9 +83,37 @@ const removeAllWidgets = () => {
   ipcRenderer.sendTo(widgetsWrapper.webContents.id, "removeAllWidgets");
 }
 
+const removeWidgetsWrapper = () => {
+  if (widgetsWrapper) {
+    widgetsWrapper.close();
+    widgetsWrapper = null;
+  }
+}
+
+// 置顶功能
+// 删除置顶窗口
+const removeTopWidgetsWrapper = () => {
+  if (topWidgetsWrapper) {
+    topWidgetsWrapper.close();
+    topWidgetsWrapper = null;
+  }
+}
+// 把组件添加到置顶窗口
+const addWidgetToTop = (widget) => {
+  if (!topWidgetsWrapper) {
+    createTopWidgetsWrapper();
+  }
+  ipcRenderer.sendTo(topWidgetsWrapper.webContents.id, "addWidget", widget);
+}
+
 preload.createWidgetsWrapper = createWidgetsWrapper;
 preload.removeWidgetsWrapper = removeWidgetsWrapper;
 preload.addWidget = addWidget;
 preload.removeAllWidgets = removeAllWidgets;
+
+// 置顶功能
+preload.createTopWidgetsWrapper = createTopWidgetsWrapper;
+preload.removeTopWidgetsWrapper = removeTopWidgetsWrapper;
+preload.addWidgetToTop = addWidgetToTop;
 
 window.preload = preload;

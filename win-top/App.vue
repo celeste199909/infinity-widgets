@@ -397,12 +397,31 @@ const nextPosistion: Ref<Widget> = ref({
 });
 
 onMounted(() => {
+  // 系统主题
+  // window.utools.isDarkColors()
+  //   ? document.documentElement.classList.add("dark")
+  //   : document.documentElement.classList.remove("dark");
+
   // 监听自定义事件
   document.addEventListener("addWidgetEvent", function (event: any) {
     console.log("添加小组件", event.detail.key);
     const eventDetail = event.detail;
     const widgetName = eventDetail.key;
     addWidget(widgetName);
+  });
+
+  document.addEventListener("winBlurEvent", function (event: any) {
+    console.log("失去焦点", event.detail.key);
+    window.utools.isDarkColors()
+      ? document.documentElement.classList.add("dark")
+      : document.documentElement.classList.remove("dark");
+  });
+
+  document.addEventListener("winFocusEvent", function (event: any) {
+    console.log("获得焦点", event.detail.key);
+    window.utools.isDarkColors()
+      ? document.documentElement.classList.add("dark")
+      : document.documentElement.classList.remove("dark");
   });
 
   document.addEventListener("removeAllWidgetsEvent", function (event: any) {
@@ -528,6 +547,10 @@ function dragEndHandle(payload: { x: number; y: number }) {
 .draggable {
   border: 0;
 }
+
+/* .widget {
+  transition: width 0.3s, height 0.3s;
+} */
 
 .active {
   border: 0;

@@ -42,9 +42,4 @@ ipcRenderer.on("win-focus", () => {
     document.dispatchEvent(newCustomEvent);
 });
 
-// 把组件添加到置顶窗口
-document.addEventListener("add-widget-to-top", function (event) {
-    console.log('%c [ add-widget-to-top ]-48', 'font-size:13px; background:pink; color:#bf2c9f;',event)
-    ipcRenderer.sendTo(mainWindowId, "add-widget-to-top");
-});
 
