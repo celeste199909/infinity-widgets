@@ -1,6 +1,7 @@
 const { ipcRenderer } = require("electron");
-
 require("./functions/getIcons.js");
+
+window.winTop = {}
 
 let mainWindowId = ""
 
@@ -18,28 +19,23 @@ ipcRenderer.on("addWidget", (e, widget) => {
     document.dispatchEvent(newCustomEvent);
 });
 
-ipcRenderer.on("removeAllWidgets", (e, widget) => {
+ipcRenderer.on("removeAllWidgets", (e) => {
     // 触发自定义事件，并传递参数
-    const newCustomEvent = new CustomEvent('removeAllWidgetsEvent', {
-        detail: { key: widget },
+    const newCustomEvent = new CustomEvent('removeAllWidgetsEvent');
+    document.dispatchEvent(newCustomEvent);
+});
+
+// 置顶部分
+ipcRenderer.on("addWidgetToTop", (e, widget) => {
+    // 触发自定义事件，并传递参数
+    const newCustomEvent = new CustomEvent('addWidgetToTopEvent', {
+        detail: { widget: widget },
     });
     document.dispatchEvent(newCustomEvent);
 });
 
-// 监听窗口失去焦点
-ipcRenderer.on("win-blur", () => {
-    const newCustomEvent = new CustomEvent('winBlurEvent', {
-        detail: { key: "value" },
-    });
-    document.dispatchEvent(newCustomEvent);
-});
+function addWidgetToOrigin(widget) {
+    ipcRenderer.sendTo(mainWindowId, "add-widget-to-origin", widget);
+}
 
-// 监听窗口重新获得焦点
-ipcRenderer.on("win-focus", () => {
-    const newCustomEvent = new CustomEvent('winFocusEvent', {
-        detail: { key: "value" },
-    });
-    document.dispatchEvent(newCustomEvent);
-});
-
-
+window.winTop.addWidgetToOrigin = addWidgetToOrigin

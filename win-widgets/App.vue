@@ -38,11 +38,13 @@
         @drag-end="dragEndHandle"
         @mousedown="handleMouseDown(item, $event)"
       >
+        <!-- <template v-if="!item.onTop"> -->
         <WidgetComp
           :widgetData="item"
           :id="'w-' + item.id"
           :modifyWidgetData="modifyWidgetData"
         />
+        <!-- </template> -->
       </Vue3DraggableResizable>
       <!-- 下一个位置 -->
       <Vue3DraggableResizable
@@ -66,6 +68,7 @@
       :modifyWidgetData="modifyWidgetData"
       :removeWidget="removeWidget"
       :bulkEdit="bulkEdit"
+      :addWidgetFromTop="addWidgetFromTop"
     />
   </div>
 </template>
@@ -399,16 +402,23 @@ const nextPosistion: Ref<Widget> = ref({
 onMounted(() => {
   // 监听自定义事件
   document.addEventListener("addWidgetEvent", function (event: any) {
-    console.log("添加小组件", event.detail.key);
+    console.log("添加小组件", event.detail.widgetKey);
     const eventDetail = event.detail;
-    const widgetName = eventDetail.key;
-    addWidget(widgetName);
+    const widgetKey = eventDetail.widgetKey;
+    addWidget(widgetKey);
   });
 
   document.addEventListener("removeAllWidgetsEvent", function (event: any) {
-    console.log("删除所有小组件", event.detail.key);
+    console.log("删除所有小组件");
     showWidgets.value = [];
-    utools.dbStorage.setItem("showWidgets", []);
+    // utools.dbStorage.setItem("showWidgets", []);
+  });
+
+  // 置顶部分
+  document.addEventListener("addWidgetToOrigin", function (event: any) {
+    console.log("添加小组件", event.detail.widget);
+    // 找到对应的小组件，把他的onTop设置为false
+    addWidgetFromTop(event.detail.widget);
   });
 });
 
@@ -421,7 +431,7 @@ function saveWidgetData() {
 }
 
 // 修改widget数据
-function modifyWidgetData(widgetData: Widget, attribution: string) {
+function modifyWidgetData(widgetData: Widget) {
   showWidgets.value.forEach((item) => {
     if (item.id === widgetData.id) {
       item.currentStyle = widgetData.currentStyle;
@@ -437,8 +447,8 @@ function modifyWidgetData(widgetData: Widget, attribution: string) {
 }
 
 // 添加 widget
-function addWidget(key: string) {
-  const widget = allWidgets.find((item) => item.key === key);
+function addWidget(widgetKey: string) {
+  const widget = allWidgets.find((item) => item.key === widgetKey);
   if (widget) {
     const { x, y } = getNearestEmptyPosition(
       toValue(showWidgets.value),
@@ -463,6 +473,34 @@ function addWidget(key: string) {
       data: widget.data,
     });
   }
+}
+
+// 添加来自顶部的widget
+function addWidgetFromTop(widget: string) {
+  const widgetData = JSON.parse(widget);
+  // const { x, y } = getNearestEmptyPosition(
+  //   toValue(showWidgets.value),
+  //   toValue(widgetData)
+  // );
+  showWidgets.value.push({
+    id: nanoid(),
+    key: widgetData.key,
+    name: widgetData.name,
+    draggable: widgetData.draggable,
+    resizable: widgetData.resizable,
+    position: {
+      x: widgetData.position.x,
+      y: widgetData.position.y,
+    },
+    size: {
+      w: widgetData.size.w,
+      h: widgetData.size.h,
+    },
+    currentStyle: widgetData.currentStyle,
+    style: widgetData.style,
+    data: widgetData.data,
+    onTop: false
+  });
 }
 
 // 删除 widget

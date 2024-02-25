@@ -26,6 +26,7 @@ export default defineConfig({
             input: {
                 "win-main": 'index.html',
                 "win-widgets": 'win-widgets/index.html',
+                "win-top": 'win-top/index.html',
             },
             output: {
                 entryFileNames: '[name]/[name].js',

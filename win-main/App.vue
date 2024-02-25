@@ -41,7 +41,7 @@
       </router-link>
     </div>
     <!-- 小组件列表 -->
-    <div class="flex-1 h-full">
+    <div class="flex-1 h-full overflow-y-scroll">
       <router-view :isOnWidgetContainer="isOnWidgetContainer"></router-view>
     </div>
   </div>
@@ -62,18 +62,60 @@ watchDeep(isOnWidgetContainer, (value) => {
 });
 
 function turnOnWidgetContainer() {
-  isOnWidgetContainer.value = true;
-  window.preload.createWidgetsWrapper();
+  if (!isOnWidgetContainer.value) {
+    window.preload.createWidgetsWrapper();
+    isOnWidgetContainer.value = true;
+
+    if (isOnTopWidgetContainer.value) {
+      setTimeout(() => {
+        window.preload.createTopWidgetsWrapper();
+      }, 100);
+    }
+  }
 }
 
 function turnOffWidgetContainer() {
-  isOnWidgetContainer.value = false;
-  window.preload.removeWidgetsWrapper();
+  if (isOnWidgetContainer.value) {
+    isOnWidgetContainer.value = false;
+    window.preload.removeWidgetsWrapper();
+
+    if (isOnTopWidgetContainer.value) {
+      setTimeout(() => {
+        window.preload.removeTopWidgetsWrapper();
+      }, 100);
+    }
+  }
 }
 
 provide("isOnWidgetContainer", isOnWidgetContainer);
 provide("turnOnWidgetContainer", turnOnWidgetContainer);
 provide("turnOffWidgetContainer", turnOffWidgetContainer);
+
+// 置顶部分
+const isOnTopWidgetContainer = ref(
+  utools.dbStorage.getItem("isOnTopWidgetContainer") || false
+);
+watchDeep(isOnTopWidgetContainer, (value) => {
+  utools.dbStorage.setItem("isOnTopWidgetContainer", value);
+});
+
+function turnOnTopWidgetContainer() {
+  if (!isOnTopWidgetContainer.value) {
+    window.preload.createTopWidgetsWrapper();
+    isOnTopWidgetContainer.value = true;
+  }
+}
+
+function turnOffTopWidgetContainer() {
+  if (isOnTopWidgetContainer.value) {
+    window.preload.removeTopWidgetsWrapper();
+    isOnTopWidgetContainer.value = false;
+  }
+}
+
+provide("isOnTopWidgetContainer", isOnTopWidgetContainer);
+provide("turnOnTopWidgetContainer", turnOnTopWidgetContainer);
+provide("turnOffTopWidgetContainer", turnOffTopWidgetContainer);
 
 onMounted(() => {
   window.utools.isDarkColors()

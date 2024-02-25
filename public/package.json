@@ -1,10 +1,9 @@
 {
   "name": "vite-utools-template",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "",
   "main": "preload.js",
-  "author": "",
-  "license": "MIT",
+  "author": "无限蔚蓝",
   "type": "commonjs",
   "dependencies": {},
   "devDependencies": {

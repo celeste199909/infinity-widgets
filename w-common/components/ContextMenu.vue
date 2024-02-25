@@ -19,6 +19,14 @@
         <Icon :name="'edit'" class="w-5 h-5" color="#8d8df9" :width="3" />
         <div>{{ clickTargetData?.draggable ? "退出编辑" : "进入编辑" }}</div>
       </div>
+      <!-- 置顶 -->
+      <div
+        @click="toggleOnTop"
+        class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
+      >
+        <Icon name="top" class="w-5 h-5" color="#8d8df9" :width="3" />
+        <div>{{ clickTargetData?.onTop ? "取消置顶" : "置顶" }}</div>
+      </div>
       <!-- 尺寸 -->
       <div
         class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
@@ -90,6 +98,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  addWidgetFromTop: {
+    type: Function,
+    required: false,
+  },
 });
 
 const clickTargetId: Ref<string | null> = ref(null); // 点击的目标
@@ -133,6 +145,42 @@ function toggleEdit() {
   if (widgetData) {
     widgetData.draggable = !widgetData.draggable;
     props.modifyWidgetData(widgetData);
+  }
+  isShowContextMenu.value = false;
+}
+
+function toggleOnTop() {
+  const isOnTopWidgetContainer =
+    utools.dbStorage.getItem("isOnTopWidgetContainer") || false;
+
+  if (!isOnTopWidgetContainer) {
+    utools.showNotification("请先在设置中开启【置顶功能】");
+    return;
+  }
+
+  // 通过点击的目标id, 获取对应的widgetData
+  const widgetData = props.showWidgets.find(
+    (item) => item.id === clickTargetId.value
+  );
+  if (widgetData) {
+    // 标记为置顶
+    // widgetData.onTop = !widgetData.onTop;
+    // props.modifyWidgetData(widgetData);
+    // // 把组件添加到顶部容器
+    // window.preload.addWidgetToTop(widgetData);
+    if (widgetData.onTop) {
+      // 鼠标右键点击位于顶部容器的组件, 移除置顶
+      // 1 通知原来的容器添加组件
+      // 添加到顶部容器
+      window.winTop.addWidgetToOrigin(JSON.stringify(widgetData));
+      // 2 从当前顶部容器移除组件
+      props.removeWidget(widgetData.id);
+    } else {
+      // 添加到顶部容器
+      window.winWidget.addWidgetToTop(JSON.stringify(widgetData));
+      // 从原来的容器移除
+      props.removeWidget(widgetData.id);
+    }
   }
   isShowContextMenu.value = false;
 }

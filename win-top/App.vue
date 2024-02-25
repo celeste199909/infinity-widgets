@@ -371,7 +371,7 @@ const allWidgets: Widget[] = [
 
 const dragTarget: Ref<Widget | null> = ref(null);
 const showWidgets = ref<Widget[]>(
-  utools.dbStorage.getItem("showWidgets") || []
+  utools.dbStorage.getItem("topShowWidgets") || []
 );
 watchDeep(showWidgets, () => {
   saveWidgetData();
@@ -397,50 +397,31 @@ const nextPosistion: Ref<Widget> = ref({
 });
 
 onMounted(() => {
-  // 系统主题
-  // window.utools.isDarkColors()
-  //   ? document.documentElement.classList.add("dark")
-  //   : document.documentElement.classList.remove("dark");
-
   // 监听自定义事件
-  document.addEventListener("addWidgetEvent", function (event: any) {
-    console.log("添加小组件", event.detail.key);
-    const eventDetail = event.detail;
-    const widgetName = eventDetail.key;
-    addWidget(widgetName);
+  document.addEventListener("addWidgetToTopEvent", function (event: any) {
+    console.log("添加小组件", event.detail.widget);
+    addWidgetToTop(event.detail.widget);
   });
 
-  document.addEventListener("winBlurEvent", function (event: any) {
-    console.log("失去焦点", event.detail.key);
-    window.utools.isDarkColors()
-      ? document.documentElement.classList.add("dark")
-      : document.documentElement.classList.remove("dark");
-  });
-
-  document.addEventListener("winFocusEvent", function (event: any) {
-    console.log("获得焦点", event.detail.key);
-    window.utools.isDarkColors()
-      ? document.documentElement.classList.add("dark")
-      : document.documentElement.classList.remove("dark");
-  });
 
   document.addEventListener("removeAllWidgetsEvent", function (event: any) {
-    console.log("删除所有小组件", event.detail.key);
+    console.log("删除所有小组件");
     showWidgets.value = [];
-    utools.dbStorage.setItem("showWidgets", []);
+    // utools.dbStorage.setItem("topShowWidgets", []);
   });
+
 });
 
 // 保存widget数据
 function saveWidgetData() {
   utools.dbStorage.setItem(
-    "showWidgets",
+    "topShowWidgets",
     JSON.parse(JSON.stringify(toValue(showWidgets.value)))
   );
 }
 
 // 修改widget数据
-function modifyWidgetData(widgetData: Widget, attribution: string) {
+function modifyWidgetData(widgetData: Widget) {
   showWidgets.value.forEach((item) => {
     if (item.id === widgetData.id) {
       item.currentStyle = widgetData.currentStyle;
@@ -454,34 +435,56 @@ function modifyWidgetData(widgetData: Widget, attribution: string) {
     }
   });
 }
-
 // 添加 widget
-function addWidget(key: string) {
-  const widget = allWidgets.find((item) => item.key === key);
-  if (widget) {
-    const { x, y } = getNearestEmptyPosition(
-      toValue(showWidgets.value),
-      toValue(widget)
-    );
+// function addWidget(key: string) {
+//   const widget = allWidgets.find((item) => item.key === key);
+//   if (widget) {
+//     const { x, y } = getNearestEmptyPosition(
+//       toValue(showWidgets.value),
+//       toValue(widget)
+//     );
+//     showWidgets.value.push({
+//       id: nanoid(),
+//       key: widget.key,
+//       name: widget.name,
+//       draggable: true,
+//       resizable: false,
+//       position: {
+//         x: x,
+//         y: y,
+//       },
+//       size: {
+//         w: widget.size.w,
+//         h: widget.size.h,
+//       },
+//       currentStyle: widget.currentStyle,
+//       style: widget.style,
+//       data: widget.data,
+//     });
+//   }
+// }
+// 添加 widget
+function addWidgetToTop(widget: string) {
+    const widgetData = JSON.parse(widget);
     showWidgets.value.push({
       id: nanoid(),
-      key: widget.key,
-      name: widget.name,
-      draggable: true,
-      resizable: false,
+      key: widgetData.key,
+      name: widgetData.name,
+      draggable: widgetData.draggable,
+      resizable: widgetData.resizable,
       position: {
-        x: x,
-        y: y,
+        x: widgetData.position.x,
+        y: widgetData.position.y,
       },
       size: {
-        w: widget.size.w,
-        h: widget.size.h,
+        w: widgetData.size.w,
+        h: widgetData.size.h,
       },
-      currentStyle: widget.currentStyle,
-      style: widget.style,
-      data: widget.data,
+      currentStyle: widgetData.currentStyle,
+      style: widgetData.style,
+      data: widgetData.data,
+      onTop: true,
     });
-  }
 }
 
 // 删除 widget

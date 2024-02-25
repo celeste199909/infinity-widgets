@@ -16,6 +16,8 @@ const createWidgetsWrapper = () => {
     },
     width: width,
     height: height,
+    // width:900,
+    // height: 600,
     alwaysOnTop: false,
     skipTaskbar: true,
     resizable: false,
@@ -46,6 +48,8 @@ const createTopWidgetsWrapper = () => {
     },
     width: width,
     height: height,
+    // width:900,
+    // height: 600,
     alwaysOnTop: true,
     skipTaskbar: true,
     resizable: false,
@@ -59,8 +63,9 @@ const createTopWidgetsWrapper = () => {
     focus: false,
   }, () => {
     // 显示
-    // widgetsWrapper.show();
-    // widgetsWrapper.webContents.openDevTools();
+    // topWidgetsWrapper.show();
+    // topWidgetsWrapper.webContents.openDevTools();
+    topWidgetsWrapper.setAlwaysOnTop(true, "screen-saver");
     ipcRenderer.sendTo(topWidgetsWrapper.webContents.id, "init");
     utools.showMainWindow();
   })
@@ -70,19 +75,29 @@ const createTopWidgetsWrapper = () => {
 utools.onPluginEnter(({ code, type, payload, option }) => {
   console.log('用户进入插件应用', code, type, payload)
   const isOnWidgetContainer = utools.dbStorage.getItem('isOnWidgetContainer');
+  const isOnTopWidgetContainer = utools.dbStorage.getItem('isOnTopWidgetContainer');
   if (isOnWidgetContainer && !widgetsWrapper) {
     createWidgetsWrapper();
+    if (isOnTopWidgetContainer && !topWidgetsWrapper) {
+      setTimeout(() => {
+        createTopWidgetsWrapper();
+      }, 100);
+    }
   }
 })
 
-const addWidget = (widget) => {
-  ipcRenderer.sendTo(widgetsWrapper.webContents.id, "addWidget", widget);
+const addWidget = (widgetKey) => {
+  ipcRenderer.sendTo(widgetsWrapper.webContents.id, "addWidget", widgetKey);
 }
 
 const removeAllWidgets = () => {
   ipcRenderer.sendTo(widgetsWrapper.webContents.id, "removeAllWidgets");
+  setTimeout(() => {
+    ipcRenderer.sendTo(topWidgetsWrapper.webContents.id, "removeAllWidgets");
+  }, 100);
 }
 
+// 移除窗口 应该把 顶置窗口也移除
 const removeWidgetsWrapper = () => {
   if (widgetsWrapper) {
     widgetsWrapper.close();
@@ -91,19 +106,18 @@ const removeWidgetsWrapper = () => {
 }
 
 // 置顶功能
-// 删除置顶窗口
+ipcRenderer.on("add-widget-to-top", (e, widget) => {
+  ipcRenderer.sendTo(topWidgetsWrapper.webContents.id, "addWidgetToTop", widget);
+});
+ipcRenderer.on("add-widget-to-origin", (e, widget) => {
+  ipcRenderer.sendTo(widgetsWrapper.webContents.id, "addWidgetToOrigin", widget);
+});
+
 const removeTopWidgetsWrapper = () => {
   if (topWidgetsWrapper) {
     topWidgetsWrapper.close();
     topWidgetsWrapper = null;
   }
-}
-// 把组件添加到置顶窗口
-const addWidgetToTop = (widget) => {
-  if (!topWidgetsWrapper) {
-    createTopWidgetsWrapper();
-  }
-  ipcRenderer.sendTo(topWidgetsWrapper.webContents.id, "addWidget", widget);
 }
 
 preload.createWidgetsWrapper = createWidgetsWrapper;
@@ -111,9 +125,8 @@ preload.removeWidgetsWrapper = removeWidgetsWrapper;
 preload.addWidget = addWidget;
 preload.removeAllWidgets = removeAllWidgets;
 
-// 置顶功能
 preload.createTopWidgetsWrapper = createTopWidgetsWrapper;
 preload.removeTopWidgetsWrapper = removeTopWidgetsWrapper;
-preload.addWidgetToTop = addWidgetToTop;
+
 
 window.preload = preload;

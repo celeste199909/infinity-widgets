@@ -26,6 +26,7 @@ export interface Widget {
             h: number;
         };
     };
+    onTop?: boolean;
     data?: any; // 每个组件产生的不同数据
 }
 

@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import "../w-common/style.css";
 import App from './App.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { utools } from "../w-common/plugin/utools";
 import Setting from "./pages/Setting.vue";
 import WidgetStore from "./pages/WidgetStore.vue"
 import Help from "./pages/Help.vue"
@@ -30,8 +29,6 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes, // `routes: routes` 的缩写
 })
-// utools挂载
-window.utools = window.utools || utools;
 
 const app = createApp(App)
 

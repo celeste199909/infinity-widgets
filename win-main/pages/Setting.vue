@@ -15,7 +15,7 @@
         </div>
         <div>
           您可以随时关闭该容器, 关闭时容器时,
-          所有小组件也会被关闭（数据不会被删除）。
+          所有小组件都会被关闭（数据不会被删除）。
         </div>
       </div>
       <div class="container my-4">
@@ -25,6 +25,25 @@
         </div>
         <div class="w-24" @click="turnOffWidgetContainer">
           <div :class="isOnWidgetContainer ? '' : 'current'"></div>
+          <span>关闭</span>
+        </div>
+      </div>
+    </div>
+    <!-- 置顶容器 -->
+    <div>
+      <div class="mt-2 font-bold text-[16px]">置顶功能</div>
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
+        <div>开启后，将创建一个透明窗口。</div>
+        <div>您可以随时关闭该功能, 数据不会被删除。</div>
+        <div>置顶的小组件将置于所有窗口之上，除了utools。</div>
+      </div>
+      <div class="container my-4">
+        <div class="w-24" @click="turnOnTopWidgetContainer">
+          <div :class="isOnTopWidgetContainer ? 'current' : ''"></div>
+          <span>开启</span>
+        </div>
+        <div class="w-24" @click="turnOffTopWidgetContainer">
+          <div :class="isOnTopWidgetContainer ? '' : 'current'"></div>
           <span>关闭</span>
         </div>
       </div>
@@ -65,6 +84,10 @@ import { inject, Ref } from "vue";
 const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
 const turnOnWidgetContainer = inject("turnOnWidgetContainer") as () => void;
 const turnOffWidgetContainer = inject("turnOffWidgetContainer") as () => void;
+
+const isOnTopWidgetContainer = inject("isOnTopWidgetContainer") as Ref<boolean>;
+const turnOnTopWidgetContainer = inject("turnOnTopWidgetContainer") as () => void;
+const turnOffTopWidgetContainer = inject("turnOffTopWidgetContainer") as () => void;
 
 function removeAllWidgets() {
   //   utools.dbStorage.setItem("showWidgets", []);
