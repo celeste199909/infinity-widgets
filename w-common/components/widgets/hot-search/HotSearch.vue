@@ -1,34 +1,14 @@
 <!-- GithubContributions.vue -->
 <template>
-  <!-- 无样式 -->
-  <div
-    v-if="!widgetData.style"
-    class="wrapper-card bg-gradient-to-br from-amber-200 to-amber-100 rounded-xl flex justify-center items-center"
-    :style="{
-      width: widgetData.size.w + 'px',
-      height: widgetData.size.h + 'px',
-    }"
-  >
-    <div
-      class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
-    >
-      <img
-        draggable="false"
-        class="rounded-xl w-14 h-14"
-        src="../../../assets/icons/weibo.png"
-        alt=""
-      />
-    </div>
-  </div>
   <!-- 有样式 -->
   <div
-    v-else
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',
     }"
     class="p-[10px] w-full h-full overflow-y-hidden rounded-xl flex flex-col justify-center items-center text-white bg-gradient-to-r from-orange-600 to-amber-500 gap-y-[1px]"
   >
+    <slot></slot>
     <!-- 加载动画 -->
     <Loader v-if="isFirstLoading" />
     <LoadFailed

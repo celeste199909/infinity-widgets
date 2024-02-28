@@ -27,7 +27,7 @@
           <img src="../../w-common/assets/icons/add-96-green.png" />
         </div>
         <!-- 封面 -->
-        <WidgetCover :widgetData="item" :width="width" :height="height" />
+        <WidgetCover :widgetKey="item.key" :width="width" :height="height" />
       </div>
       <!-- 名字 -->
       <div class="text-slate-700 dark:text-slate-100 font-bold text-center">
@@ -45,7 +45,32 @@ import { WidgetCov } from "../../w-common/types/widget";
 import { useLayout } from "../../w-common/composables/useLayout";
 const { layout } = useLayout();
 
-const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
+const props = defineProps({
+  isOnWidgetContainer: {
+    type: Boolean,
+    required: true,
+  },
+  turnOnWidgetContainer: {
+    type: Function,
+    required: true,
+  },
+  turnOffWidgetContainer: {
+    type: Function,
+    required: true,
+  },
+  isOnTopWidgetContainer: {
+    type: Boolean,
+    required: true,
+  },
+  turnOnTopWidgetContainer: {
+    type: Function,
+    required: true,
+  },
+  turnOffTopWidgetContainer: {
+    type: Function,
+    required: true,
+  },
+});
 
 const width = getWidgetLength(2);
 const height = getWidgetLength(2);
@@ -90,12 +115,16 @@ const widgetsList = [
     name: "GitHub贡献图",
   },
   {
-    key: "wukong",
+    key: "heishenhua",
     name: "黑神话：悟空",
   },
   {
     key: "drink-water",
     name: "喝水",
+  },
+  {
+    key: "woodfish",
+    name: "木鱼",
   },
 ];
 
@@ -111,7 +140,7 @@ function getWidgetLength(units: number) {
 const allWidgets: Ref<WidgetCov[]> = ref(widgetsList);
 
 function addWidget(key: string) {
-  if (!isOnWidgetContainer.value) {
+  if (!props.isOnWidgetContainer) {
     window.utools.showNotification("请先在设置中开启【小组件容器】");
     return;
   }

@@ -29,6 +29,7 @@ import Download from "./icons/Download.vue";
 import ChangeSize from "./icons/ChangeSize.vue";
 import Delete from "./icons/Delete.vue";
 import Top from "./icons/Top.vue";
+import Like from "./icons/Like.vue";
 
 const componentMap = new Map<string, any>([
   ["all-app", AllApp],
@@ -52,6 +53,7 @@ const componentMap = new Map<string, any>([
   ["change-size", ChangeSize],
   ["delete", Delete],
   ["top", Top],
+  ["like", Like],
 ]);
 
 const props = defineProps({

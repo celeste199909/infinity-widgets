@@ -8,6 +8,7 @@
     }"
     class="p-[10px] w-full h-full overflow-y-scroll rounded-xl flex flex-col justify-center items-center text-white bg-gradient-to-tr from-blue-500 to-sky-500 gap-y-[1px]"
   >
+    <slot></slot>
     <!-- 首次无任何数据时,显示加载动画 -->
     <Loader v-if="isFirstLoading" />
     <!-- 无任何数据时 且 不是在首次加载中 -->

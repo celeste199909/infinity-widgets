@@ -1,26 +1,51 @@
 <template>
   <div class="p-4 flex flex-col justify-start items-start gap-4">
-    <!-- 说明 -->
+    <!-- 组件晃动用不了啊！ -->
     <div>
       <div class="mt-2 font-bold text-[16px]">Q: 组件晃动用不了啊！</div>
       <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
-        A:
-        每一个小组件被添加时自动进入编辑模式，处于编辑模式的小组件可以拖动位置，右键退出编辑模式即可正常使用功能。
+        A:小组件被添加时自动进入编辑模式，右键退出编辑模式即可。
       </div>
     </div>
+    <!-- 设置中的小组件容器开关无法打开！ -->
     <div>
       <div class="mt-2 font-bold text-[16px]">
-        Q: 所有的小组件怎么突然消失了？(Window系统)
+        Q: 设置选项无法打开！
       </div>
       <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
-        A: 你可能是点到右下角的 “显示桌面”
-        按钮了，这个按钮会隐藏所有小组件，再点击一下即可恢复。
+        A:可以尝试手动格式化这个插件的数据。
       </div>
     </div>
+    <!-- 所有的小组件怎么突然消失了？ -->
+    <div>
+      <div class="mt-2 font-bold text-[16px]">
+        Q: 小组件怎么突然都消失了？(Window系统)
+      </div>
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
+        A: 可能是点到右下角的 “显示桌面” 按钮了，再点击一下即可恢复。
+      </div>
+    </div>
+    <!-- 你这小组件功能不完善呀！ -->
     <div>
       <div class="mt-2 font-bold text-[16px]">Q: 你这小组件功能不完善呀！</div>
       <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
         A: 请容我先凑一凑数量😁。
+      </div>
+    </div>
+    <!-- 退出编辑的时候不是所有的组件都退出编辑？ -->
+    <div>
+      <div class="mt-2 font-bold text-[16px]">
+        Q: 退出编辑的时候不是所有的组件都退出编辑？
+      </div>
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
+        A:有顶置的小组件，会出现此问题，之后会优化。
+      </div>
+    </div>
+    <!-- 添加小组件时会重叠？ -->
+    <div>
+      <div class="mt-2 font-bold text-[16px]">Q: 添加小组件时会重叠？</div>
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
+        A:有顶置的小组件，会出现此问题，之后会考虑优化。
       </div>
     </div>
     <!-- 小组件更新频率说明 -->

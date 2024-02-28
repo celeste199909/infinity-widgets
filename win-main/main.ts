@@ -5,6 +5,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Setting from "./pages/Setting.vue";
 import WidgetStore from "./pages/WidgetStore.vue"
 import Help from "./pages/Help.vue"
+import Thanks from "./pages/Thanks.vue"
+
 
 const routes = [
     {
@@ -21,6 +23,11 @@ const routes = [
         name: 'Help',
         path: '/help',
         component: Help
+    },
+    {
+        name: 'Thanks',
+        path: '/thanks',
+        component: Thanks
     },
 ]
 

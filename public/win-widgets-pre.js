@@ -1,5 +1,4 @@
 const { ipcRenderer } = require("electron");
-
 require("./functions/getIcons.js");
 window.winWidget = {}
 

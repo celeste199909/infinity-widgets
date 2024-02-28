@@ -2,50 +2,43 @@
   <div class="p-4 flex flex-col justify-start items-start gap-4">
     <!-- 小组件容器 -->
     <div>
-      <div class="mt-2 font-bold text-[16px]">小组件容器</div>
+      <div
+        class="mt-2 font-bold text-[16px] flex flex-row items-center gap-x-4"
+      >
+        <div>小组件容器</div>
+        <Toggle
+          :name="'widgetContainer'"
+          :isOn="isOnWidgetContainer"
+          :turnOn="turnOnWidgetContainer"
+          :turnOff="turnOffWidgetContainer"
+        />
+      </div>
       <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
         <div>
-          <span class="font-bold">注意：</span
-          >只有开启此选项才能把小组件添加到桌面上。
+          开启时创建一个透明窗口用于容纳小组件
         </div>
         <div>
-          开启此选项后，该插件将创建一个<span class="font-bold"
-            >与屏幕大小相近的透明窗口</span
-          >，称为<span class="font-bdold">小组件容器</span>，用于容纳小组件。
-        </div>
-        <div>
-          您可以随时关闭该容器, 关闭时容器时,
-          所有小组件都会被关闭（数据不会被删除）。
-        </div>
-      </div>
-      <div class="container my-4">
-        <div class="w-24" @click="turnOnWidgetContainer">
-          <div :class="isOnWidgetContainer ? 'current' : ''"></div>
-          <span>开启</span>
-        </div>
-        <div class="w-24" @click="turnOffWidgetContainer">
-          <div :class="isOnWidgetContainer ? '' : 'current'"></div>
-          <span>关闭</span>
+          可随时关闭
         </div>
       </div>
     </div>
     <!-- 置顶容器 -->
     <div>
-      <div class="mt-2 font-bold text-[16px]">置顶功能</div>
-      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
-        <div>开启后，将创建一个透明窗口。</div>
-        <div>您可以随时关闭该功能, 数据不会被删除。</div>
-        <div>置顶的小组件将置于所有窗口之上，除了utools。</div>
+      <div
+        class="mt-2 font-bold text-[16px] flex flex-row items-center gap-x-4"
+      >
+        <div>置顶功能</div>
+        <Toggle
+          :name="'topWidgetContainer'"
+          :isOn="isOnTopWidgetContainer"
+          :turnOn="turnOnTopWidgetContainer"
+          :turnOff="turnOffTopWidgetContainer"
+        />
       </div>
-      <div class="container my-4">
-        <div class="w-24" @click="turnOnTopWidgetContainer">
-          <div :class="isOnTopWidgetContainer ? 'current' : ''"></div>
-          <span>开启</span>
-        </div>
-        <div class="w-24" @click="turnOffTopWidgetContainer">
-          <div :class="isOnTopWidgetContainer ? '' : 'current'"></div>
-          <span>关闭</span>
-        </div>
+      <div class="mt-1 mb-2 text-[14px] text-slate-600 dark:text-slate-400">
+        <div>开启时创建一个透明窗口</div>
+        <div>可随时关闭</div>
+        <div>置顶的小组件将置于所有窗口之上，除了 uTools</div>
       </div>
     </div>
     <!-- 删除所有组件 -->
@@ -79,15 +72,33 @@
 </template>
 
 <script setup lang="ts">
-import { inject, Ref } from "vue";
-
-const isOnWidgetContainer = inject("isOnWidgetContainer") as Ref<boolean>;
-const turnOnWidgetContainer = inject("turnOnWidgetContainer") as () => void;
-const turnOffWidgetContainer = inject("turnOffWidgetContainer") as () => void;
-
-const isOnTopWidgetContainer = inject("isOnTopWidgetContainer") as Ref<boolean>;
-const turnOnTopWidgetContainer = inject("turnOnTopWidgetContainer") as () => void;
-const turnOffTopWidgetContainer = inject("turnOffTopWidgetContainer") as () => void;
+import Toggle from "../../w-common/components/Toggle.vue";
+const props = defineProps({
+  isOnWidgetContainer: {
+    type: Boolean,
+    required: true,
+  },
+  turnOnWidgetContainer: {
+    type: Function,
+    required: true,
+  },
+  turnOffWidgetContainer: {
+    type: Function,
+    required: true,
+  },
+  isOnTopWidgetContainer: {
+    type: Boolean,
+    required: true,
+  },
+  turnOnTopWidgetContainer: {
+    type: Function,
+    required: true,
+  },
+  turnOffTopWidgetContainer: {
+    type: Function,
+    required: true,
+  },
+});
 
 function removeAllWidgets() {
   //   utools.dbStorage.setItem("showWidgets", []);

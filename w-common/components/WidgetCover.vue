@@ -1,7 +1,6 @@
 <template>
   <component
-    :is="widgets.get(widgetData.key)"
-    :widgetData="widgetData"
+    :is="widgets.get(widgetKey)"
     class="transition-class rounded-xl overflow-hidden select-none"
   />
 </template>
@@ -16,11 +15,12 @@ import CovAlarm from "./widgets/alarm/CovAlarm.vue";
 import CovHotSearch from "./widgets/hot-search/CovHotSearch.vue";
 import CovJueJinHot from "./widgets/juejin-hot/CovJueJinHot.vue";
 import CovDrinkWater from "./widgets/drink-water/CovDrinkWater.vue";
-import CovWuKong from "./widgets/wukong/CovWuKong.vue";
+import CovHeiShenHua from "./widgets/heishenhua/CovHeiShenHua.vue";
+import CovWoodfish from "./widgets/woodfish/CovWoodfish.vue";
 
 defineProps({
-  widgetData: {
-    type: Object,
+  widgetKey: {
+    type: String,
     required: true,
   },
 });
@@ -36,7 +36,9 @@ const widgets = new Map([
   ["hot-search", CovHotSearch],
   ["juejin-hot", CovJueJinHot],
   ["drink-water", CovDrinkWater],
-  ["wukong", CovWuKong],
+  ["heishenhua", CovHeiShenHua],
+  ["woodfish", CovWoodfish],
 ]);
 </script>
 <style scoped></style>
+./widgets/heishenhua/CovWuKong.vue

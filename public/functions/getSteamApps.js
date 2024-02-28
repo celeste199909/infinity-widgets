@@ -1,6 +1,5 @@
 
-const { readdir, realpathSync, readdirSync, readFileSync } = require("fs");
-const { ipcRenderer, shell } = require("electron");
+const { readdirSync, readFileSync } = require("fs");
 
 const fs = require('fs');
 const path = require('path');

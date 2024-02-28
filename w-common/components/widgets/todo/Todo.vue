@@ -1,24 +1,7 @@
 <template>
-  <!-- 无样式 -->
-  <div
-    v-if="!widgetData.style"
-    class="rounded-xl bg-gradient-to-br from-cyan-100 to-slate-50 backdrop-blur-sm flex justify-center items-center"
-    :style="{
-      width: widgetData.size.w + 'px',
-      height: widgetData.size.h + 'px',
-    }"
-  >
-    <!-- completed-96.png -->
-    <img
-      class="w-14 h-14"
-      draggable="false"
-      src="../../../assets/icons/completed-96.png"
-    />
-  </div>
   <!-- 有样式 -->
   <div
-    v-else
-    class="rounded-xl w-full h-full p-2 pb-3 text-[#8D8EFC] bg-gradient-to-br from-cyan-200 to-cyan-100 backdrop-blur-sm flex flex-col justify-start items-center relative"
+    class="rounded-xl w-full h-full p-2 pb-3 text-[#8D8EFC] bg-gradient-to-br from-cyan-100 to-slate-50 backdrop-blur-sm flex flex-col justify-start items-center relative"
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',
@@ -83,14 +66,14 @@
         v-if="currentPage === 1"
         name="list-todo"
         color="#777"
-        class="w-11 h-11 p-2 cursor-pointer hover:bg-slate-200 rounded-xl"
+        class="w-11 h-11 p-2 cursor-pointer hover:bg-slate-100 rounded-xl"
         @click="toggleList"
       />
       <Icon
         v-else
         name="list-completed"
         color="#777"
-        class="w-11 h-11 p-2 cursor-pointer hover:bg-slate-200 rounded-xl"
+        class="w-11 h-11 p-2 cursor-pointer hover:bg-slate-100 rounded-xl"
         @click="toggleList"
       />
     </div>

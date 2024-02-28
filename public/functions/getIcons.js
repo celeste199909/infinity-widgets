@@ -1,7 +1,6 @@
 // desktop.js 提供桌面相关的方法
 
-const { readdir, realpathSync, readFileSync, statSync } = require("fs");
-const { ipcRenderer, shell } = require("electron");
+const { readdir, realpathSync, statSync } = require("fs");
 
 window.getIconsByPath = function (path) {
     const iconPath = path;

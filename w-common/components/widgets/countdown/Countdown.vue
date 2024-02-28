@@ -1,25 +1,6 @@
 <template>
-  <!-- 无样式 -->
-  <div
-    v-if="!widgetData.style"
-    class="rounded-xl w-full h-full bg-gradient-to-r from-violet-200 to-pink-200 text-slate-800 backdrop-blur-sm flex justify-center items-center"
-    :style="{
-      width: widgetData.size.w + 'px',
-      height: widgetData.size.h + 'px',
-    }"
-  >
-    <div class="w-14 h-14 backdrop-blur-[5px] flex justify-center items-center">
-      <img
-      draggable="false"
-        class="rounded-xl w-14 h-14"
-        src="../../../assets/icons/stopwatch-64.png"
-        alt=""
-      />
-    </div>
-  </div>
   <!-- 有样式 -->
   <div
-    v-else
     class="rounded-xl w-full h-full bg-slate-100 text-slate-800 backdrop-blur-sm flex justify-center items-center"
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',

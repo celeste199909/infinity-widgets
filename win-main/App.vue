@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-screen h-screen flex flex-row justify-center text-slate-600 bg-gradient-to-br bg-white dark:bg-[#343434] dark:text-slate-100 overflow-hidden"
+    class="w-screen h-screen flex flex-row justify-center text-slate-600 dark:text-slate-400 bg-gradient-to-br bg-white dark:bg-[#343434] overflow-hidden"
   >
     <!-- 左侧导航栏 -->
     <div
@@ -15,6 +15,17 @@
           name="all-app"
           :width="route.name === 'WidgetStore' ? 4 : 2"
           :color="route.name === 'WidgetStore' ? '#8f8ffc' : '#8080ff'"
+        />
+      </router-link>
+      <!-- 致谢 -->
+      <router-link
+        to="/thanks"
+        class="w-14 h-14 p-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-700 flex justify-center items-center"
+      >
+        <Icon
+          name="like"
+          :width="route.name === 'Thanks' ? 4 : 2"
+          :color="route.name === 'Thanks' ? '#8f8ffc' : '#8080ff'"
         />
       </router-link>
       <!-- 设置 -->
@@ -42,12 +53,19 @@
     </div>
     <!-- 小组件列表 -->
     <div class="flex-1 h-full overflow-y-scroll">
-      <router-view :isOnWidgetContainer="isOnWidgetContainer"></router-view>
+      <router-view
+        :isOnWidgetContainer="isOnWidgetContainer"
+        :turnOnWidgetContainer="turnOnWidgetContainer"
+        :turnOffWidgetContainer="turnOffWidgetContainer"
+        :isOnTopWidgetContainer="isOnTopWidgetContainer"
+        :turnOnTopWidgetContainer="turnOnTopWidgetContainer"
+        :turnOffTopWidgetContainer="turnOffTopWidgetContainer"
+      ></router-view>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, provide } from "vue";
+import { onMounted, ref } from "vue";
 import Icon from "../w-common/components/icon/Icon.vue";
 import { watchDeep } from "@vueuse/core";
 import { useRoute } from "vue-router";
@@ -69,7 +87,7 @@ function turnOnWidgetContainer() {
     if (isOnTopWidgetContainer.value) {
       setTimeout(() => {
         window.preload.createTopWidgetsWrapper();
-      }, 100);
+      }, 300);
     }
   }
 }
@@ -82,14 +100,10 @@ function turnOffWidgetContainer() {
     if (isOnTopWidgetContainer.value) {
       setTimeout(() => {
         window.preload.removeTopWidgetsWrapper();
-      }, 100);
+      }, 300);
     }
   }
 }
-
-provide("isOnWidgetContainer", isOnWidgetContainer);
-provide("turnOnWidgetContainer", turnOnWidgetContainer);
-provide("turnOffWidgetContainer", turnOffWidgetContainer);
 
 // 置顶部分
 const isOnTopWidgetContainer = ref(
@@ -112,10 +126,6 @@ function turnOffTopWidgetContainer() {
     isOnTopWidgetContainer.value = false;
   }
 }
-
-provide("isOnTopWidgetContainer", isOnTopWidgetContainer);
-provide("turnOnTopWidgetContainer", turnOnTopWidgetContainer);
-provide("turnOffTopWidgetContainer", turnOffTopWidgetContainer);
 
 onMounted(() => {
   window.utools.isDarkColors()

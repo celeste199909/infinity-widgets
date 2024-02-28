@@ -1,22 +1,6 @@
 <template>
-  <!-- 无样式 -->
-  <div
-    v-if="!widgetData.style"
-    class="rounded-xl w-full h-full p-4 flex justify-center items-center bg-white overflow-hidden relative"
-    :style="{
-      width: widgetData.size.w + 'px',
-      height: widgetData.size.h + 'px',
-    }"
-  >
-    <img
-      class="w-18 h-18"
-      draggable="false"
-      src="../../../assets/icons/start-48.png"
-    />
-  </div>
   <!-- 有样式 -->
   <div
-    v-else
     class="rounded-xl w-full h-full p-4 flex justify-center items-center bg-white overflow-hidden relative"
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',

@@ -18,7 +18,7 @@
         v-for="(item, index) in showWidgets"
         :key="item.id"
         :id="item.id"
-        class="widget select-none border-0"
+        class="widget select-none border-0 hover:z-50 relative transition"
         :class="item.draggable ? 'drag-mode' : ''"
         :initW="item.size.w"
         :initH="item.size.h"
@@ -327,7 +327,7 @@ const allWidgets: Widget[] = [
     data: {},
   },
   {
-    key: "wukong",
+    key: "heishenhua",
     name: "黑神话：悟空",
     position: {
       x: 0,
@@ -365,6 +365,26 @@ const allWidgets: Widget[] = [
     style: {
       "9x2": {
         w: getWidgetLength(9),
+        h: getWidgetLength(2),
+      },
+    },
+    data: {},
+  },
+  {
+    key: "woodfish",
+    name: "木鱼",
+    position: {
+      x: 0,
+      y: 0,
+    },
+    size: {
+      w: getWidgetLength(2),
+      h: getWidgetLength(2),
+    },
+    currentStyle: "2x2",
+    style: {
+      "2x2": {
+        w: getWidgetLength(2),
         h: getWidgetLength(2),
       },
     },
@@ -435,6 +455,7 @@ function modifyWidgetData(widgetData: Widget) {
   showWidgets.value.forEach((item) => {
     if (item.id === widgetData.id) {
       item.currentStyle = widgetData.currentStyle;
+      item.tempStyle = widgetData.tempStyle;
       item.size = widgetData.size;
       item.style = widgetData.style;
       item.data = widgetData.data;
@@ -499,7 +520,7 @@ function addWidgetFromTop(widget: string) {
     currentStyle: widgetData.currentStyle,
     style: widgetData.style,
     data: widgetData.data,
-    onTop: false
+    onTop: false,
   });
 }
 
@@ -555,6 +576,7 @@ function dragEndHandle(payload: { x: number; y: number }) {
   });
   dragTarget.value = null;
 }
+
 </script>
 <style scoped>
 .dragging {

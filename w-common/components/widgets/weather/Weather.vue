@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, Ref } from "vue";
+import {  ref, onMounted, Ref } from "vue";
 import weatherPhenomenaMap from "./weatherMap";
 import provinceDistricts from "./provinceDistricts";
 import Icon from "../../icon/Icon.vue";

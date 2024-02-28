@@ -1,28 +1,7 @@
 <!-- GithubContributions.vue -->
 <template>
-  <!-- 无样式 -->
-  <div
-    v-if="!widgetData.style"
-    class="wrapper-card rounded-xl bg-slate-900 flex justify-center items-center"
-    :style="{
-      width: widgetData.size.w + 'px',
-      height: widgetData.size.h + 'px',
-    }"
-  >
-    <div
-      class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
-    >
-      <img
-        draggable="false"
-        class="rounded-xl w-14 h-14"
-        src="../../../assets/icons/github-96-white.png"
-        alt=""
-      />
-    </div>
-  </div>
   <!-- 有样式 -->
   <div
-    v-else
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',
@@ -104,7 +83,7 @@
         :showTitle="false"
       >
         <!--  -->
-        <div class="form p-8 pt-14 w-full h-full relative">
+        <div class="window-content p-8 pt-14 w-full h-full relative">
           <div
             class="text-[24px] font-bold text-slate-100 cursor-pointer hover:underline"
             @click="openGithub"
@@ -311,7 +290,7 @@ function openGithub() {
 }
 </script>
 <style scoped>
-.form {
+.window-content{
   display: flex;
   flex-direction: column;
   background: #606c88;
@@ -326,7 +305,7 @@ function openGithub() {
   margin-top: 1rem;
 }
 
-.form div input {
+.window-content div input {
   outline: none;
   line-height: 2;
   font-size: 1rem;
@@ -338,15 +317,15 @@ function openGithub() {
   flex: 1 1 auto;
 }
 
-.form div input::placeholder {
+.window-content div input::placeholder {
   color: rgb(216, 212, 212);
 }
 
-.form div input:focus {
+.window-content div input:focus {
   border: 1px solid rgb(99 102 241);
 }
 
-.form div button {
+.window-content div button {
   color: #fff;
   font-weight: 600;
   font-size: 1rem;

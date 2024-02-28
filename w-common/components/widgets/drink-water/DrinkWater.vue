@@ -1,27 +1,7 @@
 <!-- GithubContributions.vue -->
 <template>
-  <!-- 无样式 -->
-  <div
-    v-if="!widgetData.style"
-    class="rounded-xl w-full h-full p-4 flex justify-center items-center bg-white overflow-hidden relative"
-    :style="{
-      width: widgetData.size.w + 'px',
-      height: widgetData.size.h + 'px',
-    }"
-  >
-    <div
-      class="w-18 h-18 rounded-full backdrop-blur-[10px] flex justify-center items-center"
-    >
-      <img
-        draggable="false"
-        class="rounded-xl w-14 h-14"
-        src="../../../assets/icons/glass-96.png"
-      />
-    </div>
-  </div>
   <!-- 有样式 -->
   <div
-    v-else
     :style="{
       width: widgetData.style[widgetData.currentStyle].w + 'px',
       height: widgetData.style[widgetData.currentStyle].h + 'px',
@@ -84,7 +64,7 @@
         :showTitle="false"
       >
         <div
-          class="w-full h-full overflow-hidden py-4 px-6 text-[#8d8df9] bg-slate-100"
+          class="w-full h-full overflow-hidden py-4 pt-10 px-6 text-[#8d8df9] bg-slate-100"
         >
           <div
             class="w-full h-full overflow-y-scroll flex flex-col justify-start items-start gap-4 gap-y-6 pb-40"

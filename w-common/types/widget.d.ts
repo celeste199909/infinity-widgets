@@ -20,6 +20,7 @@ export interface Widget {
         h: number;
     };
     currentStyle?: string;
+    tempStyle?: string;
     style?: {
         [key: string]: {
             w: number;

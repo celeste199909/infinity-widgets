@@ -1,7 +1,5 @@
 const { ipcRenderer } = require("electron");
 
-// const { attach, detach, refresh } = require("electron-as-wallpaper");
-
 const preload = {};
 let widgetsWrapper = null;
 let topWidgetsWrapper = null;
@@ -21,7 +19,7 @@ const createWidgetsWrapper = () => {
     alwaysOnTop: false,
     skipTaskbar: true,
     resizable: false,
-    movable: true,
+    movable: false,
     frame: false,
     transparent: true,
     backgroundColor: "#00000000",
@@ -31,9 +29,7 @@ const createWidgetsWrapper = () => {
     focus: false,
   }, () => {
     // 显示
-    // widgetsWrapper.show();
     // widgetsWrapper.webContents.openDevTools();
-
     ipcRenderer.sendTo(widgetsWrapper.webContents.id, "init");
     utools.showMainWindow();
 
@@ -53,7 +49,7 @@ const createTopWidgetsWrapper = () => {
     alwaysOnTop: true,
     skipTaskbar: true,
     resizable: false,
-    movable: true,
+    movable: false,
     frame: false,
     transparent: true,
     backgroundColor: "#00000000",
@@ -63,7 +59,6 @@ const createTopWidgetsWrapper = () => {
     focus: false,
   }, () => {
     // 显示
-    // topWidgetsWrapper.show();
     // topWidgetsWrapper.webContents.openDevTools();
     topWidgetsWrapper.setAlwaysOnTop(true, "screen-saver");
     ipcRenderer.sendTo(topWidgetsWrapper.webContents.id, "init");
@@ -74,6 +69,7 @@ const createTopWidgetsWrapper = () => {
 
 utools.onPluginEnter(({ code, type, payload, option }) => {
   console.log('用户进入插件应用', code, type, payload)
+
   const isOnWidgetContainer = utools.dbStorage.getItem('isOnWidgetContainer');
   const isOnTopWidgetContainer = utools.dbStorage.getItem('isOnTopWidgetContainer');
   if (isOnWidgetContainer && !widgetsWrapper) {
@@ -81,7 +77,7 @@ utools.onPluginEnter(({ code, type, payload, option }) => {
     if (isOnTopWidgetContainer && !topWidgetsWrapper) {
       setTimeout(() => {
         createTopWidgetsWrapper();
-      }, 100);
+      }, 300);
     }
   }
 })
@@ -94,10 +90,10 @@ const removeAllWidgets = () => {
   ipcRenderer.sendTo(widgetsWrapper.webContents.id, "removeAllWidgets");
   setTimeout(() => {
     ipcRenderer.sendTo(topWidgetsWrapper.webContents.id, "removeAllWidgets");
-  }, 100);
+  }, 300);
 }
 
-// 移除窗口 应该把 顶置窗口也移除
+// 移除窗口
 const removeWidgetsWrapper = () => {
   if (widgetsWrapper) {
     widgetsWrapper.close();

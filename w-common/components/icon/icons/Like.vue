@@ -1,0 +1,27 @@
+<template>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48">
+    <path
+      stroke-linejoin="round"
+      stroke-linecap="round"
+      :stroke-width="width"
+      :stroke="color"
+      d="M15 8C8.925 8 4 12.925 4 19c0 11 13 21 20 23.326C31 40 44 30 44 19c0-6.075-4.925-11-11-11-3.72 0-7.01 1.847-9 4.674A10.987 10.987 0 0 0 15 8Z"
+      data-follow-stroke="#333"
+    />
+  </svg>
+</template>
+
+<script setup lang="ts">
+const props = defineProps({
+  color: {
+    type: String,
+    default: "#666",
+  },
+  width: {
+    type: Number,
+    default: 2,
+  },
+});
+</script>
+
+<style scoped></style>

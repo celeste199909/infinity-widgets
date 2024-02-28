@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isShowContextMenu"
-    class="absolute w-52 p-3 select-none text-slate-700 bg-gradient-to-br from-cyan-100 to-sky-100 dark:text-slate-100 dark:bg-gradient-to-r dark:from-slate-700 dark:to-slate-600 rounded-md flex flex-col gap-y-1 z-10"
+    class="absolute w-52 p-3 select-none text-slate-700 bg-gradient-to-br from-cyan-100 to-sky-100 dark:text-slate-100 dark:bg-gradient-to-r dark:from-slate-700 dark:to-slate-600 rounded-md flex flex-col gap-y-1 z-[100]"
     :style="{
       left: contextMenuPosition.x - 5 + 'px',
       top: contextMenuPosition.y - 5 + 'px',
@@ -12,13 +12,21 @@
       class="w-full h-full backdrop-blur-lg bg-white/50 rounded-lg dark:bg-transparent flex flex-col"
     >
       <!-- 编辑 -->
+      <!-- 批量编辑 -->
       <div
+        class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
+        @click="bulkEdit()"
+      >
+        <Icon :name="'edit'" class="w-5 h-5" color="#8d8df9" :width="3" />
+        <div>{{ onBulkEdit ? "退出编辑" : "编辑" }}</div>
+      </div>
+      <!-- <div
         @click="toggleEdit"
         class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
       >
         <Icon :name="'edit'" class="w-5 h-5" color="#8d8df9" :width="3" />
         <div>{{ clickTargetData?.draggable ? "退出编辑" : "进入编辑" }}</div>
-      </div>
+      </div> -->
       <!-- 置顶 -->
       <div
         @click="toggleOnTop"
@@ -49,13 +57,13 @@
         </div>
       </div>
       <!-- 批量编辑 -->
-      <div
+      <!-- <div
         class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
         @click="bulkEdit()"
       >
         <Icon :name="'edit'" class="w-5 h-5" color="#8d8df9" :width="3" />
-        <div>{{ onBulkEdit ? "退出批量编辑" : "批量编辑" }}</div>
-      </div>
+        <div>{{ onBulkEdit ? "退出编辑" : "编辑" }}</div>
+      </div> -->
       <!-- 删除组件 -->
       <div
         class="cursor-pointer transition hover:bg-white/80 dark:hover:bg-black/20 p-2 rounded-lg flex flex-row justify-start items-center gap-x-2"
@@ -212,6 +220,7 @@ function changeStyle(key: string) {
     widgetData.currentStyle = key;
     widgetData.size.w = widgetData.style[key].w;
     widgetData.size.h = widgetData.style[key].h;
+    widgetData.tempStyle = "";
     props.modifyWidgetData(widgetData);
   }
 }
