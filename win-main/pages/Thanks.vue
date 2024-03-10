@@ -61,7 +61,7 @@ const suggetions = ref([
     suggetion: "天气超级难选，而且不能取消，只要点了定位就必须重新再选一遍，期待更复杂的天气组件",
     trade:"",
     time: "2024-02-20 18:18",
-    version: "未实现",
+    version: "部分实现",
   },
   {
     avatar: "wangsong.jpg",
@@ -70,6 +70,14 @@ const suggetions = ref([
     trade:"",
     time: "2024-02-23 16:59",
     version: "未实现",
+  },
+  {
+    avatar: "avatar.png",
+    username: "吴道子",
+    suggetion: "木鱼能弄成敲击一个键盘按键就功德+1吗 按鼠标太累了",
+    trade:"",
+    time: "2024-02-29 17:17",
+    version: "1.3.2",
   },
 ])
 

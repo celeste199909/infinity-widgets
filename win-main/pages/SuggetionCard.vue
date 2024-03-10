@@ -30,7 +30,7 @@
       class="text-slate-500 text-[12px] flex flex-row justify-between items-center"
     >
       <div class="text-slate-500 text-[12px]">{{ time }}</div>
-      <div>v:{{ version }}</div>
+      <div class="font-bold">v: {{ version }}</div>
     </div>
   </div>
 </template>

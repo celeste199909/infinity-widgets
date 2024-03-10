@@ -42,6 +42,7 @@
         <div
           class="window-content bg-slate-100 text-slate-600 p-8 pt-14 w-full h-full relative flex flex-col gap-y-4"
         >
+          <!-- 声音开关 -->
           <div class="flex flex-row items-center gap-x-4">
             <div class="font-bold text-slate-600">声音</div>
             <Toggle
@@ -51,8 +52,22 @@
               :turnOff="turnOffAudio"
             />
           </div>
+          <!-- 声音选择 -->
           <div class="flex flex-col gap-y-2">
-            <div class="font-bold text-slate-600">+1文字</div>
+            <div class="font-bold text-slate-600">音效</div>
+            <select
+              class="select select-primary w-32 select-sm"
+              v-model="currentSound"
+            >
+              <option disabled selected>音效</option>
+              <option class="text-slate-800">muyu1</option>
+              <option class="text-slate-800">muyu2</option>
+              <option class="text-slate-800">muyu3</option>
+            </select>
+          </div>
+          <!-- 文字 -->
+          <div class="flex flex-col gap-y-2">
+            <div class="font-bold text-slate-600">文字</div>
             <select
               class="select select-primary w-32 select-sm"
               v-model="selectedOption"
@@ -65,6 +80,16 @@
               <option class="text-slate-800">健康</option>
             </select>
           </div>
+          <!-- 按键开关 -->
+          <div class="flex flex-row items-center gap-x-4">
+            <div class="font-bold text-slate-600">空格触发</div>
+            <Toggle
+              :name="'keyboard-setting'"
+              :isOn="isOnKeyboard"
+              :turnOn="turnOnKeyboard"
+              :turnOff="turnOffKeyboard"
+            />
+          </div>
         </div>
       </CustomWindow>
     </Teleport>
@@ -72,11 +97,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import knockSound from "../../../assets/sounds/knocking-on-a-bottle.wav";
+import { ref, computed, onMounted } from "vue";
+import MuyuSound1 from "../../../assets/sounds/muyu1.mp3";
+import MuyuSound2 from "../../../assets/sounds/muyu2.mp3";
+import MuyuSound3 from "../../../assets/sounds/muyu3.mp3";
 import CustomWindow from "../../CustomWindow.vue";
 import Toggle from "../../Toggle.vue";
 import { watchDeep } from "@vueuse/core";
+import _ from "lodash";
 
 const props = defineProps({
   widgetData: {
@@ -89,8 +117,34 @@ const props = defineProps({
   },
 });
 
+onMounted(() => {
+  window.addEventListener("keydown", (e) => {
+    if (props.widgetData.data.isOnKeyboard) {
+      // 如果是空格键
+      if (e.code === "Space") {
+        handleClick();
+      }
+    }
+  });
+});
+
 const isOnEdit = computed(() => {
   return props.widgetData.draggable;
+});
+
+// 声音
+const soundsMap = new Map([
+  ["muyu1", MuyuSound1],
+  ["muyu2", MuyuSound2],
+  ["muyu3", MuyuSound3],
+]);
+const currentSound = ref(props.widgetData.data.currentSound || "muyu1");
+watchDeep(currentSound, (newVal) => {
+  if (props.modifyWidgetData) {
+    const _widgetData = _.cloneDeep(props.widgetData);
+    _widgetData.data.currentSound = newVal;
+    props.modifyWidgetData(_widgetData);
+  }
 });
 
 const muyu = ref<HTMLElement | null>(null);
@@ -113,7 +167,7 @@ function handleClick() {
     text.value?.classList.add("text-beat");
     count.value++;
     if (isOnAudio.value) {
-      const audio = new Audio(knockSound);
+      const audio = new Audio(soundsMap.get(currentSound.value));
       audio.play();
     }
     setTimeout(() => {
@@ -123,7 +177,6 @@ function handleClick() {
   }
 }
 
-// 声音
 const isOnAudio = ref(props.widgetData.data.isOnAudio || false);
 watchDeep(isOnAudio, (newVal) => {
   if (props.modifyWidgetData) {
@@ -165,6 +218,23 @@ watchDeep(selectedOption, (newVal) => {
 
 function handleOptionChange() {
   count.value = 0;
+}
+// 按键
+const isOnKeyboard = ref(props.widgetData.data.isOnKeyboard || false);
+watchDeep(isOnKeyboard, (newVal) => {
+  if (props.modifyWidgetData) {
+    const _widgetData = _.cloneDeep(props.widgetData);
+    _widgetData.data.isOnKeyboard = newVal;
+    props.modifyWidgetData(_widgetData);
+  }
+});
+
+function turnOnKeyboard() {
+  isOnKeyboard.value = true;
+}
+
+function turnOffKeyboard() {
+  isOnKeyboard.value = false;
 }
 </script>
 <style scoped>

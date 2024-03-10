@@ -78,12 +78,13 @@
 
 <script setup lang="ts">
 import { computed, defineProps, onMounted, ref, Ref } from "vue";
-import { useMouse } from "@vueuse/core";
+import { useMouse, watchDeep } from "@vueuse/core";
 import _ from "lodash";
 import { Widget } from "../types/widget";
 
 import Icon from "./icon/Icon.vue";
 import gsap from "gsap";
+import { watch } from "fs";
 
 const props = defineProps({
   showWidgets: {

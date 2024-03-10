@@ -2,7 +2,7 @@
   "main": "index.html",
   "preload": "preload.js",
   "logo": "logo.png",
-  "platform": ["win32", "darwin", "linux"],
+  "platform": ["win32", "linux"],
   "development": {
     "main": "http://localhost:5173/"
   },
@@ -15,7 +15,7 @@
       "code": "widgets-wrapper",
       "explain": "打开小组件商店",
       "icon": "logo.png",
-      "platform": ["win32", "darwin", "linux"],
+      "platform": ["win32", "linux"],
       "cmds": ["无限小组件"]
     }
   ]
